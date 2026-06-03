@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/api-getaway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/eureka-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-equipamiento/ms-equipamiento/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-equipamiento/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-pago/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-reserva/ms-reserva/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-reserva/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-ruta/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ms-usuario/src/main/java" charset="UTF-8" />
+  </component>
+</project>

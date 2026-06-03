@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-getaway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: ms-usuario
+            uri: lb://ms-usuario
+            predicates:
+              - Path=/api/usuarios/**
+          - id: ms-equipamiento
+            uri: lb://ms-equipamiento
+            predicates:
+              - Path=/api/equipamiento/**
+          - id: ms-reserva
+            uri: lb://ms-reserva
+            predicates:
+              - Path=/api/reservas/**
+          - id: ms-ruta
+            uri: lb://ms-ruta
+            predicates:
+              - Path=/api/rutas/**
+          - id: ms-pago
+            uri: lb://ms-pago
+            predicates:
+              - Path=/api/pagos/**
+      # ==============================================
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    reactor.netty.http.client: DEBUG
+    com.netflix.discovery: DEBUG
