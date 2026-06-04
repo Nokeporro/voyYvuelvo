@@ -4,6 +4,7 @@
     import com.voy_vuelvo.ms_equipamiento.model.Equipamiento;
     import com.voy_vuelvo.ms_equipamiento.service.EquipamientoService;
 
+    import io.swagger.v3.oas.annotations.tags.Tag;
     import jakarta.validation.Valid;
 
     import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@
 
     @RestController
     @RequestMapping("/api/equipamiento")
+    @Tag(name= "equipamiento", description = "Gestor de equipamiento para rutas")
     public class EquipamientoController {
 
         private final EquipamientoService service;
