@@ -22,4 +22,10 @@ public class PagoServiceImpl implements PagoService {
     public Pago save(Pago pago) {
         return pagoRepository.save(pago);
     }
+
+    @Override
+    public Pago findById(Long id) {
+        return pagoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado con ID: " + id));
+    }
 }

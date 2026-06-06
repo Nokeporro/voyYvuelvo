@@ -6,4 +6,5 @@ import java.util.List;
 public interface PagoService {
     List<Pago> findAll();
     Pago save(Pago pago);
+    Pago findById(Long id);
 }
