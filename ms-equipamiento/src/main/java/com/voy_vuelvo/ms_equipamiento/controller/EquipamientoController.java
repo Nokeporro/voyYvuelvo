@@ -80,8 +80,7 @@
 
             return EntityModel.of(equipamiento,
                     linkTo(methodOn(EquipamientoController.class).obtener(id)).withSelfRel(),
-                    linkTo(methodOn(EquipamientoController.class).listar())
-                            .withRel("equipamientos")
+                    linkTo(methodOn(EquipamientoController.class).listar()).withRel("equipamientos")
             );
         }
     //-----------------------------------------------------------------------------------
