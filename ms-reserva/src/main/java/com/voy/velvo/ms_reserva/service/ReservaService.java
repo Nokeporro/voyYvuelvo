@@ -5,6 +5,8 @@ import com.voy.velvo.ms_reserva.client.PagoClient;
 
 import com.voy.velvo.ms_reserva.client.RutaClient;
 import com.voy.velvo.ms_reserva.client.UsuarioClient;
+import com.voy.velvo.ms_reserva.exception.CuposInsuficientesException;
+import com.voy.velvo.ms_reserva.exception.RecursoDuplicadoException;
 import com.voy.velvo.ms_reserva.model.Dto.PagoDTO;
 
 import com.voy.velvo.ms_reserva.model.Dto.RutaDTO;
@@ -31,30 +33,55 @@ public class ReservaService {
 
     public Reserva crearReserva(Reserva reserva) {
 
-        // 1. VALIDACIÓN DE USUARIO
+        // 1. VALIDAR QUE EL USUARIO EXISTA
         try {
             UsuarioDTO usuario = usuarioClient.obtenerUsuarioPorId(reserva.getUsuarioId());
-            if (usuario == null) throw new RuntimeException("Usuario nulo");
+            System.out.println("Usuario encontrado: " + usuario);
         } catch (Exception e) {
-            throw new RecursoNoEncontradoException("Error: El usuario " + reserva.getUsuarioId() + " no existe.");
+            throw new RecursoNoEncontradoException(
+                    "El usuario con ID " + reserva.getUsuarioId() + " no existe.");
         }
 
-        // 2. VALIDACIÓN DE RUTA Y OBTENCIÓN DE PRECIO
-        RutaDTO ruta; // Guardamos la ruta aquí para usar su precio más abajo
+        // 2. VALIDAR QUE EL USUARIO NO TENGA UNA RESERVA PARA LA MISMA RUTA
+        if (reservaRepository.existsByUsuarioIdAndRutaId(
+                reserva.getUsuarioId(),
+                reserva.getRutaId())) {
+
+            throw new RecursoDuplicadoException(
+                    "Ya tienes una reserva para esta ruta.");
+        }
+
+        // 3. VALIDAR QUE LA RUTA EXISTA
+        RutaDTO ruta;
+
         try {
             ruta = rutaClient.obtenerRutaPorId(reserva.getRutaId());
-            if (ruta == null) throw new RuntimeException("Ruta nula");
         } catch (Exception e) {
-            throw new RecursoNoEncontradoException("Error: La ruta " + reserva.getRutaId() + " no existe.");
+            throw new RecursoNoEncontradoException(
+                    "La ruta con ID " + reserva.getRutaId() + " no existe.");
         }
 
-        // 3. Guardamos la reserva como PENDIENTE
+        // 4. VALIDAR CUPOS DISPONIBLES
+        if (ruta.getCupoMaximo() < reserva.getCantidadPersonas()) {
+            throw new CuposInsuficientesException(
+                    "No hay cupos suficientes para esta ruta.");
+        }
+
+        // 5. DESCONTAR CUPOS EN MS-RUTA
+        rutaClient.descontarCupos(
+                reserva.getRutaId(),
+                reserva.getCantidadPersonas());
+
+        // 6. ESTABLECER ESTADO INICIAL DE LA RESERVA
         reserva.setEstadoPago("PENDIENTE");
+
+        // 7. GUARDAR LA RESERVA
         Reserva reservaGuardada = reservaRepository.save(reserva);
 
-        // 4. CÁLCULO DEL TOTAL Y ENVÍO A PAGOS
+        // 8. CALCULAR EL TOTAL A PAGAR
         Double totalAPagar = ruta.getPrecio() * reserva.getCantidadPersonas();
 
+        // 9. CREAR EL PAGO
         PagoDTO pagoParaEnviar = new PagoDTO();
         pagoParaEnviar.setIdReserva(reservaGuardada.getId());
         pagoParaEnviar.setMonto(totalAPagar);
@@ -63,12 +90,13 @@ public class ReservaService {
 
         pagoClient.crearPagoInterno(pagoParaEnviar);
 
-        // 5. Actualizamos estado
+        // 10. ACTUALIZAR EL ESTADO DE LA RESERVA
         reservaGuardada.setEstadoPago("PROCESANDO");
+
         return reservaRepository.save(reservaGuardada);
     }
 
-
+//------------------------------------------------------------------------------------------
     // Metodo para confirmar que el pago fue exitoso
     public Reserva confirmarPago(Long id) {
         Reserva reservaExistente = obtenerPorId(id);
@@ -99,9 +127,14 @@ public class ReservaService {
         return reservaRepository.save(reservaExistente);
     }
 
-    // Metodo para eliminar una reserva
+    // Metodo para eliminar una reserva y vuelva a estar disponible el cupo
     public void eliminarReserva(Long id) {
-        obtenerPorId(id);
+
+        Reserva reserva = obtenerPorId(id);
+
+        rutaClient.aumentarCupos(
+                reserva.getRutaId(),
+                reserva.getCantidadPersonas());
 
         reservaRepository.deleteById(id);
     }

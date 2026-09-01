@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-@FeignClient(name = "ms-pago", url = "http://localhost:8085")
+@FeignClient(contextId = "pagoClient", name = "ms-pago", url = "http://ms-pago:8085")
 public interface PagoClient {
 
     @PostMapping("/api/pagos")

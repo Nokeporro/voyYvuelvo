@@ -131,4 +131,25 @@
             );
         }
 
+
+        //------------------------------------------------------------------------------------
+        /// ENDPOINTS INTERNOS PARA FEIGN (SIN HATEOAS)
+        ///
+        @GetMapping("/interno")
+        public List<Equipamiento> listarInterno() {
+            return service.listar();
+        }
+
+        @GetMapping("/interno/disponibles")
+        public List<Equipamiento> disponiblesInterno() {
+            return service.disponibles();
+        }
+
+        @GetMapping("/interno/dificultad/{dificultad}")
+        public List<Equipamiento> buscarPorDificultadInterno(
+                @PathVariable String dificultad) {
+
+            return service.buscarPorDificultad(dificultad);
+        }
+
     }

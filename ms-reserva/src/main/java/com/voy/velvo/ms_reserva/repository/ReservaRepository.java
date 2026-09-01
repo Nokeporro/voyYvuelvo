@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, Long> {
+
+    boolean existsByUsuarioIdAndRutaId(Long usuarioId, Long rutaId);
+
 }

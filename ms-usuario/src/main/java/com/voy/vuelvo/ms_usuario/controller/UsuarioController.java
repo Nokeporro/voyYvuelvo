@@ -74,4 +74,12 @@ public ResponseEntity<?> obtenerPorId(
     return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body("Usuario no encontrado con ID: " + id);
     }
+
+
+    //-----------------------------------------------------------------
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarUsuario(@PathVariable Long id) {
+        usuarioService.eliminarUsuario(id);
+        return ResponseEntity.noContent().build();
+    }
 }

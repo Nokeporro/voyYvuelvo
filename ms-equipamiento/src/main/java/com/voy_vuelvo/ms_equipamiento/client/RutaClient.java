@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "ms-rutas")
+@FeignClient(contextId = "rutaClient",
+        name = "ms-ruta",
+        url = "http://ms-ruta:8086")
 public interface RutaClient {
 
     @GetMapping("/api/rutas/{id}")

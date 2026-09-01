@@ -5,18 +5,22 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List; // Importar List
+import java.util.List;
 
-@FeignClient(name = "ms-equipamiento", url = "http://localhost:8081")
+@FeignClient(
+        contextId = "equipamientoClient",
+        name = "ms-equipamiento",
+        url = "http://ms-equipamiento:8081"
+)
 public interface EquipamientoClient {
 
-    @GetMapping("/api/equipamiento")
+    @GetMapping("/api/equipamiento/interno")
     List<EquipamientoDTO> listar();
 
-    @GetMapping("/api/equipamiento/disponibles")
+    @GetMapping("/api/equipamiento/interno/disponibles")
     List<EquipamientoDTO> disponibles();
 
-    @GetMapping("/api/equipamiento/dificultad/{dificultad}")
+    @GetMapping("/api/equipamiento/interno/dificultad/{dificultad}")
     List<EquipamientoDTO> buscarPorDificultad(
             @PathVariable("dificultad") String dificultad);
 }

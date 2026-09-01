@@ -41,8 +41,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> prueba(Exception ex) {
 
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("ENTRO AL HANDLER");
+                .status(HttpStatus.BAD_REQUEST)
+                .body("ERROR: " + ex.getMessage());
     }
+
+ //----------------------------------------------------
+ @ExceptionHandler(IllegalArgumentException.class)
+ public ResponseEntity<String> manejarCorreoDuplicado(
+         IllegalArgumentException ex) {
+
+     return ResponseEntity
+             .status(HttpStatus.CONFLICT)
+             .body(ex.getMessage());
+ }
 
 }

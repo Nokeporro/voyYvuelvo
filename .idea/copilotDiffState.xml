@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/ms-usuario/src/main/java/com/voy/vuelvo/ms_usuario/models/Usuario.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/ms-usuario/src/main/java/com/voy/vuelvo/ms_usuario/models/Usuario.java" />
+              <option name="originalContent" value="package com.voy.vuelvo.ms_usuario.models;&#10;&#10;import jakarta.persistence.*;&#10;import jakarta.validation.constraints.Email;&#10;import jakarta.validation.constraints.NotBlank;&#10;import jakarta.validation.constraints.NotNull;&#10;import lombok.AllArgsConstructor;&#10;import lombok.Data;&#10;import lombok.NoArgsConstructor;&#10;&#10;@Entity&#10;@Table(name = &quot;usuarios&quot;)&#10;@Data&#10;@NoArgsConstructor&#10;@AllArgsConstructor&#10;public class Usuario {&#10;&#10;    @Id&#10;    @GeneratedValue(strategy = GenerationType.IDENTITY)&#10;    private Long id;&#10;&#10;    @NotBlank(message = &quot;El nombre es obligatorio y no puede estar vacío&quot;)&#10;    private String nombre;&#10;&#10;    @NotBlank(message = &quot;El email es obligatorio&quot;)&#10;    @Email(message = &quot;Debe ingresar un email válido&quot;)&#10;    private String email;&#10;&#10;    @NotBlank(message = &quot;El teléfono no puede estar vacío&quot;)&#10;    private String telefono;&#10;}" />
+              <option name="updatedContent" value="package com.voy.vuelvo.ms_usuario.models;&#13;&#10;&#13;&#10;import jakarta.persistence.*;&#10;import jakarta.persistence.Column;&#10;import jakarta.validation.constraints.Email;&#13;&#10;import jakarta.validation.constraints.NotBlank;&#13;&#10;import jakarta.validation.constraints.NotNull;&#13;&#10;import lombok.AllArgsConstructor;&#13;&#10;import lombok.Data;&#13;&#10;import lombok.NoArgsConstructor;&#13;&#10;&#13;&#10;@Entity&#13;&#10;@Table(name = &quot;usuarios&quot;)&#13;&#10;@Data&#13;&#10;@NoArgsConstructor&#13;&#10;@AllArgsConstructor&#13;&#10;public class Usuario {&#13;&#10;&#13;&#10;    @Id&#13;&#10;    @GeneratedValue(strategy = GenerationType.IDENTITY)&#13;&#10;    private Long id;&#13;&#10;&#13;&#10;    @NotBlank(message = &quot;El nombre es obligatorio y no puede estar vacío&quot;)&#13;&#10;    private String nombre;&#13;&#10;&#13;&#10;    @NotBlank(message = &quot;El email es obligatorio&quot;)&#10;    @Email(message = &quot;Debe ingresar un email válido&quot;)&#10;    @Column(unique = true)&#10;    private String email;&#10;&#13;&#10;    @NotBlank(message = &quot;El teléfono no puede estar vacío&quot;)&#13;&#10;    private String telefono;&#13;&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/ms-usuario/src/main/java/com/voy/vuelvo/ms_usuario/repository/UsuarioRepository.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/ms-usuario/src/main/java/com/voy/vuelvo/ms_usuario/repository/UsuarioRepository.java" />
+              <option name="originalContent" value="package com.voy.vuelvo.ms_usuario.repository;&#10;&#10;import com.voy.vuelvo.ms_usuario.models.Usuario;&#10;import org.springframework.data.jpa.repository.JpaRepository;&#10;import org.springframework.stereotype.Repository;&#10;&#10;@Repository&#10;public interface UsuarioRepository extends JpaRepository&lt;Usuario, Long&gt; {&#10;&#10;}" />
+              <option name="updatedContent" value="package com.voy.vuelvo.ms_usuario.repository;&#13;&#10;&#13;&#10;import com.voy.vuelvo.ms_usuario.models.Usuario;&#13;&#10;import org.springframework.data.jpa.repository.JpaRepository;&#13;&#10;import org.springframework.stereotype.Repository;&#13;&#10;&#13;&#10;@Repository&#13;&#10;public interface UsuarioRepository extends JpaRepository&lt;Usuario, Long&gt; {&#13;&#10;&#9;// Permite buscar usuarios por email para validar duplicados antes de persistir&#10;&#9;java.util.Optional&lt;Usuario&gt; findByEmail(String email);&#10;&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

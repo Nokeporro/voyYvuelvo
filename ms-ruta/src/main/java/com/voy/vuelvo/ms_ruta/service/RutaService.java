@@ -89,4 +89,32 @@ public class RutaService {
         return response;
     }
 
+//-----------------------------------------------------------
+
+    public Ruta descontarCupos(Long id, Integer cantidad) {
+
+        Ruta ruta = rutaRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Ruta no encontrada"));
+
+        if (ruta.getCupoMaximo() < cantidad) {
+            throw new RuntimeException(
+                    "No hay cupos suficientes");
+        }
+
+        ruta.setCupoMaximo(
+                ruta.getCupoMaximo() - cantidad);
+
+        return rutaRepository.save(ruta);
+    }
+//-------------------------
+public Ruta aumentarCupos(Long id, Integer cantidad) {
+
+    Ruta ruta = rutaRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Ruta no encontrada"));
+
+    ruta.setCupoMaximo(ruta.getCupoMaximo() + cantidad);
+
+    return rutaRepository.save(ruta);
+}
 }

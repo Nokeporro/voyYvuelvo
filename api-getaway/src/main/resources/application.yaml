@@ -5,67 +5,81 @@ spring:
   application:
     name: api-getaway
 
+  datasource:
+    url: jdbc:mysql://mysql:3306/bd_gateway?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
   cloud:
     gateway:
-      mvc:
-        routes:
-#          - id: ms-usuario
-#            uri: lb://ms-usuario
-#            predicates:
-#              - Path=/api/usuarios/**
-#            filters:
-#              - StripPrefix=2
-#
-#          - id: ms-equipamiento
-#            uri: lb://ms-equipamiento
-#            predicates:
-#              - Path=/api/equipamiento/**
-#            filters:
-#              - StripPrefix=2
-#              -
-          - id: ms-reserva
-            uri: lb://ms-reserva
-            predicates:
-              - Path=/api/reservas/**
-            filters:
-              - StripPrefix=2
+      discovery:
+        locator:
+          enabled: false  # 🔥 CAMBIO  Apagado para quitar las rutas MS-RUTA
 
-#          - id: ms-ruta
-#            uri: lb://ms-ruta
-#            predicates:
-#              - Path=/api/rutas/**
-#            filters:
-#              - StripPrefix=2
-#
-#          - id: ms-pago
-#            uri: lb://ms-pago
-#            predicates:
-#              - Path=/api/pagos/**
-#            filters:
-#              - StripPrefix=2
+      routes:
+        - id: ms-usuario
+          uri: http://ms-usuario:8084  # 🔥 CAMBIO  Usamos la red interna de Docker
+          predicates:
+            - Path=/api/usuarios/**
+          filters:
+            - RewritePath=/api/usuarios/v3/api-docs, /v3/api-docs  # 🔥 CAMBIO Filtro para Swagger
+
+        - id: ms-equipamiento
+          uri: http://ms-equipamiento:8081
+          predicates:
+            - Path=/api/equipamiento/**
+          filters:
+            - RewritePath=/api/equipamiento/v3/api-docs, /v3/api-docs
+
+        - id: ms-reserva
+          uri: http://ms-reserva:8083
+          predicates:
+            - Path=/api/reservas/**
+          filters:
+            - RewritePath=/api/reservas/v3/api-docs, /v3/api-docs
+
+        - id: ms-ruta
+          uri: http://ms-ruta:8086
+          predicates:
+            - Path=/api/rutas/**
+          filters:
+            - RewritePath=/api/rutas/v3/api-docs, /v3/api-docs
+
+        - id: ms-pago
+          uri: http://ms-pago:8085
+          predicates:
+            - Path=/api/pagos/**
+          filters:
+            - RewritePath=/api/pagos/v3/api-docs, /v3/api-docs
 
 springdoc:
   swagger-ui:
     urls:
       - name: Microservicio Usuarios
         url: /api/usuarios/v3/api-docs
-
       - name: Microservicio Equipamiento
         url: /api/equipamiento/v3/api-docs
-
       - name: Microservicio Reservas
         url: /api/reservas/v3/api-docs
-
       - name: Microservicio Rutas
         url: /api/rutas/v3/api-docs
-
       - name: Microservicio Pagos
         url: /api/pagos/v3/api-docs
+
+jwt:
+  secret: MiClaveSuperSecretaVoyVuelvo2026
+  expiration: 86400000
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://eureka:8761/eureka/
 
 logging:
   level:

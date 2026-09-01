@@ -125,4 +125,23 @@ public class RutaController {
                 linkTo(methodOn(RutaController.class).buscarPorId(id)).withRel("ruta")
         );
     }
+
+//-----------------------------------------------------------------------------------
+    @PutMapping("/{id}/descontar-cupos")
+    public Ruta descontarCupos(
+        @PathVariable Long id,
+        @RequestParam Integer cantidad) {
+
+    return rutaService.descontarCupos(id, cantidad);
+}
+//-------------------------------------------------------------------------------
+@PutMapping("/{id}/aumentar-cupos")
+public ResponseEntity<Ruta> aumentarCupos(
+        @PathVariable Long id,
+        @RequestParam Integer cantidad) {
+
+    Ruta rutaActualizada = rutaService.aumentarCupos(id, cantidad);
+
+    return ResponseEntity.ok(rutaActualizada);
+}
 }

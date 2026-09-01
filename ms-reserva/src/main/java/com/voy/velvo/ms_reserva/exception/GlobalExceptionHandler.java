@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
                 .body(errores);
     }
 
-    // Maneja recursos no encontrados
+    // Maneja recursos no encontrados (404)
     @ExceptionHandler(RecursoNoEncontradoException.class)
     public ResponseEntity<String> manejarNoEncontrado(
             RecursoNoEncontradoException ex) {
@@ -45,7 +45,27 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
-    // Maneja cualquier error inesperado
+    // Maneja recursos duplicados (409)
+    @ExceptionHandler(RecursoDuplicadoException.class)
+    public ResponseEntity<String> manejarDuplicado(
+            RecursoDuplicadoException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    // Maneja falta de cupos (409)
+    @ExceptionHandler(CuposInsuficientesException.class)
+    public ResponseEntity<String> manejarCuposInsuficientes(
+            CuposInsuficientesException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(ex.getMessage());
+    }
+
+    // Maneja cualquier error inesperado (500)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> manejarErrorGeneral(
             Exception ex) {

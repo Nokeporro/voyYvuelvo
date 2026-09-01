@@ -1,6 +1,7 @@
 package com.voy.vuelvo.ms_usuario.models;
 
 import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class Usuario {
 
     @NotBlank(message = "El email es obligatorio")
     @Email(message = "Debe ingresar un email válido")
+    @Column(unique = true)
     private String email;
 
     @NotBlank(message = "El teléfono no puede estar vacío")

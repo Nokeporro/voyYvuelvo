@@ -66,10 +66,15 @@ public class ReservaController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "eliminar reserva",description = "elimina reserva por ID ")
-    public ResponseEntity<?> eliminarReserva(@PathVariable Long id) {
+    @Operation(summary = "eliminar reserva",
+            description = "elimina reserva por ID")
+    public ResponseEntity<String> eliminarReserva(
+            @PathVariable Long id) {
+
         reservaService.eliminarReserva(id);
-        return ResponseEntity.noContent().build();
+
+        return ResponseEntity.ok(
+                "La reserva fue eliminada correctamente.");
     }
 
 }

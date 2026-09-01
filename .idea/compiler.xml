@@ -9,14 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="eureka-server" />
         <module name="api-getaway" />
-      </profile>
-      <profile name="Annotation profile for ms-reserva" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-        </processorPath>
         <module name="ms-reserva" />
       </profile>
       <profile name="Annotation profile for ms-usuario" enabled="true">
