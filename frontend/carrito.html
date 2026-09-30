@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <title>Carrito | Voy &amp; Vuelvo</title><link rel="stylesheet" href="css/styles.css">
+    <script src="js/productos-data.js" defer></script>
+    <script src="js/carrito.js" defer></script>
+    <script src="js/carrito-vista.js" defer></script>
+    </head>
+    <body class="inicio"><header class="encabezado">
+        <div class="contenedor encabezado-interior">
+
+            <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+                <svg
+                    width="43"
+                    height="38"
+                    viewBox="0 0 48 40"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 35 18 8 25 20 31 5 46 35Z"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    ></path>
+                    <path
+                        d="m12 19 6 3 4-5M25 17l6 5 5-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></path>
+                </svg>
+
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <nav class="menu" aria-label="Navegación principal">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#rutas">Rutas</a>
+                <a href="productos.html">Productos</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="nosotros.html">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+            </nav>
+
+            <div class="cuenta">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
+
+                <a
+                    href="carrito.html"
+                    class="carrito"
+                    aria-label="Ver carrito de compras"
+                >
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M2 3h3l3 12h11l3-9H6"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="19" cy="20" r="1"></circle>
+                    </svg>
+
+                    <span>Carrito</span>
+                    <span id="contador-carrito" class="contador">0</span>
+                </a>
+            </div>
+
+        </div>
+    </header><main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / Carrito</p><h1>Tu carrito de compras</h1><p class="introduccion">Revisa tu equipo antes de tu próxima aventura.</p><p id="mensaje" role="status" aria-live="polite"></p><section id="vacio" class="panel vacio" hidden><h2>Tu carrito está vacío</h2><p>Encuentra el equipo para tu próxima salida.</p><a class="boton-amarillo" href="productos.html">Explorar productos</a></section><div id="carrito-contenido" class="compra-grid" hidden><section aria-label="Productos en tu carrito"><div id="lista-carrito"></div><a class="seguir" href="productos.html">← Seguir comprando</a><button id="vaciar" class="secundario" type="button">Vaciar carrito</button></section><aside class="panel resumen"><h2>Resumen de compra</h2><p class="fila"><span>Unidades</span><strong id="unidades"></strong></p><p class="fila"><span>Subtotal</span><strong id="subtotal"></strong></p><p class="fila total"><span>Total de productos</span><strong id="total"></strong></p><p class="nota">El pago y los costos de entrega aún no están disponibles en esta versión.</p><button class="boton-amarillo" disabled>Pago próximamente</button></aside></div></main><footer class="pie">
+    <div class="contenedor pie-columnas">
+
+        <div class="pie-marca">
+            <a href="index.html" class="logo">
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <p>
+                Descubre nuevos caminos, prepara tu equipo
+                y disfruta de la naturaleza.
+            </p>
+
+            <span class="pie-frase">
+                Tu próxima aventura comienza aquí.
+            </span>
+        </div>
+
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="productos.html">Equipamiento</a>
+            <a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Crear una cuenta</a>
+            <a href="carrito.html">Carrito de compras</a>
+        </nav>
+
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2>
+
+            <p>
+                Escríbenos para resolver tus dudas
+                y preparar tu próxima salida.
+            </p>
+
+            <a href="contacto.html" class="boton-amarillo">
+                Contáctanos
+            </a>
+
+            <a href="nosotros.html" class="pie-nosotros">
+                Conoce nuestro equipo →
+            </a>
+        </div>
+
+    </div>
+
+    <div class="pie-inferior">
+        <div class="contenedor">
+            <p>© 2026 Voy &amp; Vuelvo.</p>
+            <p>Explora con respeto. Cuida la naturaleza.</p>
+        </div>
+    </div>
+</footer></body></html>
