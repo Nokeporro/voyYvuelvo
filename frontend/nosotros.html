@@ -5,23 +5,142 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Conoce Voy y Vuelvo, una tienda creada para acompañar tus aventuras de trekking.">
   <title>Nosotros | Voy y Vuelvo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/tema-compartido.css">
 </head>
-<body>
-  <header class="site-header"><div class="container header-container">
-    <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a>
-    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="productos.html">Productos</a><a class="nav-link" href="blogs.html">Blog</a><a class="nav-link active" aria-current="page" href="nosotros.html">Nosotros</a><a class="nav-link" href="contacto.html">Contacto</a></nav>
-    <div class="header-actions"><a class="btn btn-secondary" href="login.html">Iniciar sesión</a><a class="btn btn-primary" href="registro.html">Registrarse</a><a href="carrito.html" class="cart-button" aria-label="Ver carrito"><span class="cart-icon" aria-hidden="true">🛒</span><span class="cart-label">Carrito</span></a></div>
-  </div></header>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+        <div class="contenedor encabezado-interior">
+
+            <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+                <svg
+                    width="43"
+                    height="38"
+                    viewBox="0 0 48 40"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 35 18 8 25 20 31 5 46 35Z"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    ></path>
+                    <path
+                        d="m12 19 6 3 4-5M25 17l6 5 5-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></path>
+                </svg>
+
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <nav class="menu" aria-label="Navegación principal">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#rutas">Rutas</a>
+                <a href="productos.html">Productos</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="nosotros.html" aria-current="page">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+            </nav>
+
+            <div class="cuenta">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
+
+                <a
+                    href="carrito.html"
+                    class="carrito"
+                    aria-label="Ver carrito de compras"
+                >
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M2 3h3l3 12h11l3-9H6"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="19" cy="20" r="1"></circle>
+                    </svg>
+
+                    <span>Carrito</span>
+                    <span id="contador-carrito" class="contador">0</span>
+                </a>
+            </div>
+
+        </div>
+    </header></div>
   <main>
     <section class="about-hero"><div class="container about-hero-inner"><span class="eyebrow">Nuestra historia</span><h1>La aventura se disfruta más cuando vuelves.</h1><p>Creemos que cada salida empieza mucho antes del primer paso: con ganas de explorar y el equipo correcto para hacerlo con confianza.</p><a class="btn btn-primary btn-large" href="productos.html">Encuentra tu equipo <span aria-hidden="true">→</span></a></div></section>
     <section class="section"><div class="container story-grid"><div><span class="eyebrow">Quiénes somos</span><h2>Hecho para quienes disfrutan el camino.</h2></div><div class="story-copy"><p><strong>Voy y Vuelvo</strong> es una tienda online de equipamiento para trekking. Reunimos productos para acompañar desde una caminata tranquila hasta una ruta de mayor exigencia.</p><p>Organizamos el catálogo según el nivel de dificultad recomendado para ayudarte a comparar y elegir con más claridad. También compartimos consejos e historias para inspirar una próxima salida bien preparada.</p></div></div></section>
     <section class="section values-section"><div class="container"><div class="section-heading"><span class="eyebrow">Lo que nos mueve</span><h2>Prepararse también es parte de la aventura.</h2></div><div class="values-grid"><article class="value-card"><span class="value-icon" aria-hidden="true">🧭</span><h3>Elegir con confianza</h3><p>Información clara para encontrar equipo que se ajuste al tipo de ruta.</p></article><article class="value-card"><span class="value-icon" aria-hidden="true">🥾</span><h3>Disfrutar cada paso</h3><p>Una buena preparación ayuda a vivir el camino con más tranquilidad.</p></article><article class="value-card"><span class="value-icon" aria-hidden="true">🌿</span><h3>Explorar con respeto</h3><p>Valoramos los paisajes y la responsabilidad de cuidarlos en cada salida.</p></article></div></div></section>
     <section class="section team-section"><div class="container team-card"><div><span class="eyebrow">Detrás de Voy y Vuelvo</span><h2>Un proyecto creado en equipo.</h2><p>Somos un equipo de estudiantes construyendo una experiencia digital para quienes aman el trekking. Esta tienda es el punto de partida: seguimos trabajando para mejorar cada parte del viaje.</p></div><a class="btn btn-primary" href="contacto.html">Hablemos <span aria-hidden="true">→</span></a></div></section>
   </main>
-  <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><a href="index.html" class="logo"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a><p>Equipamiento para tus aventuras de trekking.</p></div><div class="footer-column"><h3>Explora</h3><a href="productos.html">Productos</a><a href="blogs.html">Blog</a><a href="nosotros.html">Nosotros</a></div><div class="footer-column"><h3>Te ayudamos</h3><a href="contacto.html">Contacto</a><a href="login.html">Iniciar sesión</a><a href="registro.html">Crear cuenta</a></div></div><div class="footer-bottom"><div class="container footer-bottom-content"><p>© 2026 Voy y Vuelvo. Todos los derechos reservados.</p></div></div></footer>
+  <div class="inicio marco-compartido"><footer class="pie">
+    <div class="contenedor pie-columnas">
+
+        <div class="pie-marca">
+            <a href="index.html" class="logo">
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <p>
+                Descubre nuevos caminos, prepara tu equipo
+                y disfruta de la naturaleza.
+            </p>
+
+            <span class="pie-frase">
+                Tu próxima aventura comienza aquí.
+            </span>
+        </div>
+
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="productos.html">Equipamiento</a>
+            <a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Crear una cuenta</a>
+            <a href="carrito.html">Carrito de compras</a>
+        </nav>
+
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2>
+
+            <p>
+                Escríbenos para resolver tus dudas
+                y preparar tu próxima salida.
+            </p>
+
+            <a href="contacto.html" class="boton-amarillo">
+                Contáctanos
+            </a>
+
+            <a href="nosotros.html" class="pie-nosotros">
+                Conoce nuestro equipo →
+            </a>
+        </div>
+
+    </div>
+
+    <div class="pie-inferior">
+        <div class="contenedor">
+            <p>© 2026 Voy &amp; Vuelvo.</p>
+            <p>Explora con respeto. Cuida la naturaleza.</p>
+        </div>
+    </div>
+</footer></div>
 </body>
 </html>

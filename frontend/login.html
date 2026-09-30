@@ -5,17 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Inicia sesión en Voy y Vuelvo para continuar con tu equipo de trekking.">
   <title>Iniciar sesión | Voy y Vuelvo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/tema-compartido.css">
 </head>
-<body>
-  <header class="site-header"><div class="container header-container">
-    <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a>
-    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="productos.html">Productos</a><a class="nav-link" href="blogs.html">Blog</a><a class="nav-link" href="nosotros.html">Nosotros</a><a class="nav-link" href="contacto.html">Contacto</a></nav>
-    <div class="header-actions"><a class="btn btn-primary" href="registro.html">Crear cuenta</a><a href="carrito.html" class="cart-button" aria-label="Ver carrito"><span class="cart-icon" aria-hidden="true">🛒</span><span class="cart-label">Carrito</span></a></div>
-  </div></header>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+        <div class="contenedor encabezado-interior">
+
+            <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+                <svg
+                    width="43"
+                    height="38"
+                    viewBox="0 0 48 40"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 35 18 8 25 20 31 5 46 35Z"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    ></path>
+                    <path
+                        d="m12 19 6 3 4-5M25 17l6 5 5-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></path>
+                </svg>
+
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <nav class="menu" aria-label="Navegación principal">
+                <a href="index.html">Inicio</a>
+                <a href="index.html#rutas">Rutas</a>
+                <a href="productos.html">Productos</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="nosotros.html">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+            </nav>
+
+            <div class="cuenta">
+                <a href="login.html" aria-current="page">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
+
+                <a
+                    href="carrito.html"
+                    class="carrito"
+                    aria-label="Ver carrito de compras"
+                >
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M2 3h3l3 12h11l3-9H6"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="19" cy="20" r="1"></circle>
+                    </svg>
+
+                    <span>Carrito</span>
+                    <span id="contador-carrito" class="contador">0</span>
+                </a>
+            </div>
+
+        </div>
+    </header></div>
   <main class="account-page"><section class="account-card" aria-labelledby="page-title">
     <div class="account-visual"><span class="eyebrow">Tu próxima aventura</span><h1>El camino empieza contigo.</h1><p>Ingresa a tu cuenta para seguir equipándote para la ruta.</p></div>
     <div class="account-form-wrap"><span class="eyebrow">Qué bueno verte</span><h2 id="page-title">Iniciar sesión</h2><p class="form-intro">Accede con el correo y la contraseña de tu cuenta.</p>
@@ -29,7 +90,65 @@
       <p class="demo-note">Esta entrega valida el formulario en el navegador. La autenticación se conectará en una etapa posterior.</p>
     </div>
   </section></main>
-  <footer class="site-footer"><div class="container footer-bottom-content"><p>© 2026 Voy y Vuelvo · Nos vemos en la ruta.</p></div></footer>
+  <div class="inicio marco-compartido"><footer class="pie">
+    <div class="contenedor pie-columnas">
+
+        <div class="pie-marca">
+            <a href="index.html" class="logo">
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <p>
+                Descubre nuevos caminos, prepara tu equipo
+                y disfruta de la naturaleza.
+            </p>
+
+            <span class="pie-frase">
+                Tu próxima aventura comienza aquí.
+            </span>
+        </div>
+
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="productos.html">Equipamiento</a>
+            <a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Crear una cuenta</a>
+            <a href="carrito.html">Carrito de compras</a>
+        </nav>
+
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2>
+
+            <p>
+                Escríbenos para resolver tus dudas
+                y preparar tu próxima salida.
+            </p>
+
+            <a href="contacto.html" class="boton-amarillo">
+                Contáctanos
+            </a>
+
+            <a href="nosotros.html" class="pie-nosotros">
+                Conoce nuestro equipo →
+            </a>
+        </div>
+
+    </div>
+
+    <div class="pie-inferior">
+        <div class="contenedor">
+            <p>© 2026 Voy &amp; Vuelvo.</p>
+            <p>Explora con respeto. Cuida la naturaleza.</p>
+        </div>
+    </div>
+</footer></div>
   <script src="js/validaciones-login.js" defer></script>
 </body>
 </html>
