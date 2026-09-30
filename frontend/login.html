@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inicia sesión en Voy y Vuelvo para continuar con tu equipo de trekking.">
+  <title>Iniciar sesión | Voy y Vuelvo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header"><div class="container header-container">
+    <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a>
+    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="productos.html">Productos</a><a class="nav-link" href="blogs.html">Blog</a><a class="nav-link" href="nosotros.html">Nosotros</a><a class="nav-link" href="contacto.html">Contacto</a></nav>
+    <div class="header-actions"><a class="btn btn-primary" href="registro.html">Crear cuenta</a><a href="carrito.html" class="cart-button" aria-label="Ver carrito"><span class="cart-icon" aria-hidden="true">🛒</span><span class="cart-label">Carrito</span></a></div>
+  </div></header>
+  <main class="account-page"><section class="account-card" aria-labelledby="page-title">
+    <div class="account-visual"><span class="eyebrow">Tu próxima aventura</span><h1>El camino empieza contigo.</h1><p>Ingresa a tu cuenta para seguir equipándote para la ruta.</p></div>
+    <div class="account-form-wrap"><span class="eyebrow">Qué bueno verte</span><h2 id="page-title">Iniciar sesión</h2><p class="form-intro">Accede con el correo y la contraseña de tu cuenta.</p>
+      <form id="login-form" novalidate>
+        <div class="form-field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" maxlength="100" required aria-describedby="correo-error"><small class="field-error" id="correo-error" aria-live="polite"></small></div>
+        <div class="form-field"><label for="contrasena">Contraseña</label><div class="password-field"><input id="contrasena" name="contrasena" type="password" autocomplete="current-password" minlength="4" maxlength="10" required aria-describedby="contrasena-error"><button class="password-toggle" type="button" data-toggle-password="contrasena" aria-label="Mostrar contraseña">Mostrar</button></div><small class="field-error" id="contrasena-error" aria-live="polite"></small></div>
+        <div class="form-feedback" id="login-feedback" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary btn-large form-submit" type="submit">Iniciar sesión <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="form-switch">¿Aún no tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+      <p class="demo-note">Esta entrega valida el formulario en el navegador. La autenticación se conectará en una etapa posterior.</p>
+    </div>
+  </section></main>
+  <footer class="site-footer"><div class="container footer-bottom-content"><p>© 2026 Voy y Vuelvo · Nos vemos en la ruta.</p></div></footer>
+  <script src="js/validaciones-login.js" defer></script>
+</body>
+</html>

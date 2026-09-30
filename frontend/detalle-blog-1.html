@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia | Voy &amp; Vuelvo</title>
+  <meta name="description" content="En la alta montaña puedes pasar del sol al viento helado en minutos. El sistema de tres capas te permite ajustar tu abrigo sin detenerte.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="contenedor nav">
+      <a class="marca" href="index.html" aria-label="Voy &amp; Vuelvo, ir al inicio"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
+      <ul class="nav__menu" id="menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <div class="nav__acciones">
+        <a href="login.html">Iniciar sesión</a>
+        <a href="registro.html">Registrar usuario</a>
+        <a class="carrito-link" href="carrito.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span>Carrito (<span id="contador-carrito">0</span>)</span></a>
+      </div>
+    </div>
+  </header>
+  <main class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blogs.html">Blogs</a></li>
+        <li aria-current="page">Caso curioso #1</li>
+      </ol>
+    </nav>
+    <article class="articulo">
+      <header>
+        <span class="insignia insignia--alta">Ruta alta</span>
+        <h1>Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</h1>
+        <p class="meta">12 de septiembre de 2026 · 4 min de lectura</p>
+      </header>
+      <figure class="articulo__portada">
+        <img src="img/blog-tres-capas.jpg" alt="Persona con mochila caminando por un sendero de alta montaña con viento" width="1200" height="675">
+      </figure>
+      <div class="articulo__cuerpo">
+        <p>En rutas de dificultad alta, el clima manda. Una mañana despejada puede terminar con viento fuerte y lluvia antes del mediodía, y ahí es donde se nota si tu ropa está bien pensada. La solución más usada por quienes caminan a menudo es el sistema de tres capas.</p>
+        <h2>Capa base: mantiene la piel seca</h2>
+        <p>Va pegada al cuerpo y su trabajo es alejar el sudor. Elige tejidos sintéticos o lana merino; el algodón se moja, tarda en secar y te enfría cuando te detienes.</p>
+        <h2>Capa intermedia: guarda el calor</h2>
+        <p>Es el abrigo propiamente tal: un polar o una chaqueta liviana rellena. Debe ser fácil de sacar y guardar, porque la vas a usar en las paradas y en las mañanas frías.</p>
+        <h2>Capa exterior: te protege del viento y la lluvia</h2>
+        <p>Una capa impermeable y cortaviento es la pieza que más se agradece cuando el tiempo se pone difícil. Busca que tenga capucha ajustable y costuras selladas.</p>
+        <h2>Antes de salir</h2>
+        <ul>
+          <li>Ajusta tu abrigo antes de sentir frío: es más fácil mantener el calor que recuperarlo.</li>
+          <li>Guarda una muda seca de capa base dentro de una bolsa estanca.</li>
+          <li>Revisa el pronóstico la noche anterior y de nuevo antes de salir.</li>
+        </ul>
+      </div>
+      <aside class="articulo__equipo" aria-labelledby="equipo-1">
+        <h2 id="equipo-1">Equipo recomendado para este caso</h2>
+        <ul>
+          <li>Capa impermeable</li>
+          <li>Saco de dormir -10 °C</li>
+          <li>Carpa 3 estaciones</li>
+        </ul>
+        <a class="btn btn--accion" href="productos.html">Ver productos</a>
+      </aside>
+      <div class="articulo__nav">
+        <a class="btn btn--borde" href="blogs.html">Volver a Blogs</a>
+        <a class="btn btn--borde" href="detalle-blog-2.html">Siguiente caso</a>
+      </div>
+    </article>
+  </main>
+  <footer class="footer">
+    <div class="contenedor footer__grid">
+      <div>
+        <p class="marca marca--pie">Voy <span>&amp;</span> Vuelvo</p>
+        <p>Equipamiento de trekking según el nivel de dificultad de tu ruta.</p>
+      </div>
+      <nav aria-label="Categorías">
+        <ul>
+          <li><a href="productos.html">Fácil</a></li>
+          <li><a href="productos.html">Media</a></li>
+          <li><a href="productos.html">Alta</a></li>
+        </ul>
+      </nav>
+      <form action="#" onsubmit="return false" aria-label="Suscripción al boletín">
+        <label class="sr" for="boletin">Correo para el boletín</label>
+        <input id="boletin" type="email" name="boletin" placeholder="Tu correo" autocomplete="email">
+        <button class="btn btn--accion" type="submit">Suscribirme</button>
+      </form>
+    </div>
+  </footer>
+  <script src="js/menu.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+</body>
+</html>

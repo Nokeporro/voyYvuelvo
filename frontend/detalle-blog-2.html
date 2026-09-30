@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tu primera ruta de un día: qué llevar en la mochila | Voy &amp; Vuelvo</title>
+  <meta name="description" content="No necesitas mucho para una caminata fácil, pero sí lo correcto. Esta lista corta te ayuda a salir con lo justo y volver sin apuros.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="contenedor nav">
+      <a class="marca" href="index.html" aria-label="Voy &amp; Vuelvo, ir al inicio"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
+      <ul class="nav__menu" id="menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <div class="nav__acciones">
+        <a href="login.html">Iniciar sesión</a>
+        <a href="registro.html">Registrar usuario</a>
+        <a class="carrito-link" href="carrito.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span>Carrito (<span id="contador-carrito">0</span>)</span></a>
+      </div>
+    </div>
+  </header>
+  <main class="contenedor">
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blogs.html">Blogs</a></li>
+        <li aria-current="page">Caso curioso #2</li>
+      </ol>
+    </nav>
+    <article class="articulo">
+      <header>
+        <span class="insignia insignia--facil">Ruta fácil</span>
+        <h1>Tu primera ruta de un día: qué llevar en la mochila</h1>
+        <p class="meta">24 de septiembre de 2026 · 3 min de lectura</p>
+      </header>
+      <figure class="articulo__portada">
+        <img src="img/blog-primera-ruta.jpg" alt="Sendero de bosque con luz de la tarde y una persona caminando" width="1200" height="675">
+      </figure>
+      <div class="articulo__cuerpo">
+        <p>Las rutas de nivel fácil son la mejor forma de empezar: pocas horas, poco desnivel y senderos bien marcados. Aun así, un buen equipo hace la diferencia entre una salida agradable y una complicada.</p>
+        <h2>Lo esencial</h2>
+        <p>Agua suficiente para todo el recorrido, algo de comer, protector solar y una capa liviana para el viento. Súmale un mapa o la ruta descargada, por si te quedas sin señal.</p>
+        <h2>Calzado cómodo antes que caro</h2>
+        <p>Para un día basta con zapatillas con buena suela y calcetines que no te aprieten. Estrena el calzado unos días antes para evitar ampollas.</p>
+        <h2>Vuelve con luz</h2>
+        <p>Calcula tus horas para regresar antes de que oscurezca. Una linterna frontal pequeña pesa poco y te da margen si el paseo se alarga.</p>
+        <h2>Antes de salir</h2>
+        <ul>
+          <li>Avisa a alguien a dónde vas y a qué hora piensas volver.</li>
+          <li>Lleva tu basura de vuelta: en la montaña no hay quien la recoja.</li>
+          <li>Sal temprano; las tardes suelen traer más viento y más gente.</li>
+        </ul>
+      </div>
+      <aside class="articulo__equipo" aria-labelledby="equipo-2">
+        <h2 id="equipo-2">Equipo recomendado para este caso</h2>
+        <ul>
+          <li>Capa impermeable</li>
+          <li>Linterna frontal recargable</li>
+          <li>Protector solar FPS 50</li>
+        </ul>
+        <a class="btn btn--accion" href="productos.html">Ver productos</a>
+      </aside>
+      <div class="articulo__nav">
+        <a class="btn btn--borde" href="blogs.html">Volver a Blogs</a>
+        <a class="btn btn--borde" href="detalle-blog-1.html">Caso anterior</a>
+      </div>
+    </article>
+  </main>
+  <footer class="footer">
+    <div class="contenedor footer__grid">
+      <div>
+        <p class="marca marca--pie">Voy <span>&amp;</span> Vuelvo</p>
+        <p>Equipamiento de trekking según el nivel de dificultad de tu ruta.</p>
+      </div>
+      <nav aria-label="Categorías">
+        <ul>
+          <li><a href="productos.html">Fácil</a></li>
+          <li><a href="productos.html">Media</a></li>
+          <li><a href="productos.html">Alta</a></li>
+        </ul>
+      </nav>
+      <form action="#" onsubmit="return false" aria-label="Suscripción al boletín">
+        <label class="sr" for="boletin">Correo para el boletín</label>
+        <input id="boletin" type="email" name="boletin" placeholder="Tu correo" autocomplete="email">
+        <button class="btn btn--accion" type="submit">Suscribirme</button>
+      </form>
+    </div>
+  </footer>
+  <script src="js/menu.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+</body>
+</html>

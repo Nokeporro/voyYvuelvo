@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar producto | Panel Voy &amp; Vuelvo</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-pagina="producto-editar" data-modo="editar">
+  <div class="admin">
+    <div class="admin__top">
+      <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+      <button class="admin__toggle" type="button" id="btn-menu" aria-expanded="false" aria-controls="sidebar">Menú</button>
+    </div>
+    <aside class="sidebar" id="sidebar" aria-label="Menú del panel">
+      <div>
+        <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+        <p class="sidebar__rol">Panel de <strong data-sesion-rol>Administrador</strong></p>
+        <nav aria-label="Secciones">
+      <ul>
+        <li><a class="enlace" href="index.html">Inicio</a></li>
+        <li><a class="enlace" href="productos-listado.html" aria-current="page">Producto</a></li>
+        <li data-solo-admin><a class="enlace" href="usuarios-listado.html">Usuario</a></li>
+      </ul>
+        </nav>
+      </div>
+      <div class="sidebar__pie">
+        <span data-sesion-nombre>Administrador</span>
+        <a class="btn btn--borde btn--sm" href="../index.html">Ver tienda</a>
+        <button class="btn btn--borde btn--sm" type="button" id="btn-salir">Cerrar sesión</button>
+      </div>
+    </aside>
+    <main class="contenido">
+      <div class="contenido__cab"><h1>Editar producto</h1></div>
+      <div class="alerta alerta--error" id="alerta-form" role="alert" hidden></div>
+      <section class="tarjeta">
+      <form class="form" id="form-producto" novalidate aria-label="Editar producto">
+        <p class="ayuda ayuda--nota">Los campos con <span class="req">*</span> son obligatorios.</p>
+        <div class="form__grid">
+      <div class="campo">
+        <label for="codigo">Código del producto <span class="req" aria-hidden="true">*</span></label>
+        <input id="codigo" name="codigo" type="text" autocomplete="off" aria-describedby="ayuda-codigo error-codigo" aria-invalid="false">
+        <span class="ayuda" id="ayuda-codigo">Mínimo 3 caracteres. Ejemplo: MOC-001.</span>
+        <span class="error" id="error-codigo" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="nombre">Nombre <span class="req" aria-hidden="true">*</span></label>
+        <input id="nombre" name="nombre" type="text" autocomplete="off" aria-describedby="ayuda-nombre error-nombre" aria-invalid="false">
+        <span class="ayuda" id="ayuda-nombre">Máximo 100 caracteres.</span>
+        <span class="error" id="error-nombre" aria-live="polite"></span>
+      </div>
+      <div class="campo campo--completo">
+        <label for="descripcion">Descripción <span class="opcional">(opcional)</span></label>
+        <textarea id="descripcion" name="descripcion" rows="4" aria-describedby="ayuda-descripcion error-descripcion" aria-invalid="false"></textarea>
+        <span class="ayuda" id="ayuda-descripcion"><span id="contador-descripcion">0 / 500 caracteres</span></span>
+        <span class="error" id="error-descripcion" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="precio">Precio (CLP) <span class="req" aria-hidden="true">*</span></label>
+        <input id="precio" name="precio" type="text" autocomplete="off" aria-describedby="ayuda-precio error-precio" aria-invalid="false" inputmode="decimal">
+        <span class="ayuda" id="ayuda-precio">Usa 0 para un producto gratuito. Admite decimales.</span>
+        <span class="error" id="error-precio" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="stock">Stock <span class="req" aria-hidden="true">*</span></label>
+        <input id="stock" name="stock" type="text" autocomplete="off" aria-describedby="ayuda-stock error-stock" aria-invalid="false" inputmode="numeric">
+        <span class="ayuda" id="ayuda-stock">Unidades en inventario, solo enteros.</span>
+        <span class="error" id="error-stock" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="stockCritico">Stock crítico <span class="opcional">(opcional)</span></label>
+        <input id="stockCritico" name="stockCritico" type="text" autocomplete="off" aria-describedby="ayuda-stockCritico error-stockCritico" aria-invalid="false" inputmode="numeric">
+        <span class="ayuda" id="ayuda-stockCritico">Te avisamos cuando el stock sea igual o inferior a este número.</span>
+        <span class="error" id="error-stockCritico" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="categoria">Categoría (dificultad de ruta) <span class="req" aria-hidden="true">*</span></label>
+        <select id="categoria" name="categoria" aria-describedby="error-categoria" aria-invalid="false">
+          <option value="">-- Selecciona --</option>
+          <option value="Fácil">Fácil</option>
+          <option value="Media">Media</option>
+          <option value="Alta">Alta</option>
+        </select>
+        <span class="error" id="error-categoria" aria-live="polite"></span>
+      </div>
+      <div class="campo campo--completo">
+        <label for="imagen">Imagen <span class="opcional">(opcional)</span></label>
+        <input id="imagen" name="imagen" type="file" autocomplete="off" aria-describedby="ayuda-imagen error-imagen" aria-invalid="false" accept="image/png,image/jpeg,image/webp,image/gif">
+        <span class="ayuda" id="ayuda-imagen">PNG, JPG, WEBP o GIF de hasta 2 MB. <span id="imagen-actual"></span></span>
+        <span class="error" id="error-imagen" aria-live="polite"></span>
+      </div>
+        </div>
+        <p class="aviso-stock" id="aviso-stock" role="status" aria-live="polite"></p>
+        <div class="form__acciones">
+          <button class="btn btn--accion" type="submit" id="btn-guardar">Guardar producto</button>
+          <a class="btn btn--borde" href="productos-listado.html">Cancelar</a>
+        </div>
+      </form>
+      </section>
+    </main>
+  </div>
+  <script src="../js/admin.js"></script>
+  <script src="../js/validaciones-producto.js"></script>
+</body>
+</html>

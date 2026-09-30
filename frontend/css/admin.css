@@ -1,0 +1,114 @@
+/* ==========================================================
+   Voy y Vuelvo — admin.css (panel administrador)
+   Misma paleta y tipografía que la tienda (README punto 15).
+   Mobile-first: menú lateral colapsable bajo 900px.
+   ========================================================== */
+:root{
+  --c-texto:#1E2A38; --c-texto-2:#6B7280; --c-accion:#F5A623; --c-accion-h:#E39612;
+  --c-fondo:#F7F8FA; --c-tarjeta:#FFFFFF; --c-borde:#E3E6EA;
+  --c-facil:#2F9E44; --c-media:#E8871E; --c-alta:#D64545; --c-teal:#1E9E8C;
+  --c-ok-bg:#DCEEE1; --c-ok:#2F9E44;
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-pill:999px;
+  --sombra:0 2px 10px rgba(30,42,56,.08);
+  --f-titulo:"Poppins",sans-serif; --f-cuerpo:"Inter",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--f-cuerpo);color:var(--c-texto);background:var(--c-fondo);line-height:1.5}
+h1,h2,h3{font-family:var(--f-titulo);font-weight:600;line-height:1.25;margin:0 0 .5em}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--c-accion);outline-offset:2px}
+
+/* ----- Estructura ----- */
+.admin{min-height:100vh;display:flex;flex-direction:column}
+.admin__top{display:flex;align-items:center;justify-content:space-between;background:var(--c-tarjeta);border-bottom:1px solid var(--c-borde);padding:.6rem 1rem}
+.admin__toggle{background:none;border:1px solid var(--c-borde);border-radius:var(--r-sm);padding:.4rem .7rem;font:inherit;cursor:pointer}
+.sidebar{display:none;background:var(--c-tarjeta);border-bottom:1px solid var(--c-borde);padding:1rem}
+.sidebar.abierto{display:flex;flex-direction:column;gap:1rem}
+.sidebar__marca{display:flex;align-items:center;gap:.5rem;font:700 1.15rem var(--f-titulo);text-decoration:none}
+.sidebar__marca svg{width:30px;height:30px}
+.sidebar__marca span{color:var(--c-accion)}
+.sidebar__rol{font-size:.8rem;color:var(--c-texto-2);margin:0}
+.sidebar ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.25rem}
+.sidebar a.enlace{display:block;padding:.6rem .9rem;border-radius:var(--r-sm);text-decoration:none;font-weight:500}
+.sidebar a.enlace:hover{background:var(--c-fondo)}
+.sidebar a.enlace[aria-current="page"]{background:var(--c-accion);color:var(--c-texto)}
+.sidebar__pie{border-top:1px solid var(--c-borde);padding-top:.75rem;display:flex;flex-direction:column;gap:.5rem}
+.contenido{flex:1;padding:1.25rem 1rem 3rem;min-width:0}
+.contenido__cab{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:1.25rem}
+.contenido__cab h1{margin:0;font-size:1.6rem}
+
+/* ----- Botones ----- */
+.btn{display:inline-block;font:600 .95rem var(--f-cuerpo);border:2px solid transparent;border-radius:var(--r-pill);padding:.6rem 1.3rem;cursor:pointer;text-decoration:none;text-align:center;transition:background .15s}
+.btn--accion{background:var(--c-accion);color:var(--c-texto)}
+.btn--accion:hover{background:var(--c-accion-h)}
+.btn--borde{background:transparent;border-color:var(--c-borde);color:var(--c-texto)}
+.btn--borde:hover{border-color:var(--c-texto)}
+.btn--peligro{background:transparent;border-color:var(--c-alta);color:var(--c-alta)}
+.btn--peligro:hover{background:var(--c-alta);color:#fff}
+.btn--sm{padding:.3rem .8rem;font-size:.85rem}
+
+/* ----- Tarjetas y panel ----- */
+.tarjeta{background:var(--c-tarjeta);border-radius:var(--r-lg);box-shadow:var(--sombra);padding:1.25rem}
+.resumen{display:grid;gap:1rem;grid-template-columns:1fr;margin-bottom:1.5rem}
+.resumen__n{font:700 2rem var(--f-titulo);margin:0}
+.resumen__t{color:var(--c-texto-2);margin:0}
+.bienvenida h2{font-size:1.4rem}
+.bienvenida p{color:var(--c-texto-2);margin:0}
+
+/* ----- Insignias ----- */
+.insignia{display:inline-block;font:600 .75rem var(--f-cuerpo);color:#fff;background:var(--c-teal);border-radius:var(--r-pill);padding:.15rem .65rem;white-space:nowrap}
+.insignia--facil{background:var(--c-facil)} .insignia--media{background:var(--c-media)} .insignia--alta{background:var(--c-alta)}
+.insignia--alerta{background:#FDECEC;color:var(--c-alta)}
+.insignia--ok{background:var(--c-ok-bg);color:var(--c-ok)}
+
+/* ----- Tabla ----- */
+.buscador{width:100%;max-width:340px;font:inherit;border:1.5px solid var(--c-borde);border-radius:var(--r-pill);padding:.55rem 1rem}
+.buscador:focus{outline:none;border-color:var(--c-accion)}
+.tabla-caja{overflow-x:auto;margin-top:1rem}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{text-align:left;padding:.7rem .8rem;border-bottom:1px solid var(--c-borde);font-size:.92rem;vertical-align:middle}
+th{font:600 .82rem var(--f-cuerpo);color:var(--c-texto-2);background:var(--c-fondo)}
+td.acciones{display:flex;gap:.4rem;flex-wrap:wrap}
+.vacio{padding:2rem;text-align:center;color:var(--c-texto-2)}
+
+/* ----- Alertas ----- */
+.alerta{border-radius:var(--r-md);padding:.8rem 1rem;margin-bottom:1rem;font-weight:500}
+.alerta--ok{background:var(--c-ok-bg);color:var(--c-ok)}
+.alerta--error{background:#FDECEC;color:var(--c-alta)}
+
+/* ----- Formularios ----- */
+.form{max-width:760px}
+.form__grid{display:grid;gap:0 1rem;grid-template-columns:1fr}
+.campo{margin-bottom:1rem}
+.campo label{display:block;font-weight:500;margin-bottom:.3rem}
+.campo .req{color:var(--c-alta)}
+.campo input,.campo select,.campo textarea{width:100%;font:inherit;color:inherit;background:#fff;border:1.5px solid var(--c-borde);border-radius:var(--r-sm);padding:.6rem .8rem}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--c-accion)}
+.campo input[readonly]{background:var(--c-fondo);color:var(--c-texto-2)}
+.campo textarea{resize:vertical;min-height:100px}
+.campo .ayuda{display:block;font-size:.8rem;color:var(--c-texto-2);margin-top:.25rem}
+.campo .error{display:block;font-size:.85rem;color:var(--c-alta);margin-top:.25rem}
+.campo [aria-invalid="true"]{border-color:var(--c-alta)}
+.campo [aria-invalid="false"].tocado{border-color:var(--c-ok)}
+.form__acciones{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.25rem}
+.aviso-stock{font-size:.85rem;font-weight:500;margin-top:.25rem;color:var(--c-alta)}
+
+@media (min-width:600px){
+  .resumen{grid-template-columns:repeat(3,1fr)}
+  .form__grid{grid-template-columns:1fr 1fr}
+  .campo--completo{grid-column:1 / -1}
+}
+@media (min-width:900px){
+  .admin{flex-direction:row}
+  .admin__top{display:none}
+  .sidebar{display:flex;flex-direction:column;justify-content:space-between;width:250px;flex-shrink:0;border-bottom:0;border-right:1px solid var(--c-borde);position:sticky;top:0;height:100vh}
+  .contenido{padding:2rem 2.5rem 3rem}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ----- Utilidades ----- */
+.sr{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.ayuda--nota{margin-top:0}
+.resumen--sep{margin-top:1.25rem}
+.opcional{font-size:.8rem;font-weight:400;color:var(--c-texto-2)}
+[hidden]{display:none!important}

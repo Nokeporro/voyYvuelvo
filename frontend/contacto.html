@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Escríbenos tus dudas sobre Voy y Vuelvo y nuestro equipamiento de trekking.">
+  <title>Contacto | Voy y Vuelvo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header"><div class="container header-container">
+    <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a>
+    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="productos.html">Productos</a><a class="nav-link" href="blogs.html">Blog</a><a class="nav-link" href="nosotros.html">Nosotros</a><a class="nav-link active" aria-current="page" href="contacto.html">Contacto</a></nav>
+    <div class="header-actions"><a class="btn btn-secondary" href="login.html">Iniciar sesión</a><a class="btn btn-primary" href="registro.html">Registrarse</a><a href="carrito.html" class="cart-button" aria-label="Ver carrito"><span class="cart-icon" aria-hidden="true">🛒</span><span class="cart-label">Carrito</span></a></div>
+  </div></header>
+  <main class="contact-page"><div class="container contact-layout">
+    <section class="contact-intro"><span class="eyebrow">Estamos para ayudarte</span><h1>¿En qué podemos ayudarte?</h1><p>Cuéntanos qué necesitas. Si tienes dudas para elegir tu equipo o quieres compartir una idea, escríbenos.</p><div class="contact-note"><span class="contact-note-icon" aria-hidden="true">⛰️</span><div><strong>Todo empieza con una pregunta.</strong><p>Déjanos tu mensaje y nuestro equipo podrá ayudarte.</p></div></div></section>
+    <section class="contact-form-card" aria-labelledby="contact-title"><span class="eyebrow">Formulario de contacto</span><h2 id="contact-title">Envíanos un mensaje</h2><p class="form-intro">Los campos marcados son obligatorios.</p>
+      <form id="contacto-form" novalidate>
+        <div class="form-field"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" type="text" autocomplete="name" maxlength="100" required aria-describedby="nombre-error"><small class="field-error" id="nombre-error" aria-live="polite"></small></div>
+        <div class="form-field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" maxlength="100" placeholder="nombre@gmail.com" required aria-describedby="correo-error"><small class="field-hint">Aceptamos correos @duoc.cl, @profesor.duoc.cl o @gmail.com</small><small class="field-error" id="correo-error" aria-live="polite"></small></div>
+        <div class="form-field"><label for="comentario">¿Cómo podemos ayudarte?</label><textarea id="comentario" name="comentario" rows="5" maxlength="500" required aria-describedby="comentario-count comentario-error" placeholder="Escribe tu mensaje (hasta 500 caracteres)"></textarea><div class="field-meta"><small class="field-error" id="comentario-error" aria-live="polite"></small><small id="comentario-count" class="field-hint">0 / 500</small></div></div>
+        <div class="form-feedback" id="contacto-feedback" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary btn-large form-submit" type="submit">Enviar mensaje <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="demo-note">El envío se simula en esta entrega y no transmite el mensaje a un servidor.</p>
+    </section>
+  </div></main>
+  <footer class="site-footer"><div class="container footer-grid"><div class="footer-brand"><a href="index.html" class="logo"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a><p>Equipamiento para tus aventuras de trekking.</p></div><div class="footer-column"><h3>Explora</h3><a href="productos.html">Productos</a><a href="blogs.html">Blog</a><a href="nosotros.html">Nosotros</a></div><div class="footer-column"><h3>Te ayudamos</h3><a href="contacto.html">Contacto</a><a href="login.html">Iniciar sesión</a><a href="registro.html">Crear cuenta</a></div></div><div class="footer-bottom"><div class="container footer-bottom-content"><p>© 2026 Voy y Vuelvo. Todos los derechos reservados.</p></div></div></footer>
+  <script src="js/validaciones-contacto.js" defer></script>
+</body>
+</html>

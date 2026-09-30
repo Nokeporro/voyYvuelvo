@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar usuario | Panel Voy &amp; Vuelvo</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body data-pagina="usuario-editar" data-modo="editar" data-solo-admin="true">
+  <div class="admin">
+    <div class="admin__top">
+      <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+      <button class="admin__toggle" type="button" id="btn-menu" aria-expanded="false" aria-controls="sidebar">Menú</button>
+    </div>
+    <aside class="sidebar" id="sidebar" aria-label="Menú del panel">
+      <div>
+        <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+        <p class="sidebar__rol">Panel de <strong data-sesion-rol>Administrador</strong></p>
+        <nav aria-label="Secciones">
+      <ul>
+        <li><a class="enlace" href="index.html">Inicio</a></li>
+        <li><a class="enlace" href="productos-listado.html">Producto</a></li>
+        <li data-solo-admin><a class="enlace" href="usuarios-listado.html" aria-current="page">Usuario</a></li>
+      </ul>
+        </nav>
+      </div>
+      <div class="sidebar__pie">
+        <span data-sesion-nombre>Administrador</span>
+        <a class="btn btn--borde btn--sm" href="../index.html">Ver tienda</a>
+        <button class="btn btn--borde btn--sm" type="button" id="btn-salir">Cerrar sesión</button>
+      </div>
+    </aside>
+    <main class="contenido">
+      <div class="contenido__cab"><h1>Editar usuario</h1></div>
+      <div class="alerta alerta--error" id="alerta-form" role="alert" hidden></div>
+      <section class="tarjeta">
+      <form class="form" id="form-usuario" novalidate aria-label="Editar usuario">
+        <p class="ayuda ayuda--nota">Los campos con <span class="req">*</span> son obligatorios.</p>
+        <div class="form__grid">
+      <div class="campo">
+        <label for="run">RUN <span class="req" aria-hidden="true">*</span></label>
+        <input id="run" name="run" type="text" autocomplete="off" aria-describedby="ayuda-run error-run" aria-invalid="false" inputmode="text">
+        <span class="ayuda" id="ayuda-run">Sin puntos ni guion, de 7 a 9 caracteres. Ejemplo: 19011022K.</span>
+        <span class="error" id="error-run" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="tipo">Tipo de usuario <span class="req" aria-hidden="true">*</span></label>
+        <select id="tipo" name="tipo" aria-describedby="error-tipo" aria-invalid="false">
+          <option value="">-- Selecciona --</option>
+          <option value="Administrador">Administrador</option>
+          <option value="Vendedor">Vendedor</option>
+          <option value="Cliente">Cliente</option>
+        </select>
+        <span class="error" id="error-tipo" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="nombre">Nombre <span class="req" aria-hidden="true">*</span></label>
+        <input id="nombre" name="nombre" type="text" autocomplete="given-name" aria-describedby="ayuda-nombre error-nombre" aria-invalid="false">
+        <span class="ayuda" id="ayuda-nombre">Máximo 50 caracteres.</span>
+        <span class="error" id="error-nombre" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="apellidos">Apellidos <span class="req" aria-hidden="true">*</span></label>
+        <input id="apellidos" name="apellidos" type="text" autocomplete="family-name" aria-describedby="ayuda-apellidos error-apellidos" aria-invalid="false">
+        <span class="ayuda" id="ayuda-apellidos">Máximo 100 caracteres.</span>
+        <span class="error" id="error-apellidos" aria-live="polite"></span>
+      </div>
+      <div class="campo campo--completo">
+        <label for="correo">Correo <span class="req" aria-hidden="true">*</span></label>
+        <input id="correo" name="correo" type="email" autocomplete="email" aria-describedby="ayuda-correo error-correo" aria-invalid="false">
+        <span class="ayuda" id="ayuda-correo">Dominios permitidos: @duoc.cl, @profesor.duoc.cl y @gmail.com.</span>
+        <span class="error" id="error-correo" aria-live="polite"></span>
+      </div>
+      <div class="campo campo--completo">
+        <label for="correo2">Confirmar correo <span class="req" aria-hidden="true">*</span></label>
+        <input id="correo2" name="correo2" type="email" autocomplete="off" aria-describedby="error-correo2" aria-invalid="false">
+        <span class="error" id="error-correo2" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="fechaNacimiento">Fecha de nacimiento <span class="opcional">(opcional)</span></label>
+        <input id="fechaNacimiento" name="fechaNacimiento" type="date" autocomplete="bday" aria-describedby="error-fechaNacimiento" aria-invalid="false">
+        <span class="error" id="error-fechaNacimiento" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="telefono">Teléfono <span class="opcional">(opcional)</span></label>
+        <input id="telefono" name="telefono" type="tel" autocomplete="tel" aria-describedby="ayuda-telefono error-telefono" aria-invalid="false">
+        <span class="ayuda" id="ayuda-telefono">Entre 8 y 12 dígitos, sin espacios.</span>
+        <span class="error" id="error-telefono" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="region">Región <span class="req" aria-hidden="true">*</span></label>
+        <select id="region" name="region" aria-describedby="error-region" aria-invalid="false">
+          <option value="">-- Selecciona la región --</option>
+        </select>
+        <span class="error" id="error-region" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="comuna">Comuna <span class="req" aria-hidden="true">*</span></label>
+        <select id="comuna" name="comuna" aria-describedby="error-comuna" aria-invalid="false" disabled>
+          <option value="">-- Selecciona la comuna --</option>
+        </select>
+        <span class="error" id="error-comuna" aria-live="polite"></span>
+      </div>
+      <div class="campo campo--completo">
+        <label for="direccion">Dirección <span class="req" aria-hidden="true">*</span></label>
+        <input id="direccion" name="direccion" type="text" autocomplete="street-address" aria-describedby="ayuda-direccion error-direccion" aria-invalid="false">
+        <span class="ayuda" id="ayuda-direccion"><span id="contador-direccion">0 / 300 caracteres</span></span>
+        <span class="error" id="error-direccion" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="password">Nueva contraseña <span class="opcional">(opcional)</span></label>
+        <input id="password" name="password" type="password" autocomplete="new-password" aria-describedby="ayuda-password error-password" aria-invalid="false">
+        <span class="ayuda" id="ayuda-password">Entre 4 y 10 caracteres. Déjala en blanco para mantener la actual.</span>
+        <span class="error" id="error-password" aria-live="polite"></span>
+      </div>
+      <div class="campo">
+        <label for="password2">Confirmar contraseña <span class="opcional">(opcional)</span></label>
+        <input id="password2" name="password2" type="password" autocomplete="new-password" aria-describedby="error-password2" aria-invalid="false">
+        <span class="error" id="error-password2" aria-live="polite"></span>
+      </div>
+        </div>
+        <div class="form__acciones">
+          <button class="btn btn--accion" type="submit">Guardar usuario</button>
+          <a class="btn btn--borde" href="usuarios-listado.html">Cancelar</a>
+        </div>
+      </form>
+      </section>
+    </main>
+  </div>
+  <script src="../js/admin.js"></script>
+  <script src="../js/regiones-comunas.js"></script>
+  <script src="../js/admin-usuarios.js"></script>
+</body>
+</html>

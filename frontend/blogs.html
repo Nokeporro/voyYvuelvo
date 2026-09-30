@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blogs | Voy &amp; Vuelvo</title>
+  <meta name="description" content="Noticias, datos curiosos y consejos de trekking.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="contenedor nav">
+      <a class="marca" href="index.html" aria-label="Voy &amp; Vuelvo, ir al inicio"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
+      <ul class="nav__menu" id="menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="productos.html">Productos</a></li>
+        <li><a href="nosotros.html">Nosotros</a></li>
+        <li><a href="blogs.html" aria-current="page">Blogs</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <div class="nav__acciones">
+        <a href="login.html">Iniciar sesión</a>
+        <a href="registro.html">Registrar usuario</a>
+        <a class="carrito-link" href="carrito.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span>Carrito (<span id="contador-carrito">0</span>)</span></a>
+      </div>
+    </div>
+  </header>
+  <main class="contenedor">
+    <section aria-labelledby="titulo-blog">
+      <div class="pagina-titulo">
+        <h1 id="titulo-blog">Noticias importantes</h1>
+        <p>Datos curiosos y consejos para preparar tu próxima ruta.</p>
+      </div>
+      <div class="blog-lista">
+      <article class="blog-caso" aria-labelledby="caso-1">
+        <div class="blog-caso__media">
+          <img src="img/blog-tres-capas.jpg" alt="Persona con mochila caminando por un sendero de alta montaña con viento" loading="lazy" width="800" height="500">
+          <span class="insignia insignia--alta">Ruta alta</span>
+        </div>
+        <div class="blog-caso__texto">
+          <p class="meta">Caso curioso #1 · 12 de septiembre de 2026</p>
+          <h2 id="caso-1">Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</h2>
+          <p>En la alta montaña puedes pasar del sol al viento helado en minutos. El sistema de tres capas te permite ajustar tu abrigo sin detenerte.</p>
+          <a class="btn btn--accion" href="detalle-blog-1.html">Ver caso<span class="sr">: Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</span></a>
+        </div>
+      </article>
+      <article class="blog-caso" aria-labelledby="caso-2">
+        <div class="blog-caso__media">
+          <img src="img/blog-primera-ruta.jpg" alt="Sendero de bosque con luz de la tarde y una persona caminando" loading="lazy" width="800" height="500">
+          <span class="insignia insignia--facil">Ruta fácil</span>
+        </div>
+        <div class="blog-caso__texto">
+          <p class="meta">Caso curioso #2 · 24 de septiembre de 2026</p>
+          <h2 id="caso-2">Tu primera ruta de un día: qué llevar en la mochila</h2>
+          <p>No necesitas mucho para una caminata fácil, pero sí lo correcto. Esta lista corta te ayuda a salir con lo justo y volver sin apuros.</p>
+          <a class="btn btn--accion" href="detalle-blog-2.html">Ver caso<span class="sr">: Tu primera ruta de un día: qué llevar en la mochila</span></a>
+        </div>
+      </article>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <div class="contenedor footer__grid">
+      <div>
+        <p class="marca marca--pie">Voy <span>&amp;</span> Vuelvo</p>
+        <p>Equipamiento de trekking según el nivel de dificultad de tu ruta.</p>
+      </div>
+      <nav aria-label="Categorías">
+        <ul>
+          <li><a href="productos.html">Fácil</a></li>
+          <li><a href="productos.html">Media</a></li>
+          <li><a href="productos.html">Alta</a></li>
+        </ul>
+      </nav>
+      <form action="#" onsubmit="return false" aria-label="Suscripción al boletín">
+        <label class="sr" for="boletin">Correo para el boletín</label>
+        <input id="boletin" type="email" name="boletin" placeholder="Tu correo" autocomplete="email">
+        <button class="btn btn--accion" type="submit">Suscribirme</button>
+      </form>
+    </div>
+  </footer>
+  <script src="js/menu.js" defer></script>
+  <script src="js/carrito.js" defer></script>
+</body>
+</html>
