@@ -4,364 +4,706 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Voy y Vuelvo | Equipamiento de Trekking</title>
-
     <meta
         name="description"
-        content="Tienda online de equipamiento para rutas de trekking."
+        content="Descubre rutas de trekking y prepara tu próxima aventura con Voy y Vuelvo."
     >
 
-    <!-- Tipografías -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap"
-        rel="stylesheet"
-    >
+    <title>Voy y Vuelvo | Inicio</title>
 
-    <!-- Estilos principales -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body>
+<body class="inicio">
 
-    <!-- =========================================================
-         HEADER
-    ========================================================== -->
-    <header class="site-header">
-        <div class="container header-container">
+    <!-- ENCABEZADO -->
+    <header class="encabezado">
+        <div class="contenedor encabezado-interior">
 
-            <a href="index.html" class="logo" aria-label="Voy y Vuelvo - Inicio">
-                <span class="logo-mark" aria-hidden="true">🏔️</span>
-                <span class="logo-name">Voy y Vuelvo</span>
+            <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+                <svg
+                    width="43"
+                    height="38"
+                    viewBox="0 0 48 40"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 35 18 8 25 20 31 5 46 35Z"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    ></path>
+                    <path
+                        d="m12 19 6 3 4-5M25 17l6 5 5-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></path>
+                </svg>
+
+                <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
-            <nav class="main-nav" aria-label="Navegación principal">
-                <a href="index.html" class="nav-link active" aria-current="page">Inicio</a>
-                <a href="productos.html" class="nav-link">Productos</a>
-                <a href="blogs.html" class="nav-link">Blogs</a>
-                <a href="nosotros.html" class="nav-link">Nosotros</a>
-                <a href="contacto.html" class="nav-link">Contacto</a>
+            <nav class="menu" aria-label="Navegación principal">
+                <a href="index.html" aria-current="page">Inicio</a>
+                <a href="#rutas">Rutas</a>
+                <a href="productos.html">Productos</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="nosotros.html">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
             </nav>
 
-            <div class="header-actions">
-                <a href="login.html" class="btn btn-secondary">Iniciar sesión</a>
-                <a href="registro.html" class="btn btn-primary">Registrarse</a>
+            <div class="cuenta">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
 
-                <a href="carrito.html" class="cart-button" aria-label="Ver carrito de compras">
-                    <span class="cart-icon" aria-hidden="true">🛒</span>
-                    <span class="cart-label">Carrito</span>
-                    <span class="cart-count" aria-label="0 productos en el carrito">0</span>
+                <a
+                    href="carrito.html"
+                    class="carrito"
+                    aria-label="Ver carrito de compras"
+                >
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M2 3h3l3 12h11l3-9H6"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="19" cy="20" r="1"></circle>
+                    </svg>
+
+                    <span>Carrito</span>
+                    <span id="contador-carrito" class="contador">0</span>
                 </a>
             </div>
 
         </div>
     </header>
 
-
-    <!-- =========================================================
-         MAIN
-    ========================================================== -->
     <main>
 
-        <!-- HERO -->
-        <section class="hero-section">
-            <div class="container hero-grid">
+        <!-- PORTADA FIJA -->
+        <section class="portada" aria-labelledby="titulo-inicio">
 
-                <div class="hero-content">
-                    <span class="eyebrow">Equipamiento para tus aventuras</span>
+            <img
+                class="portada-fondo"
+                src="img/portada.png"
+                alt="Excursionista frente a un lago rodeado de montañas"
+                fetchpriority="high"
+            >
 
-                    <h1>
-                        Prepárate para la ruta.
-                        <span>Voy y Vuelvo.</span>
+            <div class="contenedor portada-interior">
+
+                <div class="portada-texto">
+                    <h1 id="titulo-inicio">
+                        Tu aventura<br>
+                        comienza aquí
                     </h1>
 
-                    <p class="hero-description">
-                        Encuentra equipamiento de trekking según el nivel
-                        de dificultad de tu próxima aventura.
+                    <p>
+                        Descubre Chile, encuentra tu ruta<br>
+                        y prepara tu equipo.
                     </p>
 
-                    <div class="hero-actions">
-                        <a href="productos.html" class="btn btn-primary btn-large">
-                            Explorar productos
-                        </a>
-
-                        <a href="blogs.html" class="btn btn-outline btn-large">
-                            Ver consejos
-                        </a>
-                    </div>
-
-                    <div class="hero-highlights" aria-label="Características de la tienda">
-                        <div class="hero-highlight">
-                            <span class="highlight-icon" aria-hidden="true">🥾</span>
-                            <div>
-                                <strong>Equipo para trekking</strong>
-                                <span>Seleccionado para tus rutas</span>
-                            </div>
-                        </div>
-
-                        <div class="hero-highlight">
-                            <span class="highlight-icon" aria-hidden="true">⛰️</span>
-                            <div>
-                                <strong>Por dificultad</strong>
-                                <span>Fácil, Media y Alta</span>
-                            </div>
-                        </div>
-                    </div>
+                    <a href="#rutas" class="boton-amarillo">
+                        Explorar rutas
+                        <span aria-hidden="true">→</span>
+                    </a>
                 </div>
 
-                <div class="hero-visual">
-                    <div class="hero-image-card">
-                        <img
-                            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1400&q=85"
-                            alt="Paisaje de montaña para realizar trekking"
-                        >
+                <!-- BUSCADOR -->
+                <form id="buscador" class="buscador">
+                    <h2>¿A dónde vamos?</h2>
 
-                        <div class="hero-image-badge">
-                            <span class="badge-dot" aria-hidden="true"></span>
-                            Listos para la próxima ruta
-                        </div>
-                    </div>
-                </div>
+                    <label for="destino">Destino o región</label>
+                    <input
+                        type="search"
+                        id="destino"
+                        name="destino"
+                        placeholder="Destino o región"
+                        maxlength="100"
+                    >
+
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha" required>
+
+                    <label for="personas">Personas</label>
+                    <select id="personas" name="personas">
+                        <option value="1">1 persona</option>
+                        <option value="2" selected>2 personas</option>
+                        <option value="3">3 personas</option>
+                        <option value="4">4 personas</option>
+                        <option value="5">5 personas</option>
+                        <option value="6">6 personas</option>
+                    </select>
+
+                    <button type="submit" class="boton-amarillo">
+                        Buscar rutas
+                    </button>
+                </form>
 
             </div>
         </section>
-
 
         <!-- CATEGORÍAS -->
-        <section class="section categories-section">
-            <div class="container">
+        <div class="contenedor">
+            <nav class="categorias" aria-label="Filtrar rutas por categoría">
+                <button type="button" data-categoria="montana" aria-pressed="false">
+                    <span aria-hidden="true">♧</span>
+                    Montaña
+                </button>
 
-                <div class="section-heading">
-                    <span class="eyebrow">Encuentra tu equipo</span>
-                    <h2>Equipamiento según dificultad</h2>
-                    <p>
-                        Elige una categoría para encontrar productos asociados
-                        al nivel de exigencia de tu ruta.
-                    </p>
-                </div>
+                <button type="button" data-categoria="bosque" aria-pressed="false">
+                    <span aria-hidden="true">♧</span>
+                    Bosque
+                </button>
 
-                <div class="category-grid">
+                <button type="button" data-categoria="lagos" aria-pressed="false">
+                    <span aria-hidden="true">≈</span>
+                    Lagos
+                </button>
 
-                    <a href="productos.html?dificultad=facil" class="category-card difficulty-easy">
-                        <div class="category-icon" aria-hidden="true">🥾</div>
-                        <span class="difficulty-label">Nivel</span>
-                        <h3>Fácil</h3>
-                        <p>Equipamiento para rutas de baja dificultad.</p>
-                        <span class="category-link">Ver productos <span aria-hidden="true">→</span></span>
-                    </a>
+                <button type="button" data-categoria="familia" aria-pressed="false">
+                    <span aria-hidden="true">☀</span>
+                    Familia
+                </button>
 
-                    <a href="productos.html?dificultad=media" class="category-card difficulty-medium">
-                        <div class="category-icon" aria-hidden="true">⛰️</div>
-                        <span class="difficulty-label">Nivel</span>
-                        <h3>Media</h3>
-                        <p>Equipo recomendado para rutas intermedias.</p>
-                        <span class="category-link">Ver productos <span aria-hidden="true">→</span></span>
-                    </a>
+                <button type="button" data-categoria="mascotas" aria-pressed="false">
+                    <span aria-hidden="true">🐾</span>
+                    Con mascotas
+                </button>
+            </nav>
+        </div>
 
-                    <a href="productos.html?dificultad=alta" class="category-card difficulty-hard">
-                        <div class="category-icon" aria-hidden="true">🏔️</div>
-                        <span class="difficulty-label">Nivel</span>
-                        <h3>Alta</h3>
-                        <p>Equipamiento para rutas más exigentes.</p>
-                        <span class="category-link">Ver productos <span aria-hidden="true">→</span></span>
-                    </a>
+        <!-- RUTAS DESTACADAS -->
+        <section class="rutas contenedor" id="rutas" aria-labelledby="titulo-rutas">
 
-                </div>
+            <div class="rutas-encabezado">
+                <h2 id="titulo-rutas">Rutas destacadas</h2>
 
+                <button type="button" id="ver-todas" class="enlace-texto">
+                    Ver todas las rutas
+                    <span aria-hidden="true">→</span>
+                </button>
             </div>
-        </section>
 
+            <p id="resultado-busqueda" class="resultado" role="status" hidden></p>
 
-        <!-- PRODUCTOS DESTACADOS -->
-        <section class="section featured-section">
-            <div class="container">
+            <!-- Datos de ejemplo tomados del mockup -->
+            <div class="rutas-lista">
 
-                <div class="section-heading section-heading-row">
-                    <div>
-                        <span class="eyebrow">Productos destacados</span>
-                        <h2>Equipo para comenzar tu aventura</h2>
-                        <p>
-                            Una selección inicial del catálogo de
-                            equipamiento de trekking.
-                        </p>
+                <article
+                    class="ruta"
+                    data-busqueda="Circuito Base Torres Torres del Paine Magallanes"
+                    data-categorias="montana"
+                >
+                    <div class="ruta-foto">
+                        <img
+                            src="img/portada1.jpg"
+                            alt="Circuito Base Torres"
+                            data-carrusel="img/portada1.jpg,img/base-torres-2.png"
+                        >
+                        <span class="insignia destacada">Destacada</span>
                     </div>
 
-                    <a href="productos.html" class="text-link">
-                        Ver todos los productos <span aria-hidden="true">→</span>
-                    </a>
-                </div>
+                    <div class="ruta-contenido">
+                        <p class="ubicacion">Torres del Paine</p>
+                        <h3>Circuito Base Torres</h3>
 
-                <div class="product-grid">
-
-                    <article class="product-card">
-                        <div class="product-image-wrapper">
-                            <img
-                                src="https://images.unsplash.com/photo-1622260614153-03223fb72052?auto=format&fit=crop&w=900&q=80"
-                                alt="Mochila de trekking"
-                            >
-                            <span class="difficulty-badge difficulty-badge-easy">
-                                Fácil
-                            </span>
+                        <div class="ruta-datos">
+                            <span>◷ 4 días</span>
+                            <span class="dificil">▲ Difícil</span>
+                            <span class="ruta-precio">Desde $210.000</span>
                         </div>
+                    </div>
+                </article>
 
-                        <div class="product-card-content">
-                            <span class="product-category">Equipamiento</span>
-                            <h3>Mochila Trekking</h3>
-                            <p>
-                                Mochila para recorridos y salidas de trekking.
-                            </p>
-
-                            <div class="product-footer">
-                                <span class="product-price">$39.990</span>
-                                <a href="detalle-producto.html" class="btn btn-small btn-primary">
-                                    Ver producto
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-
-                    <article class="product-card">
-                        <div class="product-image-wrapper">
-                            <img
-                                src="https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=900&q=80"
-                                alt="Carpa para trekking"
-                            >
-                            <span class="difficulty-badge difficulty-badge-medium">
-                                Media
-                            </span>
-                        </div>
-
-                        <div class="product-card-content">
-                            <span class="product-category">Equipamiento</span>
-                            <h3>Carpa de Montaña</h3>
-                            <p>
-                                Carpa pensada para aventuras de mayor duración.
-                            </p>
-
-                            <div class="product-footer">
-                                <span class="product-price">$89.990</span>
-                                <a href="detalle-producto.html" class="btn btn-small btn-primary">
-                                    Ver producto
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-
-                    <article class="product-card">
-                        <div class="product-image-wrapper">
-                            <img
-                                src="https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=900&q=80"
-                                alt="Bastones de trekking"
-                            >
-                            <span class="difficulty-badge difficulty-badge-hard">
-                                Alta
-                            </span>
-                        </div>
-
-                        <div class="product-card-content">
-                            <span class="product-category">Equipamiento</span>
-                            <h3>Bastones de Trekking</h3>
-                            <p>
-                                Mayor estabilidad para rutas exigentes.
-                            </p>
-
-                            <div class="product-footer">
-                                <span class="product-price">$29.990</span>
-                                <a href="detalle-producto.html" class="btn btn-small btn-primary">
-                                    Ver producto
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <!-- SOBRE NOSOTROS -->
-        <section class="section about-section">
-            <div class="container">
-                <div class="about-card">
-
-                    <div class="about-content">
-                        <span class="eyebrow">Sobre nosotros</span>
-                        <h2>El equipo correcto hace la diferencia.</h2>
-                        <p>
-                            Voy y Vuelvo busca facilitar la elección de
-                            equipamiento para quienes disfrutan del trekking,
-                            organizando el catálogo según la dificultad de la ruta.
-                        </p>
+                <article
+                    class="ruta"
+                    data-busqueda="Laguna del Inca Cajón del Maipo Metropolitana"
+                    data-categorias="montana lagos familia"
+                >
+                    <div class="ruta-foto">
+                        <img
+                            src="img/portada2.jpg"
+                            alt="Laguna del Inca"
+                            data-carrusel="img/portada2.jpg,img/laguna-del-inca-2.png"
+                        >
+                        <span class="insignia familiar">Familiar</span>
                     </div>
 
-                    <a href="nosotros.html" class="btn btn-primary btn-large">
-                        Conócenos
-                    </a>
+                    <div class="ruta-contenido">
+                        <p class="ubicacion">Cajón del Maipo</p>
+                        <h3>Laguna del Inca</h3>
 
-                </div>
+                        <div class="ruta-datos">
+                            <span>◷ 1 día</span>
+                            <span class="facil">▲ Fácil</span>
+                            <span class="ruta-precio">Desde $35.000</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article
+                    class="ruta"
+                    data-busqueda="Sendero Los Lirios Parque Conguillío Araucanía"
+                    data-categorias="bosque"
+                >
+                    <div class="ruta-foto">
+                        <!-- Imagen temporal hasta agregar una de bosque -->
+                        <img
+                            src="img/sendero-lirios-2.png"
+                            alt="Sendero Los Lirios"
+                            data-carrusel="img/sendero-lirios-2.png,img/bosque-familia.png"
+                        >
+                        <span class="insignia nueva">Nueva</span>
+                    </div>
+
+                    <div class="ruta-contenido">
+                        <p class="ubicacion">Parque Conguillío</p>
+                        <h3>Sendero Los Lirios</h3>
+
+                        <div class="ruta-datos">
+                            <span>◷ 2 días</span>
+                            <span class="moderada">▲ Moderada</span>
+                            <span class="ruta-precio">Desde $78.000</span>
+                        </div>
+                    </div>
+                </article>
+
             </div>
         </section>
 
-    </main>
+        <!-- EQUIPAMIENTO DESTACADO -->
+<section
+    class="equipamiento contenedor"
+    aria-labelledby="titulo-equipamiento"
+>
+    <div class="equipamiento-encabezado">
+        <div>
+            <span class="equipamiento-subtitulo">
+                Prepara tu próxima salida
+            </span>
 
+            <h2 id="titulo-equipamiento">
+                Equípate para tu aventura
+            </h2>
 
-    <!-- =========================================================
-         FOOTER
-    ========================================================== -->
-    <footer class="site-footer">
+            <p>
+                Lleva contigo lo necesario para disfrutar del camino.
+            </p>
+        </div>
 
-        <div class="container footer-grid">
+        <a href="productos.html" class="equipamiento-ver-todos">
+            Ver todo el equipamiento
+            <span aria-hidden="true">→</span>
+        </a>
+    </div>
 
-            <div class="footer-brand">
-                <a href="index.html" class="logo" aria-label="Voy y Vuelvo - Inicio">
-                    <span class="logo-mark" aria-hidden="true">🏔️</span>
-                    <span class="logo-name">Voy y Vuelvo</span>
-                </a>
+    <div class="equipamiento-lista">
+
+        <!-- MOCHILA -->
+        <article class="equipo-tarjeta">
+            <a
+                href="detalle-producto.html?id=1"
+                class="equipo-imagen"
+            >
+                <img
+                    src="img/mochila.png"
+                    alt="Mochila de trekking verde con detalles amarillos"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                >
+            </a>
+
+            <div class="equipo-contenido">
+                <span class="equipo-categoria">Mochilas</span>
+
+                <h3>
+                    <a href="detalle-producto.html?id=1">
+                        Mochila Trekking
+                    </a>
+                </h3>
 
                 <p>
-                    Equipamiento para tus aventuras de trekking.
+                    Organiza y transporta tu equipo durante tus recorridos.
                 </p>
-            </div>
 
-            <div class="footer-column">
-                <h3>Navegación</h3>
-                <a href="index.html">Inicio</a>
-                <a href="productos.html">Productos</a>
-                <a href="blogs.html">Blogs</a>
-                <a href="nosotros.html">Nosotros</a>
-                <a href="contacto.html">Contacto</a>
-            </div>
+                <div class="equipo-compra">
+                    <span class="equipo-precio">$39.990</span>
 
-            <div class="footer-column">
-                <h3>Cuenta</h3>
-                <a href="login.html">Iniciar sesión</a>
-                <a href="registro.html">Registrarse</a>
-                <a href="carrito.html">Carrito</a>
+                    <a
+                        href="detalle-producto.html?id=1"
+                        class="equipo-boton"
+                        aria-label="Ver producto: Mochila Trekking"
+                    >
+                        Ver producto
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </div>
             </div>
+        </article>
 
-            <div class="footer-column">
-                <h3>Proyecto</h3>
-                <p class="footer-note">
-                    Evaluación Parcial 1 · DSY1104
+        <!-- CARPA -->
+        <article class="equipo-tarjeta">
+            <a
+                href="detalle-producto.html?id=2"
+                class="equipo-imagen"
+            >
+                <img
+                    src="img/carpa.png"
+                    alt="Carpa de montaña verde con entrada amarilla"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                >
+            </a>
+
+            <div class="equipo-contenido">
+                <span class="equipo-categoria">Camping</span>
+
+                <h3>
+                    <a href="detalle-producto.html?id=2">
+                        Carpa de Montaña
+                    </a>
+                </h3>
+
+                <p>
+                    Prepara tu lugar de descanso para una nueva aventura.
                 </p>
-                <p class="footer-note">
-                    HTML · CSS · JavaScript
-                </p>
-            </div>
 
+                <div class="equipo-compra">
+                    <span class="equipo-precio">$89.990</span>
+
+                    <a
+                        href="detalle-producto.html?id=2"
+                        class="equipo-boton"
+                        aria-label="Ver producto: Carpa de Montaña"
+                    >
+                        Ver producto
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+
+        <!-- BASTONES -->
+        <article class="equipo-tarjeta">
+            <a
+                href="detalle-producto.html?id=3"
+                class="equipo-imagen"
+            >
+                <img
+                    src="img/bastones.png"
+                    alt="Par de bastones de trekking verdes y negros"
+                    width="600"
+                    height="600"
+                    loading="lazy"
+                >
+            </a>
+
+            <div class="equipo-contenido">
+                <span class="equipo-categoria">Accesorios</span>
+
+                <h3>
+                    <a href="detalle-producto.html?id=3">
+                        Bastones de Trekking
+                    </a>
+                </h3>
+
+                <p>
+                    Añade apoyo y estabilidad a tus caminatas.
+                </p>
+
+                <div class="equipo-compra">
+                    <span class="equipo-precio">$29.990</span>
+
+                    <a
+                        href="detalle-producto.html?id=3"
+                        class="equipo-boton"
+                        aria-label="Ver producto: Bastones de Trekking"
+                    >
+                        Ver producto
+                        <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+        </article>
+
+    </div>
+</section>
+
+        <!-- CONSEJOS DEL BLOG -->
+<section
+    class="consejos-home contenedor"
+    aria-labelledby="titulo-consejos"
+>
+    <div class="consejos-encabezado">
+        <div>
+            <span class="consejos-subtitulo">
+                Consejos para el camino
+            </span>
+
+            <h2 id="titulo-consejos">
+                Prepara tu próxima salida
+            </h2>
+
+            <p>
+                Ideas y recomendaciones para acompañar tu aventura.
+            </p>
         </div>
 
-        <div class="footer-bottom">
-            <div class="container footer-bottom-content">
-                <p>© 2026 Voy y Vuelvo. Todos los derechos reservados.</p>
+        <a href="blogs.html" class="consejos-ver-todos">
+            Visitar el blog
+            <span aria-hidden="true">→</span>
+        </a>
+    </div>
+
+    <div class="consejos-lista">
+
+        <article class="consejo-tarjeta">
+            <a
+                href="detalle-blog-1.html"
+                class="consejo-imagen"
+                aria-label="Leer: ¿Qué llevar en tu mochila de trekking?"
+            >
+                <img
+                    src="img/portada.png"
+                    alt="Excursionista con mochila frente a un paisaje de montaña"
+                    loading="lazy"
+                    width="640"
+                    height="400"
+                >
+            </a>
+
+            <div class="consejo-contenido">
+                <span class="consejo-etiqueta">Equipamiento</span>
+
+                <h3>
+                    <a href="detalle-blog-1.html">
+                        ¿Qué llevar en tu mochila de trekking?
+                    </a>
+                </h3>
+
+                <p>
+                    Prepara tu equipo y organiza lo necesario
+                    para tu próxima salida.
+                </p>
+
+                <a href="detalle-blog-1.html" class="consejo-enlace">
+                    Leer consejos
+                    <span aria-hidden="true">→</span>
+                </a>
             </div>
+        </article>
+
+        <article class="consejo-tarjeta">
+            <a
+                href="detalle-blog-2.html"
+                class="consejo-imagen"
+                aria-label="Leer: Cómo elegir tu próxima ruta"
+            >
+                <img
+                    src="img/portada2.jpg"
+                    alt="Lago rodeado de montañas"
+                    loading="lazy"
+                    width="640"
+                    height="400"
+                >
+            </a>
+
+            <div class="consejo-contenido">
+                <span class="consejo-etiqueta">Planificación</span>
+
+                <h3>
+                    <a href="detalle-blog-2.html">
+                        Cómo elegir tu próxima ruta
+                    </a>
+                </h3>
+
+                <p>
+                    Conoce qué considerar sobre la dificultad,
+                    la duración y las características del recorrido.
+                </p>
+
+                <a href="detalle-blog-2.html" class="consejo-enlace">
+                    Descubrir más
+                    <span aria-hidden="true">→</span>
+                </a>
+            </div>
+        </article>
+
+    </div>
+</section>
+    </main>
+
+<!-- PIE DE PÁGINA -->
+<footer class="pie">
+    <div class="contenedor pie-columnas">
+
+        <div class="pie-marca">
+            <a href="index.html" class="logo">
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <p>
+                Descubre nuevos caminos, prepara tu equipo
+                y disfruta de la naturaleza.
+            </p>
+
+            <span class="pie-frase">
+                Tu próxima aventura comienza aquí.
+            </span>
         </div>
 
-    </footer>
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2>
+            <a href="index.html">Inicio</a>
+            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="productos.html">Equipamiento</a>
+            <a href="blogs.html">Consejos y experiencias</a>
+        </nav>
 
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Crear una cuenta</a>
+            <a href="carrito.html">Carrito de compras</a>
+        </nav>
+
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2>
+
+            <p>
+                Escríbenos para resolver tus dudas
+                y preparar tu próxima salida.
+            </p>
+
+            <a href="contacto.html" class="boton-amarillo">
+                Contáctanos
+            </a>
+
+            <a href="nosotros.html" class="pie-nosotros">
+                Conoce nuestro equipo →
+            </a>
+        </div>
+
+    </div>
+
+    <div class="pie-inferior">
+        <div class="contenedor">
+            <p>© 2026 Voy &amp; Vuelvo.</p>
+            <p>Explora con respeto. Cuida la naturaleza.</p>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        // Esta búsqueda filtra las tarjetas de ejemplo por destino.
+        // La fecha y las personas todavía no consultan disponibilidad.
+
+        const formulario = document.getElementById("buscador");
+        const destino = document.getElementById("destino");
+        const fecha = document.getElementById("fecha");
+        const tarjetas = document.querySelectorAll(".ruta");
+        const categorias = document.querySelectorAll("[data-categoria]");
+        const resultado = document.getElementById("resultado-busqueda");
+
+        function normalizar(texto) {
+            return texto
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .toLowerCase()
+                .trim();
+        }
+
+        const hoy = new Date();
+
+        fecha.min = [
+            hoy.getFullYear(),
+            String(hoy.getMonth() + 1).padStart(2, "0"),
+            String(hoy.getDate()).padStart(2, "0")
+        ].join("-");
+
+        function limpiarCategorias() {
+            categorias.forEach(function (boton) {
+                boton.setAttribute("aria-pressed", "false");
+            });
+        }
+
+        function mostrarResultado(cantidad, aclaracion = "") {
+            resultado.hidden = false;
+            resultado.textContent =
+                `${cantidad} rutas encontradas. ${aclaracion}`;
+        }
+
+        formulario.addEventListener("submit", function (evento) {
+            evento.preventDefault();
+            limpiarCategorias();
+
+            const texto = normalizar(destino.value);
+            let cantidad = 0;
+
+            tarjetas.forEach(function (tarjeta) {
+                const coincide = normalizar(
+                    tarjeta.dataset.busqueda
+                ).includes(texto);
+
+                tarjeta.hidden = !coincide;
+
+                if (coincide) cantidad++;
+            });
+
+            mostrarResultado(
+                cantidad,
+                "La disponibilidad por fecha y personas aún no está conectada."
+            );
+
+            document.getElementById("rutas").scrollIntoView();
+        });
+
+        categorias.forEach(function (boton) {
+            boton.addEventListener("click", function () {
+                limpiarCategorias();
+                boton.setAttribute("aria-pressed", "true");
+
+                let cantidad = 0;
+
+                tarjetas.forEach(function (tarjeta) {
+                    const coincide = tarjeta.dataset.categorias
+                        .split(" ")
+                        .includes(boton.dataset.categoria);
+
+                    tarjeta.hidden = !coincide;
+
+                    if (coincide) cantidad++;
+                });
+
+                mostrarResultado(cantidad);
+            });
+        });
+
+        document.getElementById("ver-todas").addEventListener(
+            "click",
+            function () {
+                limpiarCategorias();
+                destino.value = "";
+
+                tarjetas.forEach(function (tarjeta) {
+                    tarjeta.hidden = false;
+                });
+
+                resultado.hidden = true;
+            }
+        );
+    </script>
+     <script src="js/carruseles.js"></script>
 </body>
 </html>
