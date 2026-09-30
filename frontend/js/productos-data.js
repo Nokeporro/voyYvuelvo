@@ -86,4 +86,4 @@ const productos = [
         stock: 15,
         destacado: false
     }
-];
+]
