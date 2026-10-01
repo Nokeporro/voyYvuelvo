@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Portada: presenta la tienda, accesos principales, rutas y productos destacados. -->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -44,9 +45,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html" aria-current="page">Inicio</a>
-                <a href="#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -86,6 +88,7 @@
         </div>
     </header>
 
+    <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
     <main>
 
         <!-- PORTADA FIJA -->
@@ -111,7 +114,7 @@
                         y prepara tu equipo.
                     </p>
 
-                    <a href="#rutas" class="boton-amarillo">
+                    <a href="rutas.html" class="boton-amarillo">
                         Explorar rutas
                         <span aria-hidden="true">→</span>
                     </a>
@@ -153,6 +156,7 @@
 
         <!-- CATEGORÍAS -->
         <div class="contenedor">
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="categorias" aria-label="Filtrar rutas por categoría">
                 <button type="button" data-categoria="montana" aria-pressed="false">
                     <span aria-hidden="true">♧</span>
@@ -187,10 +191,10 @@
             <div class="rutas-encabezado">
                 <h2 id="titulo-rutas">Rutas destacadas</h2>
 
-                <button type="button" id="ver-todas" class="enlace-texto">
+                <a href="rutas.html" id="ver-todas" class="enlace-texto">
                     Ver todas las rutas
                     <span aria-hidden="true">→</span>
-                </button>
+                </a>
             </div>
 
             <p id="resultado-busqueda" class="resultado" role="status" hidden></p>
@@ -198,6 +202,7 @@
             <!-- Datos de ejemplo tomados del mockup -->
             <div class="rutas-lista">
 
+                <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Circuito Base Torres». -->
                 <article
                     class="ruta"
                     data-busqueda="Circuito Base Torres Torres del Paine Magallanes"
@@ -221,9 +226,11 @@
                             <span class="dificil">▲ Difícil</span>
                             <span class="ruta-precio">Desde $210.000</span>
                         </div>
+                        <a class="ruta-reservar" href="reserva-ruta.html?ruta=1">Ver y reservar <span aria-hidden="true">→</span></a>
                     </div>
                 </article>
 
+                <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Laguna del Inca». -->
                 <article
                     class="ruta"
                     data-busqueda="Laguna del Inca Cajón del Maipo Metropolitana"
@@ -247,9 +254,11 @@
                             <span class="facil">▲ Fácil</span>
                             <span class="ruta-precio">Desde $35.000</span>
                         </div>
+                        <a class="ruta-reservar" href="reserva-ruta.html?ruta=2">Ver y reservar <span aria-hidden="true">→</span></a>
                     </div>
                 </article>
 
+                <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Sendero Los Lirios». -->
                 <article
                     class="ruta"
                     data-busqueda="Sendero Los Lirios Parque Conguillío Araucanía"
@@ -274,6 +283,7 @@
                             <span class="moderada">▲ Moderada</span>
                             <span class="ruta-precio">Desde $78.000</span>
                         </div>
+                        <a class="ruta-reservar" href="reserva-ruta.html?ruta=3">Ver y reservar <span aria-hidden="true">→</span></a>
                     </div>
                 </article>
 
@@ -468,6 +478,7 @@
 
     <div class="consejos-lista">
 
+        <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «¿Qué llevar en tu mochila de trekking?». -->
         <article class="consejo-tarjeta">
             <a
                 href="detalle-blog-1.html"
@@ -504,6 +515,7 @@
             </div>
         </article>
 
+        <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Cómo elegir tu próxima ruta». -->
         <article class="consejo-tarjeta">
             <a
                 href="detalle-blog-2.html"
@@ -545,7 +557,8 @@
     </main>
 
 <!-- PIE DE PÁGINA -->
-<footer class="pie">
+<!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -563,14 +576,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>
@@ -605,6 +620,7 @@
     </div>
 </footer>
 
+    <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
     <script>
         // Esta búsqueda filtra las tarjetas de ejemplo por destino.
         // La fecha y las personas todavía no consultan disponibilidad.
@@ -704,6 +720,7 @@
             }
         );
     </script>
+     <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
      <script src="js/carruseles.js"></script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Añade controles accesibles y movimiento automático a las fotos de las rutas. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 // Carruseles independientes para las tarjetas de rutas.
 document.querySelectorAll("img[data-carrusel]").forEach((imagen) => {
     const contenedor = imagen.closest(".ruta-foto");
@@ -27,7 +28,8 @@ document.querySelectorAll("img[data-carrusel]").forEach((imagen) => {
         `Galería de ${nombreRuta}`
     );
 
-    function crearBoton(clase, texto, etiqueta) {
+    // Crea un botón accesible del carrusel con texto visible y nombre para tecnologías de asistencia.
+  function crearBoton(clase, texto, etiqueta) {
         const boton = document.createElement("button");
 
         boton.type = "button";
@@ -62,7 +64,8 @@ document.querySelectorAll("img[data-carrusel]").forEach((imagen) => {
 
     contenedor.append(anterior, siguiente, contador, pausa);
 
-    function mostrarImagen(nuevoIndice) {
+    // Cambia la fotografía visible y sincroniza el indicador de posición del carrusel.
+  function mostrarImagen(nuevoIndice) {
         indice = (nuevoIndice + fotos.length) % fotos.length;
 
         imagen.src = fotos[indice];
@@ -72,7 +75,8 @@ document.querySelectorAll("img[data-carrusel]").forEach((imagen) => {
         contador.textContent = `${indice + 1} / ${fotos.length}`;
     }
 
-    function actualizarBotonPausa() {
+    // Actualiza el texto y el nombre accesible para indicar si el carrusel está pausado o en movimiento.
+  function actualizarBotonPausa() {
         pausa.textContent = pausado ? "Reanudar" : "Pausar";
         pausa.setAttribute(
             "aria-label",
@@ -80,12 +84,14 @@ document.querySelectorAll("img[data-carrusel]").forEach((imagen) => {
         );
     }
 
-    function detener() {
+    // Cancela el temporizador automático para detener el cambio de fotografías.
+  function detener() {
         window.clearInterval(temporizador);
         temporizador = null;
     }
 
-    function iniciar() {
+    // Inicia el cambio automático de fotos cuando las preferencias y la interacción de la persona lo permiten.
+  function iniciar() {
         detener();
 
         // No cambia imágenes mientras alguien usa los controles,

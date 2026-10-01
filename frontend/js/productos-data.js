@@ -1,6 +1,8 @@
+/* GUÍA DE LECTURA: Define el catálogo de ejemplo que utilizan las páginas de productos y carrito. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 // Catálogo de ejemplo de Voy & Vuelvo.
 // Los precios están expresados en pesos chilenos.
 
+// Cada producto es un objeto: id lo identifica; nombre y descripción explican qué es; precio e imagen alimentan la ficha; categoría y dificultad ayudan a clasificarlo; stock limita la compra; destacado indica si aparece en portada.
 const productos = [
     {
         id: 1,

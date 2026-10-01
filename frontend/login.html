@@ -6,7 +6,6 @@
   <meta name="description" content="Inicia sesión en Voy y Vuelvo para continuar con tu equipo de trekking.">
   <title>Iniciar sesión | Voy y Vuelvo</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/tema-compartido.css">
 </head>
 <body class="pagina-unificada">
   <div class="inicio marco-compartido"><header class="encabezado">
@@ -36,9 +35,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -77,9 +77,11 @@
 
         </div>
     </header></div>
-  <main class="account-page"><section class="account-card" aria-labelledby="page-title">
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="account-page"><section class="account-card" aria-labelledby="page-title">
     <div class="account-visual"><span class="eyebrow">Tu próxima aventura</span><h1>El camino empieza contigo.</h1><p>Ingresa a tu cuenta para seguir equipándote para la ruta.</p></div>
     <div class="account-form-wrap"><span class="eyebrow">Qué bueno verte</span><h2 id="page-title">Iniciar sesión</h2><p class="form-intro">Accede con el correo y la contraseña de tu cuenta.</p>
+      <!-- Formulario: Este formulario agrupa los campos de acceso; JavaScript valida su formato antes de mostrar el resultado. -->
       <form id="login-form" novalidate>
         <div class="form-field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" maxlength="100" required aria-describedby="correo-error"><small class="field-error" id="correo-error" aria-live="polite"></small></div>
         <div class="form-field"><label for="contrasena">Contraseña</label><div class="password-field"><input id="contrasena" name="contrasena" type="password" autocomplete="current-password" minlength="4" maxlength="10" required aria-describedby="contrasena-error"><button class="password-toggle" type="button" data-toggle-password="contrasena" aria-label="Mostrar contraseña">Mostrar</button></div><small class="field-error" id="contrasena-error" aria-live="polite"></small></div>
@@ -90,7 +92,8 @@
       <p class="demo-note">Esta entrega valida el formulario en el navegador. La autenticación se conectará en una etapa posterior.</p>
     </div>
   </section></main>
-  <div class="inicio marco-compartido"><footer class="pie">
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -108,14 +111,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>
@@ -149,6 +154,7 @@
         </div>
     </div>
 </footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/validaciones-login.js" defer></script>
 </body>
 </html>

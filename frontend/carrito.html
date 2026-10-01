@@ -4,8 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Carrito | Voy &amp; Vuelvo</title><link rel="stylesheet" href="css/styles.css">
+    <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
     <script src="js/productos-data.js" defer></script>
+    <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
     <script src="js/carrito.js" defer></script>
+    <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
     <script src="js/carrito-vista.js" defer></script>
     </head>
     <body class="inicio"><header class="encabezado">
@@ -35,9 +38,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -75,7 +79,9 @@
             </div>
 
         </div>
-    </header><main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / Carrito</p><h1>Tu carrito de compras</h1><p class="introduccion">Revisa tu equipo antes de tu próxima aventura.</p><p id="mensaje" role="status" aria-live="polite"></p><section id="vacio" class="panel vacio" hidden><h2>Tu carrito está vacío</h2><p>Encuentra el equipo para tu próxima salida.</p><a class="boton-amarillo" href="productos.html">Explorar productos</a></section><div id="carrito-contenido" class="compra-grid" hidden><section aria-label="Productos en tu carrito"><div id="lista-carrito"></div><a class="seguir" href="productos.html">← Seguir comprando</a><button id="vaciar" class="secundario" type="button">Vaciar carrito</button></section><aside class="panel resumen"><h2>Resumen de compra</h2><p class="fila"><span>Unidades</span><strong id="unidades"></strong></p><p class="fila"><span>Subtotal</span><strong id="subtotal"></strong></p><p class="fila total"><span>Total de productos</span><strong id="total"></strong></p><p class="nota">El pago y los costos de entrega aún no están disponibles en esta versión.</p><button class="boton-amarillo" disabled>Pago próximamente</button></aside></div></main><footer class="pie">
+    </header><!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / Carrito</p><h1>Tu carrito de compras</h1><p class="introduccion">Revisa tu equipo antes de tu próxima aventura.</p><p id="mensaje" role="status" aria-live="polite"></p><section id="vacio" class="panel vacio" hidden><h2>Tu carrito está vacío</h2><p>Encuentra el equipo para tu próxima salida.</p><a class="boton-amarillo" href="productos.html">Explorar productos</a></section><div id="carrito-contenido" class="compra-grid" hidden><section aria-label="Productos en tu carrito"><div id="lista-carrito"></div><a class="seguir" href="productos.html">← Seguir comprando</a><button id="vaciar" class="secundario" type="button">Vaciar carrito</button></section><aside class="panel resumen"><h2>Resumen de compra</h2><p class="fila"><span>Unidades</span><strong id="unidades"></strong></p><p class="fila"><span>Subtotal</span><strong id="subtotal"></strong></p><p class="fila total"><span>Total de productos</span><strong id="total"></strong></p><p class="nota">El pago y los costos de entrega aún no están disponibles en esta versión.</p><button class="boton-amarillo" disabled>Pago próximamente</button></aside></div></main><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -93,14 +99,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>

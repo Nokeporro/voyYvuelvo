@@ -2,12 +2,14 @@ package com.voy.velvo.ms_reserva.service;
 
 
 import com.voy.velvo.ms_reserva.client.PagoClient;
+import com.voy.velvo.ms_reserva.client.EquipamientoClient;
 
 import com.voy.velvo.ms_reserva.client.RutaClient;
 import com.voy.velvo.ms_reserva.client.UsuarioClient;
 import com.voy.velvo.ms_reserva.exception.CuposInsuficientesException;
 import com.voy.velvo.ms_reserva.exception.RecursoDuplicadoException;
 import com.voy.velvo.ms_reserva.model.Dto.PagoDTO;
+import com.voy.velvo.ms_reserva.model.Dto.EquipamientoDTO;
 
 import com.voy.velvo.ms_reserva.model.Dto.RutaDTO;
 import com.voy.velvo.ms_reserva.model.Dto.UsuarioDTO;
@@ -28,6 +30,7 @@ public class ReservaService {
     private final PagoClient pagoClient;
     private final UsuarioClient usuarioClient;
     private final RutaClient rutaClient;
+    private final EquipamientoClient equipamientoClient;
 
 
 
@@ -67,21 +70,38 @@ public class ReservaService {
                     "No hay cupos suficientes para esta ruta.");
         }
 
-        // 5. DESCONTAR CUPOS EN MS-RUTA
+        // 5. VALIDAR EQUIPAMIENTO Y CALCULAR TOTAL ANTES DE MODIFICAR CUPOS
+        Double totalAPagar = ruta.getPrecio() * reserva.getCantidadPersonas();
+
+        if (reserva.getEquipamientos() != null) {
+            for (var item : reserva.getEquipamientos()) {
+                EquipamientoDTO equipo;
+                try {
+                    equipo = equipamientoClient.obtenerPorId(item.getEquipamientoId());
+                } catch (Exception e) {
+                    throw new RecursoNoEncontradoException(
+                            "El equipamiento con ID " + item.getEquipamientoId() + " no existe.");
+                }
+
+                if (!equipo.isDisponible()) {
+                    throw new RecursoNoEncontradoException(
+                            "El equipamiento " + equipo.getNombre() + " no está disponible para arriendo.");
+                }
+
+                totalAPagar += (double) equipo.getValorArriendo() * item.getCantidad();
+            }
+        }
+
+        // 6. DESCONTAR CUPOS EN MS-RUTA
         rutaClient.descontarCupos(
                 reserva.getRutaId(),
                 reserva.getCantidadPersonas());
 
-        // 6. ESTABLECER ESTADO INICIAL DE LA RESERVA
+        // 7. ESTABLECER ESTADO INICIAL Y GUARDAR LA RESERVA
         reserva.setEstadoPago("PENDIENTE");
-
-        // 7. GUARDAR LA RESERVA
         Reserva reservaGuardada = reservaRepository.save(reserva);
 
-        // 8. CALCULAR EL TOTAL A PAGAR
-        Double totalAPagar = ruta.getPrecio() * reserva.getCantidadPersonas();
-
-        // 9. CREAR EL PAGO
+        // 8. CREAR EL PAGO
         PagoDTO pagoParaEnviar = new PagoDTO();
         pagoParaEnviar.setIdReserva(reservaGuardada.getId());
         pagoParaEnviar.setMonto(totalAPagar);
@@ -90,7 +110,7 @@ public class ReservaService {
 
         pagoClient.crearPagoInterno(pagoParaEnviar);
 
-        // 10. ACTUALIZAR EL ESTADO DE LA RESERVA
+        // 9. ACTUALIZAR EL ESTADO DE LA RESERVA
         reservaGuardada.setEstadoPago("PROCESANDO");
 
         return reservaRepository.save(reservaGuardada);
@@ -123,6 +143,7 @@ public class ReservaService {
         reservaExistente.setCantidadPersonas(detallesNuevos.getCantidadPersonas());
         reservaExistente.setFechaReserva(detallesNuevos.getFechaReserva());
         reservaExistente.setNecesitaGuia(detallesNuevos.getNecesitaGuia());
+        reservaExistente.setEquipamientos(detallesNuevos.getEquipamientos());
         // No actualizamos el ID ni el usuarioId por seguridad
         return reservaRepository.save(reservaExistente);
     }

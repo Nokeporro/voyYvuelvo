@@ -1,4 +1,6 @@
+/* GUÍA DE LECTURA: Proporciona las regiones y comunas que comparten los formularios. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 /* Catálogo de regiones y comunas usado por el formulario de registro. */
+// Cada objeto representa una región y su arreglo comunas contiene las localidades que se ofrecen en el selector dependiente.
 window.REGIONES_COMUNAS = [
   { region: "Arica y Parinacota", comunas: ["Arica", "Camarones", "Putre", "General Lagos"] },
   { region: "Tarapacá", comunas: ["Iquique", "Alto Hospicio", "Pozo Almonte", "Pica", "Huara"] },

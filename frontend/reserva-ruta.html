@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Reserva: recoge fecha y participantes, permite elegir equipo y confirma con el backend. -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservar ruta | Voy &amp; Vuelvo</title>
+  <meta name="description" content="Reserva tu ruta de trekking y agrega el equipamiento que necesites para tu salida.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+    <div class="contenedor encabezado-interior">
+      <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+        <svg width="43" height="38" viewBox="0 0 48 40" fill="none" aria-hidden="true"><path d="M3 35 18 8 25 20 31 5 46 35Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path><path d="m12 19 6 3 4-5M25 17l6 5 5-6" stroke="currentColor" stroke-width="2"></path></svg>
+        <span>Voy <b>&amp;</b> Vuelvo</span>
+      </a>
+      <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+      <nav class="menu" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a><a href="rutas.html" aria-current="page">Rutas</a><a href="productos.html">Productos</a><a href="blogs.html">Blogs</a><a href="nosotros.html">Nosotros</a><a href="contacto.html">Contacto</a>
+      </nav>
+      <div class="cuenta"><a href="login.html">Iniciar sesión</a><a href="registro.html">Registrarse</a><a href="carrito.html" class="carrito" aria-label="Ver carrito de compras"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 12h11l3-9H6"></path><circle cx="9" cy="20" r="1"></circle><circle cx="19" cy="20" r="1"></circle></svg><span>Carrito</span><span id="contador-carrito" class="contador">0</span></a></div>
+    </div>
+  </header></div>
+
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor reserva-ruta-page">
+    <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+    <nav class="migas" aria-label="Ruta de navegación">
+      <ol><li><a href="index.html">Inicio</a></li><li><a href="rutas.html">Rutas</a></li><li aria-current="page">Reservar ruta</li></ol>
+    </nav>
+
+    <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Cargando ruta…». -->
+    <section class="reserva-hero" aria-labelledby="titulo-ruta">
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Cargando ruta…». -->
+      <article class="reserva-ruta-info">
+        <div class="reserva-ruta-imagen"><img id="ruta-imagen" src="img/portada1.jpg" alt="Ruta de trekking seleccionada"></div>
+        <div class="reserva-ruta-contenido">
+          <span class="rutas-kicker">Tu próxima salida</span>
+          <h1 id="titulo-ruta">Cargando ruta…</h1>
+          <p id="ruta-ubicacion" class="ruta-card__lugar"></p>
+          <p id="ruta-descripcion">Selecciona la fecha, la cantidad de personas y el equipamiento que necesites.</p>
+          <div class="reserva-ruta-meta">
+            <span id="ruta-duracion">Duración</span><span id="ruta-dificultad">Dificultad</span><span id="ruta-cupos">Cupos</span><span id="ruta-apto"></span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Reserva tu ruta». -->
+      <section class="reserva-panel" aria-labelledby="titulo-reserva">
+        <h2 id="titulo-reserva">Reserva tu ruta</h2>
+        <p class="reserva-panel-intro">Completa los datos de contacto y arma tu salida. El valor del equipamiento se suma al total de la reserva.</p>
+        <!-- Formulario: Este formulario reúne los datos de la reserva, sus opciones y el botón para enviarla al backend. -->
+        <form id="form-reserva" novalidate>
+          <div class="reserva-grid">
+            <div class="form-field form-field-full"><label for="nombre">Nombre y apellido</label><input id="nombre" name="nombre" type="text" maxlength="100" required autocomplete="name"></div>
+            <div class="form-field"><label for="email">Correo</label><input id="email" name="email" type="email" maxlength="100" required autocomplete="email"></div>
+            <div class="form-field"><label for="telefono">Teléfono</label><input id="telefono" name="telefono" type="tel" maxlength="20" required autocomplete="tel" placeholder="+56 9 1234 5678"></div>
+            <div class="form-field"><label for="fecha">Fecha de salida</label><input id="fecha" name="fecha" type="date" required></div>
+            <div class="form-field"><label for="personas">Personas</label><input id="personas" name="personas" type="number" min="1" value="1" required></div>
+            <div class="form-field form-field-full">
+              <div class="reserva-check"><input id="guia" name="guia" type="checkbox"><label for="guia">Necesito guía para esta ruta</label></div>
+            </div>
+          </div>
+
+          <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «¿Te falta equipamiento?». -->
+          <section class="equipamiento-reserva" aria-labelledby="titulo-equipo">
+            <div class="equipamiento-reserva__encabezado"><div><h2 id="titulo-equipo">¿Te falta equipamiento?</h2><p>Agrega solo lo que necesites para esta salida.</p></div></div>
+            <div id="equipamiento-opciones" class="equipamiento-opciones" aria-live="polite"><p>Cargando equipamiento recomendado…</p></div>
+          </section>
+
+          <div class="reserva-resumen" aria-label="Resumen de la reserva">
+            <div class="fila-resumen"><span>Ruta</span><strong id="resumen-ruta">$0</strong></div>
+            <div class="fila-resumen"><span>Equipamiento</span><strong id="resumen-equipo">$0</strong></div>
+            <div class="fila-resumen total-reserva"><span>Total estimado</span><strong id="resumen-total">$0</strong></div>
+          </div>
+
+          <button class="btn-reservar" type="submit">Confirmar reserva</button>
+          <div id="reserva-feedback" class="reserva-feedback" role="status" aria-live="polite"></div>
+          <p class="reserva-nota">La reserva se registra mediante los microservicios de Usuario, Ruta, Equipamiento, Reserva y Pago cuando el backend está ejecutándose en el Gateway (puerto 8080).</p>
+        </form>
+      </section>
+    </section>
+  </main>
+
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
+    <div class="contenedor pie-columnas">
+      <div class="pie-marca"><a href="index.html" class="logo"><span>Voy <b>&amp;</b> Vuelvo</span></a><p>Descubre nuevos caminos, prepara tu equipo y disfruta de la naturaleza.</p><span class="pie-frase">Tu próxima aventura comienza aquí.</span></div>
+      <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+      <nav class="pie-enlaces" aria-label="Explorar el sitio"><h2>Explora</h2><a href="index.html">Inicio</a><a href="rutas.html">Rutas</a><a href="productos.html">Equipamiento</a><a href="blogs.html">Consejos y experiencias</a></nav>
+      <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+      <nav class="pie-enlaces" aria-label="Accesos de cuenta"><h2>Tu cuenta</h2><a href="login.html">Iniciar sesión</a><a href="registro.html">Crear una cuenta</a><a href="carrito.html">Carrito de compras</a></nav>
+      <div class="pie-ayuda"><h2>¿Te ayudamos?</h2><p>Escríbenos para resolver tus dudas y preparar tu próxima salida.</p><a href="contacto.html" class="boton-amarillo">Contáctanos</a><a href="nosotros.html" class="pie-nosotros">Conoce nuestro equipo →</a></div>
+    </div>
+    <div class="pie-inferior"><div class="contenedor"><p>© 2026 Voy &amp; Vuelvo.</p><p>Explora con respeto. Cuida la naturaleza.</p></div></div>
+  </footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script src="js/productos-data.js"></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script src="js/carrito.js"></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script src="js/reserva-ruta.js" defer></script>
+</body>
+</html>

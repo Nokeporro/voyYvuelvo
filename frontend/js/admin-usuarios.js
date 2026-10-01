@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Valida y guarda los formularios de alta y edición de usuarios del panel. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 /* ==========================================================
    admin-usuarios.js
    Formulario de usuario del administrador (nuevo y editar).
@@ -21,6 +22,7 @@
      (módulo 11). Por eso la verificación matemática queda desactivada por defecto.
      Cambiar a true si el docente pide validar el dígito verificador real. */
   var VALIDAR_DIGITO_VERIFICADOR = false;
+  // Calcula el dígito verificador RUN con el algoritmo módulo 11; la opción que lo aplica se controla en VALIDAR_DIGITO_VERIFICADOR.
   function dvEsperado(cuerpo) {
     var suma = 0, factor = 2;
     for (var i = cuerpo.length - 1; i >= 0; i--) {
@@ -106,6 +108,7 @@
     }
   };
 
+  // Aplica la regla del campo indicado, comunica el error a lectores de pantalla y marca visualmente el campo si corresponde.
   function validar(id, tocar) {
     var msg = reglas[id](f[id].value);
     document.getElementById("error-" + id).textContent = msg;
@@ -115,11 +118,13 @@
   }
 
   /* ---------- Región → comunas ---------- */
+  // Llena el selector de regiones a partir del catálogo compartido de regiones y comunas.
   function cargarRegiones() {
     REGIONES_COMUNAS.forEach(function (r) {
       var o = document.createElement("option"); o.value = r.nombre; o.textContent = r.nombre; f.region.appendChild(o);
     });
   }
+  // Muestra solo las comunas de la región elegida y opcionalmente restaura la comuna al editar.
   function cargarComunas(comunaSeleccionada) {
     f.comuna.textContent = "";
     var base = document.createElement("option");

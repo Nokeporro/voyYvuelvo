@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Nuevo usuario: recoge datos personales y perfil para crear una cuenta de demostración. -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -8,18 +9,20 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
-<body data-pagina="usuario-nuevo" data-modo="nuevo" data-solo-admin="true">
+<body class="admin-page" data-pagina="usuario-nuevo" data-modo="nuevo" data-solo-admin="true">
   <div class="admin">
     <div class="admin__top">
       <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
       <button class="admin__toggle" type="button" id="btn-menu" aria-expanded="false" aria-controls="sidebar">Menú</button>
     </div>
+    <!-- Estructura HTML: Contenido complementario relacionado con la sección que lo rodea. -->
     <aside class="sidebar" id="sidebar" aria-label="Menú del panel">
       <div>
         <a class="sidebar__marca" href="index.html"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
         <p class="sidebar__rol">Panel de <strong data-sesion-rol>Administrador</strong></p>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav aria-label="Secciones">
       <ul>
         <li><a class="enlace" href="index.html">Inicio</a></li>
@@ -34,10 +37,13 @@
         <button class="btn btn--borde btn--sm" type="button" id="btn-salir">Cerrar sesión</button>
       </div>
     </aside>
+    <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
     <main class="contenido">
       <div class="contenido__cab"><h1>Nuevo usuario</h1></div>
       <div class="alerta alerta--error" id="alerta-form" role="alert" hidden></div>
+      <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. -->
       <section class="tarjeta">
+      <!-- Formulario: Este formulario recoge los datos y el rol de un usuario nuevo del panel de demostración. -->
       <form class="form" id="form-usuario" novalidate aria-label="Nuevo usuario">
         <p class="ayuda ayuda--nota">Los campos con <span class="req">*</span> son obligatorios.</p>
         <div class="form__grid">
@@ -131,8 +137,11 @@
       </section>
     </main>
   </div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="../js/admin.js"></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="../js/regiones-comunas.js"></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="../js/admin-usuarios.js"></script>
 </body>
 </html>

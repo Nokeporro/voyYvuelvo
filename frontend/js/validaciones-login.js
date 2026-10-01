@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Valida los datos del formulario de inicio de sesión; no autentica con un servidor. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 (() => {
   const form = document.querySelector("#login-form");
   if (!form) return;
@@ -7,6 +8,7 @@
   const feedback = document.querySelector("#login-feedback");
   const allowedDomains = ["duoc.cl", "profesor.duoc.cl", "gmail.com"];
 
+  // Comprueba que el correo tenga formato válido, longitud permitida y uno de los dominios aceptados.
   function validateEmail() {
     const value = email.value.trim();
     let message = "";
@@ -20,6 +22,7 @@
     return showField(email, "correo-error", message);
   }
 
+  // Exige una contraseña de entre 4 y 10 caracteres.
   function validatePassword() {
     const value = password.value;
     let message = "";
@@ -28,6 +31,7 @@
     return showField(password, "contrasena-error", message);
   }
 
+  // Actualiza el mensaje de error y el estado accesible del campo validado.
   function showField(input, errorId, message) {
     const error = document.getElementById(errorId);
     error.textContent = message;
@@ -35,6 +39,7 @@
     return !message;
   }
 
+  // Conecta los botones que permiten mostrar u ocultar la contraseña escrita.
   function showPasswordToggle() {
     form.querySelectorAll("[data-toggle-password]").forEach((button) => {
       button.addEventListener("click", () => {
@@ -53,6 +58,7 @@
   password.addEventListener("blur", validatePassword);
   showPasswordToggle();
 
+// Detiene el envío normal del navegador, valida ambos campos y muestra si el formato está correcto; aquí no se consulta una cuenta real.
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     feedback.className = "form-feedback";

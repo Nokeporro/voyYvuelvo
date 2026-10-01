@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Valida los campos de registro; comprueba el RUN y las opciones de región/comuna. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 (() => {
   const form = document.querySelector("#registro-form");
   if (!form) return;
@@ -16,6 +17,7 @@
   const allowedDomains = ["duoc.cl", "profesor.duoc.cl", "gmail.com"];
   const maxLengths = { nombre: 50, apellidos: 100, correo: 100, direccion: 300 };
 
+// Guarda referencias a los selectores para poblar comunas según la región escogida.
   const regionSelect = fields.region;
   const communeSelect = fields.comuna;
   (window.REGIONES_COMUNAS || []).forEach(({ region }) => {
@@ -25,6 +27,7 @@
     regionSelect.append(option);
   });
 
+// Cuando cambia la región, reemplaza las opciones de comuna por las correspondientes.
   regionSelect.addEventListener("change", () => {
     communeSelect.replaceChildren(new Option("Selecciona una comuna", ""));
     const selected = window.REGIONES_COMUNAS?.find(({ region }) => region === regionSelect.value);
@@ -34,6 +37,7 @@
     validate("comuna");
   });
 
+  // Verifica el formato y el dígito verificador chileno del RUN mediante módulo 11.
   function isValidRun(value) {
     const run = value.trim().toUpperCase();
     if (!/^\d{6,8}[0-9K]$/.test(run)) return false;
@@ -49,6 +53,7 @@
     return run.endsWith(expected);
   }
 
+  // Devuelve un mensaje vacío si el correo cumple las reglas o una explicación del problema.
   function emailMessage(value) {
     if (!value) return "El correo es obligatorio.";
     if (value.length > 100) return "El correo no puede superar los 100 caracteres.";
@@ -58,6 +63,7 @@
     return "";
   }
 
+  // Valida el campo solicitado y actualiza el mensaje y el estado accesible de ese campo.
   function validate(name) {
     const input = fields[name];
     const value = input.value.trim();
@@ -104,6 +110,7 @@
     });
   });
 
+// Detiene el envío normal, valida todos los campos y muestra el resultado de la validación.
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     feedback.className = "form-feedback";

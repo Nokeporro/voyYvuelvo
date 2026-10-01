@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Catálogo: muestra los productos y permite explorar el equipamiento disponible. -->
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -47,9 +48,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html" aria-current="page">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -89,8 +91,10 @@
         </div>
     </header>
 
+    <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
     <main class="catalogo contenedor">
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="catalogo-migas" aria-label="Ubicación en el sitio">
             <a href="index.html">Inicio</a>
             <span aria-hidden="true">/</span>
@@ -166,7 +170,8 @@
     </main>
 
     <!-- PIE DE PÁGINA -->
-    <footer class="pie">
+    <!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
         <div class="contenedor pie-columnas">
 
             <div class="pie-marca">
@@ -184,14 +189,16 @@
                 </span>
             </div>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="pie-enlaces" aria-label="Explorar el sitio">
                 <h2>Explora</h2>
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas destacadas</a>
+                <a href="rutas.html">Rutas destacadas</a>
                 <a href="productos.html">Equipamiento</a>
                 <a href="blogs.html">Consejos y experiencias</a>
             </nav>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="pie-enlaces" aria-label="Accesos de cuenta">
                 <h2>Tu cuenta</h2>
                 <a href="login.html">Iniciar sesión</a>
@@ -228,6 +235,7 @@
 
     <!-- Plantilla reutilizable para cada producto -->
     <template id="plantilla-producto">
+        <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. -->
         <article class="equipo-tarjeta">
             <a class="equipo-imagen">
                 <img width="600" height="600" loading="lazy" alt="">
@@ -254,6 +262,7 @@
         </article>
     </template>
 
+    <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
     <script>
         const lista = document.getElementById("lista-catalogo");
         const plantilla = document.getElementById("plantilla-producto");

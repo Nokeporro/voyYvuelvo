@@ -6,7 +6,9 @@
         <title>Detalle de producto | Voy &amp; Vuelvo</title>
         <link rel="stylesheet" href="css/styles.css">
        
+        <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
         <script src="js/productos-data.js" defer></script>
+        <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
         <script src="js/carrito.js" defer></script><script src="js/detalle-producto.js" defer></script>
     </head><body class="inicio"><header class="encabezado">
         <div class="contenedor encabezado-interior">
@@ -35,9 +37,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -75,7 +78,10 @@
             </div>
 
         </div>
-    </header><main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / <a href="productos.html">Productos</a> / Detalle</p><section id="no-encontrado" class="panel vacio" hidden><h1>Producto no encontrado</h1><p>Vuelve al catálogo para elegir un equipo.</p><a class="boton-amarillo" href="productos.html">Ver productos</a></section><section id="detalle" class="detalle-grid" hidden><div class="foto-producto"><img id="imagen" alt=""></div><div class="detalle-info"><p id="categoria" class="etiqueta"></p><h1 id="nombre"></h1><p id="descripcion"></p><p id="precio" class="precio-grande"></p><p id="stock"></p><p id="dificultad" class="nota"></p><form id="agregar-form"><label for="cantidad">Cantidad</label><input id="cantidad" type="number" min="1" step="1" value="1" required><button id="agregar" class="boton-amarillo" type="submit">Agregar al carrito</button></form><p id="mensaje" role="status" aria-live="polite"></p><a class="secundario" href="carrito.html">Ver mi carrito</a><a class="seguir" href="productos.html">← Volver al catálogo</a></div></section></main><footer class="pie">
+    </header><!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / <a href="productos.html">Productos</a> / Detalle</p><section id="no-encontrado" class="panel vacio" hidden><h1>Producto no encontrado</h1><p>Vuelve al catálogo para elegir un equipo.</p><a class="boton-amarillo" href="productos.html">Ver productos</a></section><section id="detalle" class="detalle-grid" hidden><div class="foto-producto"><img id="imagen" alt=""></div><div class="detalle-info"><p id="categoria" class="etiqueta"></p><h1 id="nombre"></h1><p id="descripcion"></p><p id="precio" class="precio-grande"></p><p id="stock"></p><p id="dificultad" class="nota"></p><!-- Formulario: Este formulario permite elegir cuántas unidades agregar del producto mostrado. -->
+    <main class="contenedor compra"><p class="migas"><a href="index.html">Inicio</a> / <a href="productos.html">Productos</a> / Detalle</p><section id="no-encontrado" class="panel vacio" hidden><h1>Producto no encontrado</h1><p>Vuelve al catálogo para elegir un equipo.</p><a class="boton-amarillo" href="productos.html">Ver productos</a></section><section id="detalle" class="detalle-grid" hidden><div class="foto-producto"><img id="imagen" alt=""></div><div class="detalle-info"><p id="categoria" class="etiqueta"></p><h1 id="nombre"></h1><p id="descripcion"></p><p id="precio" class="precio-grande"></p><p id="stock"></p><p id="dificultad" class="nota"></p><form id="agregar-form"><label for="cantidad">Cantidad</label><input id="cantidad" type="number" min="1" step="1" value="1" required><button id="agregar" class="boton-amarillo" type="submit">Agregar al carrito</button></form><p id="mensaje" role="status" aria-live="polite"></p><a class="secundario" href="carrito.html">Ver mi carrito</a><a class="seguir" href="productos.html">← Volver al catálogo</a></div></section></main><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -93,14 +99,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>

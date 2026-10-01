@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Blog: lista artículos informativos y enlaces a sus páginas de detalle. -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -6,7 +7,6 @@
   <title>Blogs | Voy &amp; Vuelvo</title>
   <meta name="description" content="Noticias, datos curiosos y consejos de trekking.">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/tema-compartido.css">
 </head>
 <body class="pagina-unificada">
   <div class="inicio marco-compartido"><header class="encabezado">
@@ -36,9 +36,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html" aria-current="page">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -77,13 +78,16 @@
 
         </div>
     </header></div>
-  <main class="contenedor">
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor">
+    <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Noticias importantes». -->
     <section aria-labelledby="titulo-blog">
       <div class="pagina-titulo">
         <h1 id="titulo-blog">Noticias importantes</h1>
         <p>Datos curiosos y consejos para preparar tu próxima ruta.</p>
       </div>
       <div class="blog-lista">
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia». -->
       <article class="blog-caso" aria-labelledby="caso-1">
         <div class="blog-caso__media">
           <img src="img/montana-sendero.png" alt="Persona con mochila caminando por un sendero de alta montaña con viento" loading="lazy" width="800" height="500">
@@ -96,6 +100,7 @@
           <a class="btn btn--accion" href="detalle-blog-1.html">Ver caso<span class="sr">: Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</span></a>
         </div>
       </article>
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Tu primera ruta de un día: qué llevar en la mochila». -->
       <article class="blog-caso" aria-labelledby="caso-2">
         <div class="blog-caso__media">
           <img src="img/bosque-familia.png" alt="Sendero de bosque con luz de la tarde y una persona caminando" loading="lazy" width="800" height="500">
@@ -111,7 +116,8 @@
       </div>
     </section>
   </main>
-  <div class="inicio marco-compartido"><footer class="pie">
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -129,14 +135,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>
@@ -170,6 +178,7 @@
         </div>
     </div>
 </footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/menu.js" defer></script>
 </body>
 </html>

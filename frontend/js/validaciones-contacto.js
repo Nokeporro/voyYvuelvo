@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Valida el formulario de contacto y presenta errores antes de enviarlo. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 (() => {
   const form = document.querySelector("#contacto-form");
   if (!form) return;
@@ -9,12 +10,14 @@
   const counter = document.querySelector("#comentario-count");
   const allowedDomains = ["duoc.cl", "profesor.duoc.cl", "gmail.com"];
 
+  // Muestra o limpia el error del campo y actualiza su estado accesible aria-invalid.
   function setError(input, message) {
     document.getElementById(`${input.name}-error`).textContent = message;
     input.setAttribute("aria-invalid", String(Boolean(message)));
     return !message;
   }
 
+  // Exige un nombre y comprueba que no supere el máximo permitido.
   function validateName() {
     const value = name.value.trim();
     let error = "";
@@ -23,6 +26,7 @@
     return setError(name, error);
   }
 
+  // Comprueba formato, longitud y dominio permitido del correo electrónico.
   function validateEmail() {
     const value = email.value.trim();
     let error = "";
@@ -36,6 +40,7 @@
     return setError(email, error);
   }
 
+  // Valida el comentario y mantiene actualizado su contador de caracteres.
   function validateComment() {
     const value = comment.value.trim();
     let error = "";
@@ -53,6 +58,7 @@
   comment.addEventListener("input", validateComment);
   comment.addEventListener("blur", validateComment);
 
+// Detiene el envío normal, comprueba los tres campos y presenta el mensaje; el formulario todavía no envía datos a un servicio.
   form.addEventListener("submit", (event) => {
     event.preventDefault();
     feedback.className = "form-feedback";

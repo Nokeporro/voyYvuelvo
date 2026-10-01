@@ -862,3 +862,37 @@ La siguiente matriz relaciona requisitos con casos de uso, historias de usuario 
 2. Abrir `index.html` directamente en el navegador, o servirlo con una extensión tipo *Live Server* para recarga automática.
 
 No requiere instalación de dependencias ni servidor backend en esta entrega.
+
+## Estado implementado en el código actual (30-09-2026)
+
+Esta sección complementa el alcance originalmente especificado y refleja lo que está implementado hoy en `frontend/`. Las funciones descritas como plan futuro en otras secciones pueden haber avanzado; para el estado vigente, consulta esta sección.
+
+### Páginas y flujos disponibles
+
+- La tienda incluye páginas de inicio, productos, detalle de producto, carrito, registro, inicio de sesión, nosotros, blog y dos artículos de blog.
+- También incluye `rutas.html` con rutas destacadas y filtros por tipo de entorno, y `reserva-ruta.html?ruta=<id>` para revisar una ruta, elegir fecha, cantidad de personas, guía y equipamiento recomendado, y calcular un total estimado.
+- El panel bajo `admin/` incluye dashboard, listados y formularios de creación/edición de productos y usuarios. No hay una vista de órdenes en el código actual.
+
+### Persistencia, sesión y limitaciones funcionales
+
+- El catálogo público de equipamiento se define como datos de ejemplo en `js/productos-data.js`. El carrito almacena IDs y cantidades en `localStorage` con la clave `voy-vuelvo-carrito-v1`, limita cantidades al stock del catálogo y no procesa pagos.
+- El formulario público de inicio de sesión valida correo y contraseña, pero termina indicando que falta conectar un servicio de autenticación. El registro valida RUN, contraseña, correo, región, comuna y dirección, pero no crea una cuenta ni inicia sesión. El formulario de contacto valida los datos localmente; no envía el mensaje a un servidor.
+- El panel de administración sí cuenta con una sesión de demostración y persiste sus datos en el navegador: sesión bajo `sesion`, productos bajo `vv_admin_productos` y usuarios bajo `vv_admin_usuarios`. `js/admin.js` inicializa los datos de ejemplo cuando no existen datos guardados. El administrador de demostración es `admin@duoc.cl` con contraseña `1234`; el vendedor es `vendedor@duoc.cl` con contraseña `1234`. Como el login público no establece esa sesión, para entrar al panel en esta maqueta se debe establecer `localStorage.sesion` desde las herramientas del navegador, usando un objeto con `correo`, `nombre` y `rol` (`Administrador` o `Vendedor`). Estos controles son solo una demostración frontend, no una medida de seguridad.
+- El CRUD de productos y usuarios del panel guarda los cambios solo en `localStorage` del navegador actual. No se sincroniza con el catálogo público, ni con un backend.
+
+### Integración del flujo de reservas
+
+`js/reserva-ruta.js` intenta conectar con el backend en `http://localhost:8080` mediante estos recursos:
+
+- `GET /api/rutas/{id}` para consultar la ruta.
+- `GET /api/equipamiento/recomendacion/{idRuta}` para cargar equipamiento recomendado.
+- `GET /api/usuarios` y, si el correo no existe, `POST /api/usuarios` para buscar o crear al usuario de la reserva.
+- `POST /api/reservas` para registrar la reserva.
+
+Si las consultas de ruta o equipamiento fallan, la página usa datos locales de respaldo para mostrar el formulario. Si falla el envío, conserva un borrador en `localStorage` bajo `voy-vuelvo-reserva-borrador`; cuando tiene éxito, guarda la última respuesta bajo `voy-vuelvo-ultima-reserva`. El mensaje de la página identifica los microservicios de Usuario, Ruta, Equipamiento, Reserva y Pago y el Gateway en el puerto 8080. Por lo tanto, las reservas requieren que el backend correspondiente esté disponible para persistirse; el respaldo local solo permite presentar la experiencia y conservar el borrador.
+
+### Estructura de estilos y ejecución
+
+- La hoja de estilos presente en el repositorio es `css/styles.css`, compartida por las páginas públicas y el panel; no existe actualmente `css/admin.css`, aunque esa hoja se menciona en secciones anteriores de este documento.
+- Para recorrer la tienda estática, abre `frontend/index.html` o sirve `frontend/` con Live Server. El flujo de reservas usa `fetch` contra `localhost:8080`; para guardar reservas se debe iniciar además el backend con ese Gateway. Las páginas de tienda pueden mostrar rutas y equipamiento de respaldo si las consultas de lectura no están disponibles.
+- No hay manifiesto de dependencias ni paso de compilación en `frontend/`; sus páginas y scripts se ejecutan directamente en el navegador.

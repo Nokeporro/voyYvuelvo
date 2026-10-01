@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Controla el acceso al panel, sus datos de demostración y las vistas de resumen. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 /* ==========================================================
    admin.js — lógica compartida del panel administrador
    - Protege las vistas según la sesión y el rol
@@ -34,6 +35,7 @@
   ];
 
   /* ---------- Almacenamiento ---------- */
+  // Lee una lista guardada en el navegador; si aún no existe o el JSON está dañado, crea una copia inicial para que el panel pueda arrancar.
   function leer(key, inicial) {
     try {
       var crudo = localStorage.getItem(key);
@@ -42,6 +44,7 @@
     localStorage.setItem(key, JSON.stringify(inicial));
     return inicial.slice();
   }
+  // Convierte una lista JavaScript a JSON y la guarda en localStorage para conservar los cambios entre visitas.
   function guardar(key, lista) { localStorage.setItem(key, JSON.stringify(lista)); }
 
   var VV = {
@@ -65,6 +68,7 @@
   window.VV = VV;
 
   /* ---------- Utilidad DOM segura (textContent, sin innerHTML) ---------- */
+  // Crea un elemento HTML de forma segura y opcionalmente asigna clase y texto sin interpretar ese texto como etiquetas.
   function el(tag, clase, texto) {
     var n = document.createElement(tag);
     if (clase) { n.className = clase; }
@@ -123,6 +127,7 @@
   });
 
   /* ---------- Dashboard ---------- */
+  // Calcula y muestra los totales de productos, usuarios y productos con stock crítico.
   function pintarDashboard() {
     var prods = VV.getProductos();
     var usrs = VV.getUsuarios();
@@ -135,6 +140,7 @@
   }
 
   /* ---------- Listado de productos ---------- */
+  // Construye la tabla de productos, aplica la búsqueda y agrega acciones disponibles para el rol actual.
   function pintarProductos() {
     var tbody = document.getElementById("tbody");
     var buscador = document.getElementById("buscador");
@@ -146,7 +152,9 @@
       aviso.hidden = false;
     }
 
-    function dibujar() {
+    // Vuelve a dibujar las filas según el texto de búsqueda actual.
+// Reconstruye la tabla administrativa usando los datos filtrados por el texto de búsqueda.
+  function dibujar() {
       var q = (buscador.value || "").trim().toLowerCase();
       var lista = VV.getProductos().filter(function (p) {
         return !q || (p.codigo + " " + p.nombre + " " + p.categoria).toLowerCase().indexOf(q) !== -1;
@@ -191,6 +199,7 @@
   }
 
   /* ---------- Listado de usuarios ---------- */
+  // Construye la tabla de usuarios y sus acciones para el administrador.
   function pintarUsuarios() {
     var tbody = document.getElementById("tbody");
     var buscador = document.getElementById("buscador");
