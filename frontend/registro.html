@@ -6,7 +6,6 @@
   <meta name="description" content="Crea tu cuenta Voy y Vuelvo y prepárate para tu próxima salida de trekking.">
   <title>Crear cuenta | Voy y Vuelvo</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/tema-compartido.css">
 </head>
 <body class="pagina-unificada">
   <div class="inicio marco-compartido"><header class="encabezado">
@@ -36,9 +35,10 @@
                 <span>Voy <b>&amp;</b> Vuelvo</span>
             </a>
 
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
             <nav class="menu" aria-label="Navegación principal">
                 <a href="index.html">Inicio</a>
-                <a href="index.html#rutas">Rutas</a>
+                <a href="rutas.html">Rutas</a>
                 <a href="productos.html">Productos</a>
                 <a href="blogs.html">Blogs</a>
                 <a href="nosotros.html">Nosotros</a>
@@ -77,9 +77,11 @@
 
         </div>
     </header></div>
-  <main class="account-page account-page-wide"><section class="account-card account-card-wide" aria-labelledby="page-title">
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="account-page account-page-wide"><section class="account-card account-card-wide" aria-labelledby="page-title">
     <div class="account-visual"><span class="eyebrow">Súmate a la aventura</span><h1>Equípate para llegar más lejos.</h1><p>Crea tu cuenta para guardar tus datos y preparar cada salida con el equipo adecuado.</p><div class="visual-points"><span>✓ Tu equipo, a tu ritmo</span><span>✓ Consejos para cada ruta</span></div></div>
     <div class="account-form-wrap"><span class="eyebrow">Unos datos y partimos</span><h2 id="page-title">Crear cuenta</h2><p class="form-intro">Completa tus datos para registrarte en Voy y Vuelvo.</p>
+      <!-- Formulario: Este formulario reúne los datos necesarios para crear una cuenta y vincular una comuna con su región. -->
       <form id="registro-form" novalidate>
         <div class="form-grid">
           <div class="form-field"><label for="run">RUN</label><input id="run" name="run" type="text" inputmode="text" autocomplete="off" placeholder="19011022K" maxlength="9" required aria-describedby="run-help run-error"><small class="field-hint" id="run-help">Sin puntos ni guion. Ejemplo: 19011022K</small><small class="field-error" id="run-error" aria-live="polite"></small></div>
@@ -99,7 +101,8 @@
       <p class="demo-note">El registro se simula en esta entrega y no envía datos a un servidor.</p>
     </div>
   </section></main>
-  <div class="inicio marco-compartido"><footer class="pie">
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
     <div class="contenedor pie-columnas">
 
         <div class="pie-marca">
@@ -117,14 +120,16 @@
             </span>
         </div>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Explorar el sitio">
             <h2>Explora</h2>
             <a href="index.html">Inicio</a>
-            <a href="index.html#rutas">Rutas destacadas</a>
+            <a href="rutas.html">Rutas destacadas</a>
             <a href="productos.html">Equipamiento</a>
             <a href="blogs.html">Consejos y experiencias</a>
         </nav>
 
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
         <nav class="pie-enlaces" aria-label="Accesos de cuenta">
             <h2>Tu cuenta</h2>
             <a href="login.html">Iniciar sesión</a>
@@ -158,7 +163,9 @@
         </div>
     </div>
 </footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/regiones-comunas.js" defer></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/validaciones-registro.js" defer></script>
 </body>
 </html>

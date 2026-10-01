@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "RESERVAS") // Nombra la tabla en la base de datos MySQL
@@ -40,6 +42,10 @@ public class Reserva {
 
     @Column(name = "estado_pago")
     private String estadoPago;
+
+    @ElementCollection
+    @CollectionTable(name = "RESERVA_EQUIPAMIENTO", joinColumns = @JoinColumn(name = "reserva_id"))
+    private List<ReservaEquipamiento> equipamientos = new ArrayList<>();
 }
 
         /* POSTMAN POST

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Artículo: presenta el contenido completo de la segunda publicación del blog. -->
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -10,41 +11,57 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-  <header class="header">
-    <div class="contenedor nav">
-      <a class="marca" href="index.html" aria-label="Voy &amp; Vuelvo, ir al inicio"><svg viewBox="0 0 40 40" aria-hidden="true" focusable="false"><path d="M2 34 15 11l7 12 4-6 12 17z" fill="#1E2A38"/><path d="M15 11l3.2 5.4-3.2-1.6-3 1.6z" fill="#fff"/></svg>Voy <span>&amp;</span> Vuelvo</a>
-      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="menu">Menú</button>
-      <ul class="nav__menu" id="menu">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="productos.html">Productos</a></li>
-        <li><a href="nosotros.html">Nosotros</a></li>
-        <li><a href="blogs.html" aria-current="page">Blogs</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
-      </ul>
-      <div class="nav__acciones">
-        <a href="login.html">Iniciar sesión</a>
-        <a href="registro.html">Registrar usuario</a>
-        <a class="carrito-link" href="carrito.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 4h2l2.4 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 1.9-1.4L21 8H6.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/></svg><span>Carrito (<span id="contador-carrito">0</span>)</span></a>
-      </div>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+    <div class="contenedor encabezado-interior">
+        <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+            <svg width="43" height="38" viewBox="0 0 48 40" fill="none" aria-hidden="true">
+                <path d="M3 35 18 8 25 20 31 5 46 35Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path>
+                <path d="m12 19 6 3 4-5M25 17l6 5 5-6" stroke="currentColor" stroke-width="2"></path>
+            </svg>
+            <span>Voy <b>&amp;</b> Vuelvo</span>
+        </a>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="menu" aria-label="Navegación principal">
+            <a href="index.html">Inicio</a>
+            <a href="rutas.html">Rutas</a>
+            <a href="productos.html">Productos</a>
+            <a href="blogs.html" aria-current="page">Blogs</a>
+            <a href="nosotros.html">Nosotros</a>
+            <a href="contacto.html">Contacto</a>
+        </nav>
+        <div class="cuenta">
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Registrarse</a>
+            <a href="carrito.html" class="carrito" aria-label="Ver carrito de compras">
+                <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M2 3h3l3 12h11l3-9H6"></path><circle cx="9" cy="20" r="1"></circle><circle cx="19" cy="20" r="1"></circle>
+                </svg>
+                <span>Carrito</span><span id="contador-carrito" class="contador">0</span>
+            </a>
+        </div>
     </div>
-  </header>
-  <main class="contenedor">
+</header></div>
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor">
+    <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
     <nav class="migas" aria-label="Ruta de navegación">
       <ol>
         <li><a href="index.html">Home</a></li>
         <li><a href="blogs.html">Blogs</a></li>
-        <li aria-current="page">Caso curioso #2</li>
+        <li aria-current="page">Tu primera ruta de un día</li>
       </ol>
     </nav>
+    <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Tu primera ruta de un día: qué llevar en la mochila». -->
     <article class="articulo">
+      <!-- Estructura HTML: Encabezado del sitio o de una sección; suele reunir marca, título y navegación. -->
       <header>
         <span class="insignia insignia--facil">Ruta fácil</span>
         <h1>Tu primera ruta de un día: qué llevar en la mochila</h1>
         <p class="meta">24 de septiembre de 2026 · 3 min de lectura</p>
       </header>
       <figure class="articulo__portada">
-        <img src="img/blog-primera-ruta.jpg" alt="Sendero de bosque con luz de la tarde y una persona caminando" width="1200" height="675">
+        <img src="img/bosque-familia.png" alt="Sendero de bosque con luz de la tarde y una persona caminando" width="1200" height="675">
       </figure>
       <div class="articulo__cuerpo">
         <p>Las rutas de nivel fácil son la mejor forma de empezar: pocas horas, poco desnivel y senderos bien marcados. Aun así, un buen equipo hace la diferencia entre una salida agradable y una complicada.</p>
@@ -61,6 +78,7 @@
           <li>Sal temprano; las tardes suelen traer más viento y más gente.</li>
         </ul>
       </div>
+      <!-- Estructura HTML: Contenido complementario relacionado con la sección que lo rodea. -->
       <aside class="articulo__equipo" aria-labelledby="equipo-2">
         <h2 id="equipo-2">Equipo recomendado para este caso</h2>
         <ul>
@@ -76,27 +94,32 @@
       </div>
     </article>
   </main>
-  <footer class="footer">
-    <div class="contenedor footer__grid">
-      <div>
-        <p class="marca marca--pie">Voy <span>&amp;</span> Vuelvo</p>
-        <p>Equipamiento de trekking según el nivel de dificultad de tu ruta.</p>
-      </div>
-      <nav aria-label="Categorías">
-        <ul>
-          <li><a href="productos.html">Fácil</a></li>
-          <li><a href="productos.html">Media</a></li>
-          <li><a href="productos.html">Alta</a></li>
-        </ul>
-      </nav>
-      <form action="#" onsubmit="return false" aria-label="Suscripción al boletín">
-        <label class="sr" for="boletin">Correo para el boletín</label>
-        <input id="boletin" type="email" name="boletin" placeholder="Tu correo" autocomplete="email">
-        <button class="btn btn--accion" type="submit">Suscribirme</button>
-      </form>
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
+    <div class="contenedor pie-columnas">
+        <div class="pie-marca">
+            <a href="index.html" class="logo"><span>Voy <b>&amp;</b> Vuelvo</span></a>
+            <p>Descubre nuevos caminos, prepara tu equipo y disfruta de la naturaleza.</p>
+            <span class="pie-frase">Tu próxima aventura comienza aquí.</span>
+        </div>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2><a href="index.html">Inicio</a><a href="rutas.html">Rutas destacadas</a><a href="productos.html">Equipamiento</a><a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2><a href="login.html">Iniciar sesión</a><a href="registro.html">Crear una cuenta</a><a href="carrito.html">Carrito de compras</a>
+        </nav>
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2><p>Escríbenos para resolver tus dudas y preparar tu próxima salida.</p>
+            <a href="contacto.html" class="boton-amarillo">Contáctanos</a><a href="nosotros.html" class="pie-nosotros">Conoce nuestro equipo →</a>
+        </div>
     </div>
-  </footer>
+    <div class="pie-inferior"><div class="contenedor"><p>© 2026 Voy &amp; Vuelvo.</p><p>Explora con respeto. Cuida la naturaleza.</p></div></div>
+</footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/menu.js" defer></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
   <script src="js/carrito.js" defer></script>
 </body>
 </html>

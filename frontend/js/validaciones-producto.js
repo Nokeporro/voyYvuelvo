@@ -1,3 +1,4 @@
+/* GUÍA DE LECTURA: Valida los campos del formulario de creación o edición de productos. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 /* ==========================================================
    validaciones-producto.js
    Formulario de producto del administrador (nuevo y editar).
@@ -18,11 +19,13 @@
   campos.forEach(function (id) { f[id] = document.getElementById(id); });
 
   /* ---------- Helpers ---------- */
+  // Convierte texto a número y acepta coma o punto como separador decimal.
   function numero(texto) {
     // Acepta coma o punto decimal. Devuelve NaN si no es un número válido.
     var t = String(texto).trim().replace(",", ".");
     return /^-?\d+(\.\d+)?$/.test(t) ? Number(t) : NaN;
   }
+  // Comprueba que el texto contenga exclusivamente un número entero.
   function esEntero(texto) { return /^-?\d+$/.test(String(texto).trim()); }
 
   /* ---------- Reglas: cada función devuelve un mensaje o "" ---------- */
@@ -79,6 +82,7 @@
   };
 
   /* ---------- Mostrar / limpiar error ---------- */
+  // Aplica la regla correspondiente al campo del producto y muestra su error si es necesario.
   function validar(id, marcarTocado) {
     var campo = f[id];
     var msg = reglas[id](campo.value);
@@ -91,11 +95,13 @@
 
   /* ---------- Sugerencias dinámicas ---------- */
   var contDesc = document.getElementById("contador-descripcion");
+  // Actualiza el contador de caracteres de los campos que tienen un máximo.
   function actualizarContador() {
     var n = f.descripcion.value.length;
     contDesc.textContent = n + " / 500 caracteres";
   }
   var avisoStock = document.getElementById("aviso-stock");
+  // Avisa cuando las unidades disponibles alcanzan o bajan del umbral de stock crítico.
   function actualizarAvisoStock() {
     avisoStock.textContent = "";
     if (f.stock.value.trim() === "" || f.stockCritico.value.trim() === "") { return; }
@@ -149,6 +155,7 @@
   }
 
   /* ---------- Envío ---------- */
+// Detiene el envío normal, valida los datos del producto y guarda los cambios a través de la lógica compartida del panel.
   form.addEventListener("submit", function (e) {
     e.preventDefault();
     var primeroInvalido = null;
