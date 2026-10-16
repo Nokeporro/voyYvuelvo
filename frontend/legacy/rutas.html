@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Rutas: presenta rutas destacadas y controles para filtrar por tipo de entorno. -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rutas | Voy &amp; Vuelvo</title>
+  <meta name="description" content="Explora rutas de trekking por dificultad, duración y tipo de aventura.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+    <div class="contenedor encabezado-interior">
+      <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+        <svg width="43" height="38" viewBox="0 0 48 40" fill="none" aria-hidden="true"><path d="M3 35 18 8 25 20 31 5 46 35Z" stroke="currentColor" stroke-width="3" stroke-linejoin="round"></path><path d="m12 19 6 3 4-5M25 17l6 5 5-6" stroke="currentColor" stroke-width="2"></path></svg>
+        <span>Voy <b>&amp;</b> Vuelvo</span>
+      </a>
+      <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+      <nav class="menu" aria-label="Navegación principal">
+        <a href="index.html">Inicio</a><a href="rutas.html" aria-current="page">Rutas</a><a href="productos.html">Productos</a><a href="blogs.html">Blogs</a><a href="nosotros.html">Nosotros</a><a href="contacto.html">Contacto</a>
+      </nav>
+      <div class="cuenta"><a href="login.html">Iniciar sesión</a><a href="registro.html">Registrarse</a><a href="carrito.html" class="carrito" aria-label="Ver carrito de compras"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h3l3 12h11l3-9H6"></path><circle cx="9" cy="20" r="1"></circle><circle cx="19" cy="20" r="1"></circle></svg><span>Carrito</span><span id="contador-carrito" class="contador">0</span></a></div>
+    </div>
+  </header></div>
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor rutas-pagina">
+    <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Encuentra tu próxima ruta». -->
+    <section class="pagina-titulo" aria-labelledby="titulo-rutas-pagina">
+      <span class="rutas-kicker">Explora Chile paso a paso</span>
+      <h1 id="titulo-rutas-pagina">Encuentra tu próxima ruta</h1>
+      <p>Compara dificultad, duración y entorno para elegir una aventura que se ajuste a tu experiencia.</p>
+    </section>
+    <div class="rutas-filtros" aria-label="Filtros de rutas">
+      <button type="button" class="ruta-filtro activo" data-filtro="todas">Todas</button>
+      <button type="button" class="ruta-filtro" data-filtro="montana">Montaña</button>
+      <button type="button" class="ruta-filtro" data-filtro="bosque">Bosque</button>
+      <button type="button" class="ruta-filtro" data-filtro="lagos">Lagos</button>
+      <button type="button" class="ruta-filtro" data-filtro="familia">Familia</button>
+    </div>
+    <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Circuito Base Torres». -->
+    <section class="rutas-grid" aria-label="Listado de rutas">
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Circuito Base Torres». -->
+      <article class="ruta-card" data-categorias="montana">
+        <div class="ruta-card__imagen"><img src="img/portada1.jpg" alt="Circuito Base Torres en Torres del Paine"><span class="ruta-badge ruta-badge--amarillo">Destacada</span></div>
+        <div class="ruta-card__cuerpo"><p class="ruta-card__lugar">Torres del Paine · Magallanes</p><h2>Circuito Base Torres</h2><p>Una experiencia de varios días entre montañas, miradores y uno de los paisajes más reconocidos de la Patagonia.</p><div class="ruta-card__datos"><span>◷ 4 días</span><span class="nivel-alto">▲ Difícil</span><strong>Desde $210.000</strong></div><p class="ruta-card__cupos">Cupos sujetos a disponibilidad</p><div class="ruta-card__acciones"><a href="reserva-ruta.html?ruta=1" class="btn btn--accion">Ver y reservar</a><a href="productos.html" class="btn btn--borde">Ver equipamiento</a></div></div>
+      </article>
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Laguna del Inca». -->
+      <article class="ruta-card" data-categorias="montana lagos familia">
+        <div class="ruta-card__imagen"><img src="img/portada2.jpg" alt="Laguna del Inca en Cajón del Maipo"><span class="ruta-badge ruta-badge--verde">Familiar</span></div>
+        <div class="ruta-card__cuerpo"><p class="ruta-card__lugar">Cajón del Maipo · Metropolitana</p><h2>Laguna del Inca</h2><p>Una alternativa de un día para disfrutar del paisaje cordillerano y una caminata de dificultad accesible.</p><div class="ruta-card__datos"><span>◷ 1 día</span><span class="nivel-facil">▲ Fácil</span><strong>Desde $35.000</strong></div><p class="ruta-card__cupos">Cupos sujetos a disponibilidad</p><div class="ruta-card__acciones"><a href="reserva-ruta.html?ruta=2" class="btn btn--accion">Ver y reservar</a><a href="productos.html" class="btn btn--borde">Ver equipamiento</a></div></div>
+      </article>
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Sendero Los Lirios». -->
+      <article class="ruta-card" data-categorias="bosque">
+        <div class="ruta-card__imagen"><img src="img/sendero-lirios-2.png" alt="Sendero Los Lirios en Parque Conguillío"><span class="ruta-badge ruta-badge--oscuro">Nueva</span></div>
+        <div class="ruta-card__cuerpo"><p class="ruta-card__lugar">Parque Conguillío · Araucanía</p><h2>Sendero Los Lirios</h2><p>Recorre un entorno de bosque nativo y naturaleza volcánica en una salida pensada para quienes ya tienen algo de experiencia.</p><div class="ruta-card__datos"><span>◷ 2 días</span><span class="nivel-medio">▲ Moderada</span><strong>Desde $78.000</strong></div><p class="ruta-card__cupos">Cupos sujetos a disponibilidad</p><div class="ruta-card__acciones"><a href="reserva-ruta.html?ruta=3" class="btn btn--accion">Ver y reservar</a><a href="productos.html" class="btn btn--borde">Ver equipamiento</a></div></div>
+      </article>
+    </section>
+    <p id="sin-rutas" class="rutas-vacio" hidden>No hay rutas disponibles para este filtro.</p>
+  </main>
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
+    <div class="contenedor pie-columnas">
+        <div class="pie-marca">
+            <a href="index.html" class="logo"><span>Voy <b>&amp;</b> Vuelvo</span></a>
+            <p>Descubre nuevos caminos, prepara tu equipo y disfruta de la naturaleza.</p>
+            <span class="pie-frase">Tu próxima aventura comienza aquí.</span>
+        </div>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2><a href="index.html">Inicio</a><a href="rutas.html">Rutas destacadas</a><a href="productos.html">Equipamiento</a><a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2><a href="login.html">Iniciar sesión</a><a href="registro.html">Crear una cuenta</a><a href="carrito.html">Carrito de compras</a>
+        </nav>
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2><p>Escríbenos para resolver tus dudas y preparar tu próxima salida.</p>
+            <a href="contacto.html" class="boton-amarillo">Contáctanos</a><a href="nosotros.html" class="pie-nosotros">Conoce nuestro equipo →</a>
+        </div>
+    </div>
+    <div class="pie-inferior"><div class="contenedor"><p>© 2026 Voy &amp; Vuelvo.</p><p>Explora con respeto. Cuida la naturaleza.</p></div></div>
+</footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script src="js/carrito.js" defer></script>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script>
+    document.querySelectorAll('.ruta-filtro').forEach(function (boton) {
+      boton.addEventListener('click', function () {
+        var filtro = boton.dataset.filtro;
+        var visibles = 0;
+        document.querySelectorAll('.ruta-filtro').forEach(function (b) { b.classList.toggle('activo', b === boton); });
+        document.querySelectorAll('.ruta-card').forEach(function (card) {
+          var mostrar = filtro === 'todas' || card.dataset.categorias.split(' ').includes(filtro);
+          card.hidden = !mostrar; if (mostrar) visibles++;
+        });
+        document.getElementById('sin-rutas').hidden = visibles !== 0;
+      });
+    });
+  </script>
+</body>
+</html>
