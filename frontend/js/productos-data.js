@@ -1,3 +1,4 @@
+
 /* GUÍA DE LECTURA: Define el catálogo de ejemplo que utilizan las páginas de productos y carrito. Los comentarios explican bloques y funciones; las instrucciones ejecutables conservan su comportamiento. */
 // Catálogo de ejemplo de Voy & Vuelvo.
 // Los precios están expresados en pesos chilenos.

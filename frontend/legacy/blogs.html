@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!-- GUÍA DE LECTURA: Blog: lista artículos informativos y enlaces a sus páginas de detalle. -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Blogs | Voy &amp; Vuelvo</title>
+  <meta name="description" content="Noticias, datos curiosos y consejos de trekking.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="pagina-unificada">
+  <div class="inicio marco-compartido"><header class="encabezado">
+        <div class="contenedor encabezado-interior">
+
+            <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio">
+                <svg
+                    width="43"
+                    height="38"
+                    viewBox="0 0 48 40"
+                    fill="none"
+                    aria-hidden="true"
+                >
+                    <path
+                        d="M3 35 18 8 25 20 31 5 46 35Z"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                    ></path>
+                    <path
+                        d="m12 19 6 3 4-5M25 17l6 5 5-6"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    ></path>
+                </svg>
+
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+            <nav class="menu" aria-label="Navegación principal">
+                <a href="index.html">Inicio</a>
+                <a href="rutas.html">Rutas</a>
+                <a href="productos.html">Productos</a>
+                <a href="blogs.html" aria-current="page">Blogs</a>
+                <a href="nosotros.html">Nosotros</a>
+                <a href="contacto.html">Contacto</a>
+            </nav>
+
+            <div class="cuenta">
+                <a href="login.html">Iniciar sesión</a>
+                <a href="registro.html">Registrarse</a>
+
+                <a
+                    href="carrito.html"
+                    class="carrito"
+                    aria-label="Ver carrito de compras"
+                >
+                    <svg
+                        width="25"
+                        height="25"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                    >
+                        <path d="M2 3h3l3 12h11l3-9H6"></path>
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="19" cy="20" r="1"></circle>
+                    </svg>
+
+                    <span>Carrito</span>
+                    <span id="contador-carrito" class="contador">0</span>
+                </a>
+            </div>
+
+        </div>
+    </header></div>
+  <!-- Contenido principal: aquí está la información o tarea específica de esta página. -->
+    <main class="contenedor">
+    <!-- Estructura HTML: Sección temática que agrupa contenido relacionado; el encabezado cercano explica su tema. Título asociado: «Noticias importantes». -->
+    <section aria-labelledby="titulo-blog">
+      <div class="pagina-titulo">
+        <h1 id="titulo-blog">Noticias importantes</h1>
+        <p>Datos curiosos y consejos para preparar tu próxima ruta.</p>
+      </div>
+      <div class="blog-lista">
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia». -->
+      <article class="blog-caso" aria-labelledby="caso-1">
+        <div class="blog-caso__media">
+          <img src="img/montana-sendero.png" alt="Persona con mochila caminando por un sendero de alta montaña con viento" loading="lazy" width="800" height="500">
+          <span class="insignia insignia--alta">Ruta alta</span>
+        </div>
+        <div class="blog-caso__texto">
+          <p class="meta">Caso curioso #1 · 12 de septiembre de 2026</p>
+          <h2 id="caso-1">Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</h2>
+          <p>En la alta montaña puedes pasar del sol al viento helado en minutos. El sistema de tres capas te permite ajustar tu abrigo sin detenerte.</p>
+          <a class="btn btn--accion" href="detalle-blog-1.html">Ver caso<span class="sr">: Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia</span></a>
+        </div>
+      </article>
+      <!-- Estructura HTML: Contenido independiente, como una tarjeta de ruta, producto o publicación. Título asociado: «Tu primera ruta de un día: qué llevar en la mochila». -->
+      <article class="blog-caso" aria-labelledby="caso-2">
+        <div class="blog-caso__media">
+          <img src="img/bosque-familia.png" alt="Sendero de bosque con luz de la tarde y una persona caminando" loading="lazy" width="800" height="500">
+          <span class="insignia insignia--facil">Ruta fácil</span>
+        </div>
+        <div class="blog-caso__texto">
+          <p class="meta">Caso curioso #2 · 24 de septiembre de 2026</p>
+          <h2 id="caso-2">Tu primera ruta de un día: qué llevar en la mochila</h2>
+          <p>No necesitas mucho para una caminata fácil, pero sí lo correcto. Esta lista corta te ayuda a salir con lo justo y volver sin apuros.</p>
+          <a class="btn btn--accion" href="detalle-blog-2.html">Ver caso<span class="sr">: Tu primera ruta de un día: qué llevar en la mochila</span></a>
+        </div>
+      </article>
+      </div>
+    </section>
+  </main>
+  <div class="inicio marco-compartido"><!-- Pie de página: enlaces secundarios e información común del sitio. -->
+  <footer class="pie">
+    <div class="contenedor pie-columnas">
+
+        <div class="pie-marca">
+            <a href="index.html" class="logo">
+                <span>Voy <b>&amp;</b> Vuelvo</span>
+            </a>
+
+            <p>
+                Descubre nuevos caminos, prepara tu equipo
+                y disfruta de la naturaleza.
+            </p>
+
+            <span class="pie-frase">
+                Tu próxima aventura comienza aquí.
+            </span>
+        </div>
+
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Explorar el sitio">
+            <h2>Explora</h2>
+            <a href="index.html">Inicio</a>
+            <a href="rutas.html">Rutas destacadas</a>
+            <a href="productos.html">Equipamiento</a>
+            <a href="blogs.html">Consejos y experiencias</a>
+        </nav>
+
+        <!-- Estructura HTML: Grupo de enlaces de navegación; aria-label ayuda a distinguir menús diferentes. -->
+        <nav class="pie-enlaces" aria-label="Accesos de cuenta">
+            <h2>Tu cuenta</h2>
+            <a href="login.html">Iniciar sesión</a>
+            <a href="registro.html">Crear una cuenta</a>
+            <a href="carrito.html">Carrito de compras</a>
+        </nav>
+
+        <div class="pie-ayuda">
+            <h2>¿Te ayudamos?</h2>
+
+            <p>
+                Escríbenos para resolver tus dudas
+                y preparar tu próxima salida.
+            </p>
+
+            <a href="contacto.html" class="boton-amarillo">
+                Contáctanos
+            </a>
+
+            <a href="nosotros.html" class="pie-nosotros">
+                Conoce nuestro equipo →
+            </a>
+        </div>
+
+    </div>
+
+    <div class="pie-inferior">
+        <div class="contenedor">
+            <p>© 2026 Voy &amp; Vuelvo.</p>
+            <p>Explora con respeto. Cuida la naturaleza.</p>
+        </div>
+    </div>
+</footer></div>
+  <!-- Estructura HTML: Carga un archivo JavaScript que añade comportamiento a los elementos de la página. -->
+  <script src="js/menu.js" defer></script>
+</body>
+</html>
