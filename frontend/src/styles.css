@@ -1,14 +1,10 @@
+@import "./styles/tokens.css";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap");
-:root {
-  --ink: #1e2a38;
-  --muted: #65707e;
-  --yellow: #f5a623;
-  --paper: #f7f8fa;
-  --bs-body-color: var(--ink);
-  --bs-body-bg: var(--paper);
-  --bs-font-sans-serif: "Inter", sans-serif;
-  --bs-border-radius: 0.6rem;
+
+.total-pair {
+  display: contents;
 }
+
 body {
   min-width: 320px;
 }
@@ -547,6 +543,12 @@ button:focus-visible {
   }
 }
 @media (max-width: 767px) {
+  .container > .row.g-5 {
+    --bs-gutter-x: 1.5rem;
+  }
+  .site-header > .container {
+    padding-inline: 12px;
+  }
   .hero {
     min-height: 0;
   }

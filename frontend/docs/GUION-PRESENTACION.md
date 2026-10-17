@@ -4,7 +4,7 @@
 
 Explica que Voy y Vuelvo atiende a personas de Chile y turistas extranjeros que preparan rutas de trekking. Presenta React + Vite como la adaptación solicitada y Bootstrap para el diseño responsivo. Toda mención a Jasmine y Karma de la guía se sustituye por Vitest.
 
-Abre src/main.jsx y App.jsx. Identifica el montaje, Router, StoreProvider y el layout común. En Cards.jsx muestra props product y route. En Register.jsx muestra el estado del formulario y cómo cambia la UI al escoger pasaporte. Explica que una actualización de estado vuelve a renderizar el componente sin escribir innerHTML.
+Abre src/main.jsx y App.jsx. Identifica el montaje, Router, StoreProvider y SiteTemplate. Recorre las cinco capas de Atomic Design: Button como átomo, FormField y ProductCard como moléculas, RegistrationForm como organismo, SplitTemplate como plantilla y Register como página. En ProductCard.jsx y RouteCard.jsx muestra las props product y route. En RegistrationForm.jsx muestra el estado del formulario y cómo cambia la UI al escoger pasaporte. Explica que una actualización de estado vuelve a renderizar el componente sin escribir innerHTML.
 
 En el navegador, recorre el registro RUT/pasaporte, filtra productos y agrega uno al carrito. Entra con la cuenta demo de administrador, modifica un producto y vuelve a verlo en la tienda. Después entra como vendedor y muestra que solo puede consultar. Aclara que los controles locales son académicos y que el servidor deberá autorizar las operaciones reales.
 

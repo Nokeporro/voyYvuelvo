@@ -1,27 +1,37 @@
+import ArticleTemplate from "../components/templates/ArticleTemplate";
+import PageTemplate from "../components/templates/PageTemplate";
+import Image from "../components/atoms/Image";
+import Heading from "../components/atoms/Heading";
+import Text from "../components/atoms/Text";
+import AppLink from "../components/atoms/AppLink";
 export default function ArticleTwo() {
   return (
-    <div className="contenedor">
+    <PageTemplate className="contenedor">
       <nav className="migas" aria-label="Ruta de navegación">
         <ol>
           <li>
-            <a href="/">{"Home"}</a>
+            <AppLink href="/">{"Home"}</AppLink>
           </li>
           <li>
-            <a href="/blogs">{"Blogs"}</a>
+            <AppLink href="/blogs">{"Blogs"}</AppLink>
           </li>
           <li aria-current="page">{"Tu primera ruta de un día"}</li>
         </ol>
       </nav>
-      <article className="articulo">
+      <ArticleTemplate className="articulo">
         <header>
-          <span className="insignia insignia--facil">{"Ruta fácil"}</span>
-          <h1>{"Tu primera ruta de un día: qué llevar en la mochila"}</h1>
-          <p className="meta">
+          <Text as="span" className="insignia insignia--facil">
+            {"Ruta fácil"}
+          </Text>
+          <Heading as="h1">
+            {"Tu primera ruta de un día: qué llevar en la mochila"}
+          </Heading>
+          <Text className="meta">
             {"24 de septiembre de 2026 · 3 min de lectura"}
-          </p>
+          </Text>
         </header>
         <figure className="articulo__portada">
-          <img
+          <Image
             src="/img/bosque-familia.png"
             alt="Sendero de bosque con luz de la tarde y una persona caminando"
             width="1200"
@@ -29,30 +39,30 @@ export default function ArticleTwo() {
           />
         </figure>
         <div className="articulo__cuerpo">
-          <p>
+          <Text>
             {
               "Las rutas de nivel fácil son la mejor forma de empezar: pocas horas, poco desnivel y senderos bien marcados. Aun así, un buen equipo hace la diferencia entre una salida agradable y una complicada."
             }
-          </p>
-          <h2>{"Lo esencial"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">{"Lo esencial"}</Heading>
+          <Text>
             {
               "Agua suficiente para todo el recorrido, algo de comer, protector solar y una capa liviana para el viento. Súmale un mapa o la ruta descargada, por si te quedas sin señal."
             }
-          </p>
-          <h2>{"Calzado cómodo antes que caro"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">{"Calzado cómodo antes que caro"}</Heading>
+          <Text>
             {
               "Para un día basta con zapatillas con buena suela y calcetines que no te aprieten. Estrena el calzado unos días antes para evitar ampollas."
             }
-          </p>
-          <h2>{"Vuelve con luz"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">{"Vuelve con luz"}</Heading>
+          <Text>
             {
               "Calcula tus horas para regresar antes de que oscurezca. Una linterna frontal pequeña pesa poco y te da margen si el paseo se alarga."
             }
-          </p>
-          <h2>{"Antes de salir"}</h2>
+          </Text>
+          <Heading as="h2">{"Antes de salir"}</Heading>
           <ul>
             <li>
               {"Avisa a alguien a dónde vas y a qué hora piensas volver."}
@@ -68,25 +78,27 @@ export default function ArticleTwo() {
           </ul>
         </div>
         <aside className="articulo__equipo" aria-labelledby="equipo-2">
-          <h2 id="equipo-2">{"Equipo recomendado para este caso"}</h2>
+          <Heading as="h2" id="equipo-2">
+            {"Equipo recomendado para este caso"}
+          </Heading>
           <ul>
             <li>{"Capa impermeable"}</li>
             <li>{"Linterna frontal recargable"}</li>
             <li>{"Protector solar FPS 50"}</li>
           </ul>
-          <a className="btn btn--accion" href="/productos">
+          <AppLink className="btn btn--accion" href="/productos">
             {"Ver productos"}
-          </a>
+          </AppLink>
         </aside>
         <div className="articulo__nav">
-          <a className="btn btn--borde" href="/blogs">
+          <AppLink className="btn btn--borde" href="/blogs">
             {"Volver a Blogs"}
-          </a>
-          <a className="btn btn--borde" href="/blogs/1">
+          </AppLink>
+          <AppLink className="btn btn--borde" href="/blogs/1">
             {"Caso anterior"}
-          </a>
+          </AppLink>
         </div>
-      </article>
-    </div>
+      </ArticleTemplate>
+    </PageTemplate>
   );
 }
