@@ -1,17 +1,25 @@
+import PageTemplate from "../components/templates/PageTemplate";
+import Heading from "../components/atoms/Heading";
+import Text from "../components/atoms/Text";
+import Image from "../components/atoms/Image";
+import AppLink from "../components/atoms/AppLink";
+import SplitTemplate from "../components/templates/SplitTemplate";
+import RentalEquipmentList from "../components/organisms/RentalEquipmentList";
+import ReservationForm from "../components/organisms/ReservationForm.jsx";
 import { useEffect, useState } from "react";
-import { Link, useParams, useSearchParams } from "react-router-dom";
-import { routes, rentalEquipment } from "../data/routes";
+import { useParams, useSearchParams } from "react-router-dom";
+import { routes, rentalEquipment } from "../data/routes.js";
 import {
   apiEnabled,
   embeddedList,
   request,
   submitReservation,
-} from "../services/api";
-import { readStorage, writeStorage } from "../services/storage";
-import { useStore } from "../context/Store";
-import { money, tomorrow, validateReservation } from "../utils/validation";
-import Field from "../components/Field";
-import { NotFound } from "./Catalog";
+} from "../services/api.js";
+import { readStorage, writeStorage } from "../services/storage.js";
+import { useStore } from "../context/Store.jsx";
+import { validateReservation } from "../utils/validation.js";
+
+import { NotFound } from "./NotFound.jsx";
 export default function Reservation() {
   const { id } = useParams();
   const [params] = useSearchParams();
@@ -139,128 +147,61 @@ export default function Reservation() {
     );
   }
   return (
-    <div className="container py-5">
-      <Link className="text-link" to="/rutas">
+    <PageTemplate className="container py-5">
+      <AppLink className="text-link" to="/rutas">
         ← Todas las rutas
-      </Link>
-      <div className="row g-5 mt-1">
-        <section className="col-lg-7">
-          <img
-            className="reservation-photo"
-            src={route.imagen}
-            alt={route.nombre}
+      </AppLink>
+      <SplitTemplate
+        className="row g-5 mt-1"
+        introClass="col-lg-7"
+        contentClass="col-lg-5"
+        intro={
+          <>
+            <Image
+              className="reservation-photo"
+              src={route.imagen}
+              alt={route.nombre}
+            />
+            <Text as="span" className="eyebrow d-block mt-4">
+              {route.ubicacion}
+            </Text>
+            <Heading as="h1">{route.nombre}</Heading>
+            <Text>{route.descripcion}</Text>
+            <Text>
+              {route.duracion} · Dificultad {route.dificultad} · Máximo{" "}
+              {route.cupoMaximo} personas
+            </Text>
+            <Text className="small">{source}</Text>
+            <Heading as="h2" className="h4 mt-4">
+              Equipamiento para arrendar
+            </Heading>
+            <Text>El arriendo se suma una vez por artículo seleccionado.</Text>
+            <RentalEquipmentList
+              equipment={equipment}
+              selected={selected}
+              onSelectionChange={setSelected}
+            />
+          </>
+        }
+      >
+        <div className="form-panel">
+          <Heading as="h2" className="h4">
+            Prepara tu reserva
+          </Heading>
+          <ReservationForm
+            data={data}
+            change={change}
+            route={route}
+            equipmentTotal={equipmentTotal}
+            total={total}
+            message={message}
+            busy={busy}
+            submit={submit}
+            restore={restore}
+            apiEnabled={apiEnabled}
           />
-          <span className="eyebrow d-block mt-4">{route.ubicacion}</span>
-          <h1>{route.nombre}</h1>
-          <p>{route.descripcion}</p>
-          <p>
-            {route.duracion} · Dificultad {route.dificultad} · Máximo{" "}
-            {route.cupoMaximo} personas
-          </p>
-          <p className="small">{source}</p>
-          <h2 className="h4 mt-4">Equipamiento para arrendar</h2>
-          <p>El arriendo se suma una vez por artículo seleccionado.</p>
-          <div className="row g-3">
-            {equipment.map((item) => (
-              <div className="col-sm-6" key={item.id}>
-                <label
-                  className={`rental-card ${selected.includes(item.id) ? "selected" : ""}`}
-                >
-                  <img src={item.imagen} alt="" />
-                  <span>
-                    <strong>{item.nombre}</strong>
-                    <small className="d-block">
-                      {money(Number(item.valorArriendo))} / arriendo
-                    </small>
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(item.id)}
-                    onChange={(e) =>
-                      setSelected(
-                        e.target.checked
-                          ? [...selected, item.id]
-                          : selected.filter((id) => id !== item.id),
-                      )
-                    }
-                    aria-label={`Arrendar ${item.nombre}`}
-                  />
-                </label>
-              </div>
-            ))}
-          </div>
-        </section>
-        <section className="col-lg-5">
-          <div className="form-panel">
-            <h2 className="h4">Prepara tu reserva</h2>
-            <form onSubmit={submit} noValidate>
-              {[
-                ["nombre", "Nombre completo", { autoComplete: "name" }],
-                [
-                  "email",
-                  "Correo electrónico",
-                  { type: "email", autoComplete: "email" },
-                ],
-                ["telefono", "Teléfono", { type: "tel", autoComplete: "tel" }],
-                ["fecha", "Fecha de salida", { type: "date", min: tomorrow() }],
-                [
-                  "personas",
-                  "Personas",
-                  { type: "number", min: 1, max: route.cupoMaximo },
-                ],
-              ].map(([name, label, props]) => (
-                <Field
-                  key={name}
-                  name={name}
-                  label={label}
-                  value={data[name]}
-                  onChange={change}
-                  required
-                  {...props}
-                />
-              ))}
-              <label className="form-check mb-4">
-                <input
-                  className="form-check-input"
-                  name="guia"
-                  type="checkbox"
-                  checked={data.guia}
-                  onChange={change}
-                />
-                Solicitar guía (precio por confirmar)
-              </label>
-              <dl className="totals">
-                <dt>Ruta por persona</dt>
-                <dd>{money(Number(route.precio))}</dd>
-                <dt>Arriendo</dt>
-                <dd>{money(equipmentTotal)}</dd>
-                <dt>Total estimado</dt>
-                <dd>
-                  <strong>{money(total)}</strong>
-                </dd>
-              </dl>
-              <p className="small">
-                El total no incluye un eventual servicio de guía.
-              </p>
-              <p role="status">{message}</p>
-              <button disabled={busy} className="btn btn-warning w-100">
-                {busy
-                  ? "Guardando…"
-                  : apiEnabled
-                    ? "Confirmar reserva"
-                    : "Guardar borrador de reserva"}
-              </button>
-              <button
-                className="btn btn-link w-100 mt-2"
-                type="button"
-                onClick={restore}
-              >
-                Recuperar borrador
-              </button>
-            </form>
-          </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      </SplitTemplate>
+    </PageTemplate>
   );
 }

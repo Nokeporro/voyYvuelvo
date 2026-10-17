@@ -64,6 +64,6 @@ Revisa ambos artículos del blog. En contacto prueba errores y un mensaje válid
 
 ## 8 Evidencia técnica
 
-Ejecuta npm test o npm run test:coverage. Última verificación: 87 pruebas aprobadas y 87,80% de líneas cubiertas del código instrumentado. El detalle y las ramas pendientes están en COBERTURA-TESTING.md. La compilación se comprueba con npm run build.
+Ejecuta npm test o npm run test:coverage. Última verificación tras integrar Atomic Design: 97 pruebas aprobadas y 88,88% de líneas cubiertas del código instrumentado. El detalle y las ramas pendientes están en COBERTURA-TESTING.md. La compilación se comprueba con npm run build. Revisa la composición de las cinco capas en ATOMIC-DESIGN.md y comprueba sus dependencias con npm run check:architecture.
 
 Para evaluar cumplimiento, consulta ANALISIS-Y-CRITERIOS.md y ERS-EP2.md. Falta publicar el enlace público de GitHub y realizar la presentación individual. La ERS de EP2 está en Markdown; el DOCX de la raíz conserva el documento histórico de EP1.

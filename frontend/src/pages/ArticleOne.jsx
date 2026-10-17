@@ -1,33 +1,41 @@
+import ArticleTemplate from "../components/templates/ArticleTemplate";
+import PageTemplate from "../components/templates/PageTemplate";
+import Image from "../components/atoms/Image";
+import Heading from "../components/atoms/Heading";
+import Text from "../components/atoms/Text";
+import AppLink from "../components/atoms/AppLink";
 export default function ArticleOne() {
   return (
-    <div className="contenedor">
+    <PageTemplate className="contenedor">
       <nav className="migas" aria-label="Ruta de navegación">
         <ol>
           <li>
-            <a href="/">{"Home"}</a>
+            <AppLink href="/">{"Home"}</AppLink>
           </li>
           <li>
-            <a href="/blogs">{"Blogs"}</a>
+            <AppLink href="/blogs">{"Blogs"}</AppLink>
           </li>
           <li aria-current="page">
             {"Las tres capas: cómo vestirte para la montaña"}
           </li>
         </ol>
       </nav>
-      <article className="articulo">
+      <ArticleTemplate className="articulo">
         <header>
-          <span className="insignia insignia--alta">{"Ruta alta"}</span>
-          <h1>
+          <Text as="span" className="insignia insignia--alta">
+            {"Ruta alta"}
+          </Text>
+          <Heading as="h1">
             {
               "Tres capas para rutas exigentes: cómo vestirte cuando el clima cambia"
             }
-          </h1>
-          <p className="meta">
+          </Heading>
+          <Text className="meta">
             {"12 de septiembre de 2026 · 4 min de lectura"}
-          </p>
+          </Text>
         </header>
         <figure className="articulo__portada">
-          <img
+          <Image
             src="/img/montana-sendero.png"
             alt="Persona con mochila caminando por un sendero de alta montaña con viento"
             width="1200"
@@ -35,30 +43,32 @@ export default function ArticleOne() {
           />
         </figure>
         <div className="articulo__cuerpo">
-          <p>
+          <Text>
             {
               "En rutas de dificultad alta, el clima manda. Una mañana despejada puede terminar con viento fuerte y lluvia antes del mediodía, y ahí es donde se nota si tu ropa está bien pensada. La solución más usada por quienes caminan a menudo es el sistema de tres capas."
             }
-          </p>
-          <h2>{"Capa base: mantiene la piel seca"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">{"Capa base: mantiene la piel seca"}</Heading>
+          <Text>
             {
               "Va pegada al cuerpo y su trabajo es alejar el sudor. Elige tejidos sintéticos o lana merino; el algodón se moja, tarda en secar y te enfría cuando te detienes."
             }
-          </p>
-          <h2>{"Capa intermedia: guarda el calor"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">{"Capa intermedia: guarda el calor"}</Heading>
+          <Text>
             {
               "Es el abrigo propiamente tal: un polar o una chaqueta liviana rellena. Debe ser fácil de sacar y guardar, porque la vas a usar en las paradas y en las mañanas frías."
             }
-          </p>
-          <h2>{"Capa exterior: te protege del viento y la lluvia"}</h2>
-          <p>
+          </Text>
+          <Heading as="h2">
+            {"Capa exterior: te protege del viento y la lluvia"}
+          </Heading>
+          <Text>
             {
               "Una capa impermeable y cortaviento es la pieza que más se agradece cuando el tiempo se pone difícil. Busca que tenga capucha ajustable y costuras selladas."
             }
-          </p>
-          <h2>{"Antes de salir"}</h2>
+          </Text>
+          <Heading as="h2">{"Antes de salir"}</Heading>
           <ul>
             <li>
               {
@@ -76,25 +86,27 @@ export default function ArticleOne() {
           </ul>
         </div>
         <aside className="articulo__equipo" aria-labelledby="equipo-1">
-          <h2 id="equipo-1">{"Equipo recomendado para este caso"}</h2>
+          <Heading as="h2" id="equipo-1">
+            {"Equipo recomendado para este caso"}
+          </Heading>
           <ul>
             <li>{"Capa impermeable"}</li>
             <li>{"Saco de dormir -10 °C"}</li>
             <li>{"Carpa 3 estaciones"}</li>
           </ul>
-          <a className="btn btn--accion" href="/productos">
+          <AppLink className="btn btn--accion" href="/productos">
             {"Ver productos"}
-          </a>
+          </AppLink>
         </aside>
         <div className="articulo__nav">
-          <a className="btn btn--borde" href="/blogs">
+          <AppLink className="btn btn--borde" href="/blogs">
             {"Volver a Blogs"}
-          </a>
-          <a className="btn btn--borde" href="/blogs/2">
+          </AppLink>
+          <AppLink className="btn btn--borde" href="/blogs/2">
             {"Siguiente caso"}
-          </a>
+          </AppLink>
         </div>
-      </article>
-    </div>
+      </ArticleTemplate>
+    </PageTemplate>
   );
 }

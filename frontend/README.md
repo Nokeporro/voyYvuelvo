@@ -1,6 +1,6 @@
 # Voy y Vuelvo
 
-Frontend de turismo aventura y equipamiento de trekking para la Evaluación Parcial 2 de DSY1104. Migrado a React, Vite, React Router y Bootstrap. Todas las referencias a Jasmine y Karma de la guía se implementan con Vitest, según la adaptación solicitada.
+Frontend de turismo aventura y equipamiento de trekking para la Evaluación Parcial 2 de DSY1104. Migrado a React, Vite, React Router y Bootstrap, con Atomic Design en toda la interfaz pública y administrativa. Todas las referencias a Jasmine y Karma de la guía se implementan con Vitest, según la adaptación solicitada.
 
 ## Ejecutar el proyecto
 
@@ -18,6 +18,7 @@ En Visual Studio Code, inicia Vite con `npm run dev` (o con la tarea **Voy y Vue
 ```sh
 npm test
 npm run test:coverage
+npm run check:architecture
 npm run build
 npm run preview
 ```
@@ -73,12 +74,18 @@ Contacto guarda una simulación local y no envía correo. El carrito no procesa 
 
 ```text
 src/
-  components/   Layout, campos y tarjetas reutilizables
+  components/
+    atoms/      Controles y elementos visuales básicos
+    molecules/  Campos accesibles, tarjetas y composiciones pequeñas
+    organisms/  Formularios, navegación, grillas, tablas y secciones
+    templates/  Estructuras de sitio, panel, página, columnas y artículo
   context/      Estado compartido de catálogo, carrito y sesión
   data/         Datos iniciales de productos, regiones y rutas
-  pages/        Vistas React públicas y administrativas
+  pages/        Páginas públicas que componen las plantillas
+    admin/      Páginas individuales de administración
   services/     Persistencia, cuentas y comunicación HTTP
   utils/        Validaciones y reglas del carrito
+  styles/       Tokens visuales compartidos
   test/         Pruebas Vitest y React Testing Library
 public/img/     Recursos servidos por Vite
 docs/           Análisis, ERS actualizada, cobertura y exposición
@@ -95,6 +102,7 @@ Los HTML de la raíz y `admin/` son entradas de compatibilidad a la misma aplica
 - `docs/ERS-EP2.md`: versión 2 de requisitos, con criterios de aceptación y reglas para visitantes extranjeros. Reemplaza el estado de EP1 del DOCX histórico para esta entrega.
 - `docs/COBERTURA-TESTING.md`: alcance, estrategia, mocks, resultados y límites de cobertura.
 - `docs/GUION-PRESENTACION.md`: recorrido de exposición y diez casos centrales para demostrar.
+- `docs/ATOMIC-DESIGN.md`: responsabilidades de las cinco capas, ejemplos por pantalla y reglas para continuar el desarrollo.
 
 El enlace público de GitHub y la publicación del proyecto deben completarse en el repositorio elegido por el equipo. Ninguna cuenta o repositorio público se crea automáticamente.
 

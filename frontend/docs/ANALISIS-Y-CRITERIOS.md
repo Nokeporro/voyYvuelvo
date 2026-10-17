@@ -26,7 +26,7 @@ El proyecto contenía 20 páginas HTML: 13 públicas y siete administrativas. Te
 
 ## Arquitectura de la solución
 
-`main.jsx` monta React, Bootstrap, BrowserRouter y StoreProvider. `App.jsx` define las páginas y las rutas anidadas del panel. Layout comparte navegación y pie. Los formularios usan estado controlado; Field recibe etiquetas, valores, mensajes y manejadores mediante props.
+`main.jsx` monta React, Bootstrap, BrowserRouter y StoreProvider. `App.jsx` define las páginas y las rutas anidadas del panel. Desde el 16 de octubre de 2026, Atomic Design organiza toda la interfaz: SiteTemplate comparte SiteHeader y SiteFooter; FormField combina átomos para etiquetas, controles y errores; los formularios se agrupan en organismos y las páginas componen plantillas. El detalle y la comprobación automática de dependencias están en ATOMIC-DESIGN.md.
 
 StoreProvider centraliza productos, carrito y sesión. Las operaciones actualizan arrays de manera inmutable y persisten antes de publicar el nuevo estado. La tienda consulta el mismo catálogo que modifica el panel. `storage` sincroniza cambios de catálogo y carrito entre pestañas del mismo origen.
 
@@ -37,7 +37,7 @@ Los servicios separan Web Storage, cuentas académicas y fetch. Las reglas puras
 | Indicador | Peso | Evidencia concreta |
 | --- | --- | --- |
 | IE2.1.1 Proyecto con framework JS | 10% | React + Vite, src organizado, scripts de desarrollo y build, rutas y servicios |
-| IE2.1.2 Props, estado y Bootstrap | 10% | RouteCard/ProductCard, Field, RegistrationForm, StoreProvider, Grid con col-md y col-lg, menú móvil |
+| IE2.1.2 Props, estado y Bootstrap | 10% | Atomic Design: RouteCard/ProductCard, FormField, RegistrationForm, plantillas; StoreProvider, Grid con col-md y col-lg y menú móvil |
 | IE2.2.1 Pruebas de lógica y comportamiento | 12% | Más de diez casos con Vitest; validación, interacción DOM, persistencia y HTTP simulado |
 | IE2.3.1 Proceso de testeo | 8% | Setup jsdom, limpieza entre pruebas, mocks de fetch, reporte de cobertura y documentación de límites |
 | IE2.1.3 Explicación del diseño | 15% | README, diagnóstico, diagrama conceptual de dependencias y guion de exposición |

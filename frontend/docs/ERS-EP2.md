@@ -1,6 +1,6 @@
 # Especificación de requisitos de Voy y Vuelvo
 
-Versión 2.0. Fecha: 15 de octubre de 2026. Asignatura DSY1104 Desarrollo Fullstack II. Estado: propuesta e implementación frontend para Evaluación Parcial 2. Validación académica pendiente del equipo y docente.
+Versión 2.1. Fecha: 16 de octubre de 2026. Asignatura DSY1104 Desarrollo Fullstack II. Estado: propuesta e implementación frontend para Evaluación Parcial 2, con Atomic Design. Validación académica pendiente del equipo y docente.
 
 ## 1 Introducción
 
@@ -71,6 +71,7 @@ La aceptación del RUT y del pasaporte comprueba formato y consistencia local. N
 | RNF07 | Build reproducible | package-lock.json, npm ci y npm run build; sin dependencia de Live Server |
 | RNF08 | Solicitudes acotadas | Timeout de 10 segundos y error explícito para respuestas no exitosas |
 | RNF09 | Minimizar exposición de credenciales | No persistir contraseña literal de cuentas de usuario; no enviar documentos a API no definida |
+| RNF10 | Organizar toda la interfaz con Atomic Design | Átomos, moléculas, organismos, plantillas y páginas; responsabilidades e imports verificados mediante npm run check:architecture |
 
 No se establece una métrica de carga o disponibilidad de backend porque el servidor no se incluye en este alcance. La suite automatizada no acredita seguridad de producción ni compatibilidad con todos los navegadores.
 

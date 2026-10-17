@@ -1,17 +1,17 @@
 # Cobertura de testing de Voy y Vuelvo
 
-Evaluación Parcial 2 de DSY1104. Ejecución verificada el 15 de octubre de 2026 con Vitest 5.0.5, jsdom, React Testing Library y cobertura V8. Vitest sustituye las referencias a Jasmine y Karma por instrucción del usuario.
+Evaluación Parcial 2 de DSY1104. Ejecución verificada el 16 de octubre de 2026 tras integrar Atomic Design, con Vitest 5.0.5, jsdom, React Testing Library y cobertura V8. Vitest sustituye las referencias a Jasmine y Karma por instrucción del usuario.
 
 ## Resultados medidos
 
-`npm run test:coverage`: **87 pruebas aprobadas en siete archivos**, sin fallos. Duración observada: 16,31 segundos. `npm run build`: compilación de producción aprobada.
+`npm run test:coverage`: **97 pruebas aprobadas en ocho archivos**, sin fallos. Duración observada: 16,56 segundos. `npm run build`: compilación de producción aprobada. `npm run check:architecture`: dependencias válidas, sin ciclos ni imports hacia capas superiores.
 
 | Métrica | Cubiertos | Total | Cobertura |
 | --- | --- | --- | --- |
-| Sentencias | 497 | 574 | 86,58% |
-| Ramas | 352 | 431 | 81,67% |
-| Funciones | 156 | 182 | 85,71% |
-| Líneas | 461 | 525 | 87,80% |
+| Sentencias | 556 | 634 | 87,69% |
+| Ramas | 385 | 464 | 82,97% |
+| Funciones | 210 | 237 | 88,60% |
+| Líneas | 520 | 585 | 88,88% |
 
 Las cifras provienen de coverage/coverage-summary.json. El reporte HTML se genera en coverage/index.html. Las métricas corresponden al código instrumentado del reporte, no al porcentaje de requisitos cumplidos. Las pruebas de la entrada de Show Preview ejecutan su fuente con un entorno simulado y no suman cobertura instrumentada de ese archivo.
 
@@ -26,6 +26,7 @@ Las cifras provienen de coverage/coverage-summary.json. El reporte HTML se gener
 | admin.test.jsx | Login/logout, credenciales incorrectas, acceso cliente, límites del vendedor, CRUD de catálogo compartido y edición/eliminación de usuarios con pasaporte |
 | pages.test.jsx | Páginas editoriales conservadas y búsqueda de inicio |
 | preview.test.js | Redirección desde Live Preview a Vite, preservación de parámetros/hash, prefijo de carpeta y carga React al procesar con Vite |
+| atomic-design.test.jsx | Contratos de botones, enlaces, campos accesibles, confirmación y selección de arriendo; detección de dependencias hacia capas superiores y ciclos |
 
 Las pruebas con parámetros cuentan varias entradas de un mismo escenario. Los diez casos centrales para exposición están identificados en GUION-PRESENTACION.md; la suite completa agrega límites y regresiones.
 
@@ -39,11 +40,11 @@ Los mocks de fetch con vi.fn y vi.stubGlobal devuelven respuestas controladas pa
 
 ## Interpretación y límites
 
-Las reglas de carrito y validación tienen 100% de sentencias y líneas en esta ejecución. El registro alcanza 97,72% de líneas; la administración, 86,45%. Los servicios alcanzan 98,18% de líneas. Estos resultados sostienen la verificación de los flujos principales y permiten localizar ramas pendientes.
+Las reglas de carrito y validación tienen 100% de sentencias y líneas en esta ejecución. RegistrationForm alcanza 97,67% de líneas; las páginas de administración, 89,74%. Los servicios alcanzan 98,18% de líneas. Estos resultados sostienen la verificación de los flujos principales y permiten localizar ramas pendientes.
 
-Reservation.jsx conserva ramas sin ejecutar para la carga remota del componente, confirmación HTTP y recuperación/fallo de borrador. Su cobertura de líneas es 53,03%; el servicio de envío se prueba por separado con mocks. Store.jsx tiene 71,42% de líneas y baja cobertura de ramas, especialmente sincronización entre pestañas y errores de actualización. Algunos alias HTML, permisos administrativos y fallos de cuota tienen casos pendientes. No se afirma cobertura exhaustiva.
+Reservation.jsx conserva ramas sin ejecutar para la carga remota del componente, confirmación HTTP y recuperación/fallo de borrador. Su cobertura de líneas es 51,61%; el servicio de envío se prueba por separado con mocks. ProductForm tiene 50% de líneas y necesita ampliar escenarios de selección y edición. Store.jsx tiene 71,42% de líneas y baja cobertura de ramas, especialmente sincronización entre pestañas y errores de actualización. Algunos alias HTML, permisos administrativos y fallos de cuota tienen casos pendientes. No se afirma cobertura exhaustiva.
 
-jsdom no verifica geometría, colores o layout real de Bootstrap. La revisión visual anterior comprobó inicio de escritorio y registro móvil de 390 px sin desbordamiento horizontal. La corrección final de Show Preview se verificó por pruebas de su entrada y respuestas HTTP 200; no se pudo inspeccionar visualmente el panel de VS Code en esa sesión porque el control nativo no estaba disponible.
+jsdom no verifica geometría, colores o layout real de Bootstrap. Tras la reorganización se inspeccionaron el registro y la portada en navegador. En registro móvil de 390 px se detectó y corrigió el margen horizontal del Grid: el ancho desplazable y el ancho útil quedaron iguales en 375 px, considerando la barra de desplazamiento vertical. No se detectaron errores de consola al cargar la portada. La entrada de Show Preview conserva sus pruebas; el botón de VS Code no se inspeccionó nuevamente en esta actualización.
 
 No se verificaron un backend real, autorización de servidor, pagos, correo entregado, autenticidad de documentos, pruebas de carga ni todos los navegadores. No deben presentarse los mocks como evidencia de reservas persistidas en producción.
 

@@ -12,7 +12,8 @@
     "test:coverage": "vitest run --coverage",
     "format": "prettier --write src vite.config.js package.json",
     "format:check": "prettier --check src vite.config.js package.json",
-    "package:delivery": "node scripts/package-delivery.mjs"
+    "package:delivery": "node scripts/package-delivery.mjs",
+    "check:architecture": "node scripts/check-atomic-design.mjs"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",

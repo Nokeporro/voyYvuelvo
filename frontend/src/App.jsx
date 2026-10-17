@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import Layout from "./components/Layout";
+import SiteTemplate from "./components/templates/SiteTemplate.jsx";
 import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -10,20 +10,16 @@ import About from "./pages/About";
 import Blog from "./pages/Blog";
 import ArticleOne from "./pages/ArticleOne";
 import ArticleTwo from "./pages/ArticleTwo";
-import {
-  Products,
-  ProductDetail,
-  RoutesCatalog,
-  NotFound,
-} from "./pages/Catalog";
-import {
-  AdminLayout,
-  Dashboard,
-  AdminProducts,
-  ProductEditor,
-  AdminUsers,
-  UserEditor,
-} from "./pages/Admin";
+import { Products } from "./pages/Products.jsx";
+import { ProductDetail } from "./pages/ProductDetail.jsx";
+import { RoutesCatalog } from "./pages/RoutesCatalog.jsx";
+import { NotFound } from "./pages/NotFound.jsx";
+import { AdminTemplate } from "./components/templates/AdminTemplate.jsx";
+import { Dashboard } from "./pages/admin/Dashboard.jsx";
+import { AdminProducts } from "./pages/admin/AdminProducts.jsx";
+import { ProductEditor } from "./pages/admin/ProductEditor.jsx";
+import { AdminUsers } from "./pages/admin/AdminUsers.jsx";
+import { UserEditor } from "./pages/admin/UserEditor.jsx";
 function LegacyRedirect() {
   const { pathname, search } = useLocation();
   const params = new URLSearchParams(search);
@@ -57,7 +53,7 @@ function LegacyRedirect() {
 export default function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route element={<SiteTemplate />}>
         <Route index element={<Home />} />
         <Route path="registro" element={<Register />} />
         <Route path="login" element={<Login />} />
@@ -71,7 +67,7 @@ export default function App() {
         <Route path="blogs" element={<Blog />} />
         <Route path="blogs/1" element={<ArticleOne />} />
         <Route path="blogs/2" element={<ArticleTwo />} />
-        <Route path="admin" element={<AdminLayout />}>
+        <Route path="admin" element={<AdminTemplate />}>
           <Route index element={<Dashboard />} />
           <Route path="productos" element={<AdminProducts />} />
           <Route path="productos/nuevo" element={<ProductEditor />} />

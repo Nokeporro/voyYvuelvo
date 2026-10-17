@@ -3,8 +3,10 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { StoreProvider } from "../context/Store";
-import { RegistrationForm } from "../pages/Register";
-import { Products, ProductDetail, RoutesCatalog } from "../pages/Catalog";
+import { RegistrationForm } from "../components/organisms/RegistrationForm.jsx";
+import { Products } from "../pages/Products.jsx";
+import { ProductDetail } from "../pages/ProductDetail.jsx";
+import { RoutesCatalog } from "../pages/RoutesCatalog.jsx";
 import Cart from "../pages/Cart";
 import Contact from "../pages/Contact";
 import Reservation from "../pages/Reservation";
@@ -32,8 +34,10 @@ async function fillPassport(user) {
     ["Confirmar contraseña", "Sendero2026!"],
     ["Teléfono de contacto", "+33612345678"],
     ["Domicilio o alojamiento en Chile", "Hotel Santiago 123"],
-  ])
-    await user.type(screen.getByLabelText(label, { exact: true }), value);
+  ]) {
+    await user.click(screen.getByLabelText(label, { exact: true }));
+    await user.paste(value);
+  }
   await user.click(screen.getByLabelText(/Acepto el uso/));
 }
 describe("Componentes de registro", () => {
