@@ -50,6 +50,8 @@ Las cuentas se guardan solo en el navegador actual. Se persiste un hash SHA-256 
 
 ## Backend opcional de reservas
 
+Consulta [Conexión con los microservicios](docs/CONEXION-BACKEND.md) para iniciar ambos proyectos y verificar las llamadas reales. `.env.test` mantiene las pruebas en modo simulado aunque configures una API local en `.env`.
+
 Copia `.env.example` a `.env` y configura:
 
 ```dotenv
@@ -98,6 +100,7 @@ Los HTML de la raíz y `admin/` son entradas de compatibilidad a la misma aplica
 
 ## Documentación para la evaluación
 
+- [Manual completo de arquitectura, uso y pruebas](docs/MANUAL-COMPLETO-DEL-PROYECTO.md): índice de carpetas, componentes, rutas, instalación, comandos de terminal y explicación de las pruebas.
 - `docs/ANALISIS-Y-CRITERIOS.md`: inventario, diagnóstico y trazabilidad de los ocho indicadores.
 - `docs/ERS-EP2.md`: versión 2 de requisitos, con criterios de aceptación y reglas para visitantes extranjeros. Reemplaza el estado de EP1 del DOCX histórico para esta entrega.
 - `docs/COBERTURA-TESTING.md`: alcance, estrategia, mocks, resultados y límites de cobertura.
