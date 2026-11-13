@@ -61,7 +61,7 @@ Las dependencias van de componentes de mayor composición a componentes más sim
 
 Para una nueva pantalla, primero reutiliza los átomos y moléculas disponibles. Crea un organismo para un bloque con una responsabilidad clara; combina los organismos con una plantilla desde una página. Modifica App.jsx únicamente para registrar la ruta. Evita importar componentes mediante archivos de índice que oculten dependencias circulares.
 
-Los tokens visuales comunes están en src/styles/tokens.css. src/styles.css conserva los estilos de componentes y los ajustes responsivos. Bootstrap se importa una sola vez en main.jsx.
+Los tokens visuales comunes están en src/styles/tokens.css. src/styles/global.css conserva los estilos de componentes y los ajustes responsivos. Bootstrap se importa una sola vez en main.jsx.
 
 ## Comprobación automática
 

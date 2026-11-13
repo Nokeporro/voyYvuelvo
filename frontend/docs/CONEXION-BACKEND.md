@@ -1,8 +1,10 @@
 # Conexión del frontend con los microservicios
 
+Esta guía reúne la configuración y las comprobaciones operativas. Para comprender la implementación paso a paso, consulta [Cómo se conectan el frontend y el backend](INTEGRACION-FRONTEND-BACKEND.md). Para descargar e iniciar todo desde cero, sigue el [README principal](../../README.md).
+
 ## Configuración local
 
-El backend está en `C:\Users\nokep\Documents\1_PROYECTOS_code\backend\voyYvuelvo`. Su Gateway publica los servicios en `http://localhost:8080`.
+El backend está actualmente en `C:\Users\nokep\Documents\1_PROYECTOS_code\HTML_PROYECTS\Fullstack2\voyYvuelvo`, junto a `frontend`. Su Gateway publica los servicios en `http://localhost:8080`. Para la instalación y comprobación completa consulta [la guía paso a paso](GUIA-INICIO-Y-VERIFICACION.md).
 
 En esta copia del frontend se creó `.env` con:
 
@@ -17,7 +19,7 @@ El archivo `.env` está ignorado por Git. Cada colaborador debe crear su configu
 Con Docker Desktop abierto, desde una terminal:
 
 ```powershell
-cd "C:\Users\nokep\Documents\1_PROYECTOS_code\backend\voyYvuelvo"
+cd "C:\Users\nokep\Documents\1_PROYECTOS_code\HTML_PROYECTS\Fullstack2\voyYvuelvo"
 docker compose up -d --build
 docker compose ps
 ```
@@ -35,13 +37,13 @@ Si Vite estaba abierto antes de crear o modificar `.env`, detenlo con Ctrl+C y v
 
 `src/pages/Reservation.jsx` consulta la ruta y su equipamiento a través de `src/services/api.js`. Al enviar una reserva, el servicio busca el contacto por correo, lo crea si hace falta y envía la reserva. Las respuestas de listas pueden ser directas o HAL.
 
-| Operación | Endpoint del Gateway |
-| --- | --- |
-| Consultar ruta | `GET /api/rutas/{id}` |
+| Operación                      | Endpoint del Gateway                       |
+| ------------------------------ | ------------------------------------------ |
+| Consultar ruta                 | `GET /api/rutas/{id}`                      |
 | Consultar arriendo recomendado | `GET /api/equipamiento/recomendacion/{id}` |
-| Consultar contactos | `GET /api/usuarios` |
-| Crear contacto | `POST /api/usuarios` |
-| Crear reserva | `POST /api/reservas` |
+| Consultar contactos            | `GET /api/usuarios`                        |
+| Crear contacto                 | `POST /api/usuarios`                       |
+| Crear reserva                  | `POST /api/reservas`                       |
 
 La reserva tiene efectos reales en los microservicios: utiliza identificadores existentes y puede afectar cupos y el flujo de pago. Para probar el envío manual utiliza datos académicos y verifica antes la disponibilidad. No se creó una reserva durante la comprobación inicial de conexión.
 
@@ -77,3 +79,21 @@ npm run build
 ```
 
 Vitest carga el modo `test` y `.env.test`; sus casos conservan respuestas HTTP simuladas. Vite en desarrollo y el build normal utilizan la dirección local de `.env`. Si despliegas `dist` en otro equipo o servidor, recompila con la URL apropiada: `localhost` en el navegador apunta al equipo de quien visita la página, no al servidor remoto.
+
+## Verificación real después de la limpieza: 12 de noviembre de 2026
+
+Se reconstruyeron las siete imágenes desde `infrastructure/` y `services/`, conservando el volumen MySQL. Los ocho contenedores iniciaron correctamente. Las cinco API respondieron por el Gateway y sus puertos directos; Eureka registró las seis aplicaciones cliente como `UP` y se verificaron CORS y el preflight para reservas.
+
+Desde `frontend/`, con Vite y Docker iniciados:
+
+```powershell
+# Consultas reales sin modificar datos.
+npm run test:integration
+
+# Añade una prueba con datos temporales propios y limpieza al finalizar.
+npm run test:integration -- --write-test
+```
+
+La segunda opción aprobó 12 comprobaciones. Ejecuta el servicio HTTP real de `src/services/api.js` con el entorno de desarrollo: crea y actualiza un equipamiento, crea un usuario y una reserva con arriendo, comprueba el pago pendiente y su monto, y verifica el descuento de un cupo. Después elimina sus registros temporales y comprueba que los cupos se restauren. No procesa un cobro ni confirma el pago. Los errores producen una salida distinta de cero.
+
+El comprobador está en `scripts/check-integration.mjs`. Esta prueba verifica HTTP, contratos y persistencia; la revisión visual manual en el navegador es complementaria.

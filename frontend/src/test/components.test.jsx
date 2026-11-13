@@ -194,6 +194,12 @@ describe("Navegación, contacto y reservas", () => {
       await screen.findByRole("heading", { name: "Crea tu cuenta" }),
     ).toBeInTheDocument();
   });
+  it("conserva el producto indicado por un enlace HTML antiguo", async () => {
+    show(<App />, "/detalle-producto.html?id=2");
+    expect(
+      await screen.findByRole("heading", { name: "Carpa de Montaña" }),
+    ).toBeInTheDocument();
+  });
   it("abre y cierra el menú móvil mediante estado", async () => {
     const user = userEvent.setup();
     show(<App />);
@@ -202,12 +208,15 @@ describe("Navegación, contacto y reservas", () => {
     await user.click(menu);
     expect(menu).toHaveAttribute("aria-expanded", "true");
   });
-  it("redirige un visitante del panel a login", async () => {
-    show(<App />, "/admin");
-    expect(
-      await screen.findByRole("heading", { name: "Iniciar sesión" }),
-    ).toBeInTheDocument();
-  });
+  it.each(["/admin", "/admin/productos-listado.html"])(
+    "redirige un visitante de %s a login",
+    async (path) => {
+      show(<App />, path);
+      expect(
+        await screen.findByRole("heading", { name: "Iniciar sesión" }),
+      ).toBeInTheDocument();
+    },
+  );
   it("muestra página no encontrada para un producto inexistente", () => {
     show(<App />, "/productos/999");
     expect(

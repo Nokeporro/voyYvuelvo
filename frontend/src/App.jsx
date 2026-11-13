@@ -20,34 +20,10 @@ import { AdminProducts } from "./pages/admin/AdminProducts.jsx";
 import { ProductEditor } from "./pages/admin/ProductEditor.jsx";
 import { AdminUsers } from "./pages/admin/AdminUsers.jsx";
 import { UserEditor } from "./pages/admin/UserEditor.jsx";
+import { resolveLegacyPath } from "./routes/legacy.js";
 function LegacyRedirect() {
   const { pathname, search } = useLocation();
-  const params = new URLSearchParams(search);
-  const aliases = {
-    "/index.html": "/",
-    "/registro.html": "/registro",
-    "/login.html": "/login",
-    "/productos.html": "/productos",
-    "/rutas.html": "/rutas",
-    "/carrito.html": "/carrito",
-    "/blogs.html": "/blogs",
-    "/nosotros.html": "/nosotros",
-    "/contacto.html": "/contacto",
-    "/detalle-blog-1.html": "/blogs/1",
-    "/detalle-blog-2.html": "/blogs/2",
-    "/admin/index.html": "/admin",
-    "/admin/productos-listado.html": "/admin/productos",
-    "/admin/usuarios-listado.html": "/admin/usuarios",
-    "/admin/producto-nuevo.html": "/admin/productos/nuevo",
-    "/admin/usuario-nuevo.html": "/admin/usuarios/nuevo",
-  };
-  let target = aliases[pathname];
-  if (pathname === "/detalle-producto.html")
-    target = `/productos/${params.get("id") || 1}`;
-  if (pathname === "/reserva-ruta.html")
-    target = `/rutas/${params.get("ruta") || 1}`;
-  if (pathname === "/admin/producto-editar.html") target = "/admin/productos";
-  if (pathname === "/admin/usuario-editar.html") target = "/admin/usuarios";
+  const target = resolveLegacyPath(pathname, search);
   return target ? <Navigate to={`${target}${search}`} replace /> : <NotFound />;
 }
 export default function App() {

@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "test:integration": "node scripts/check-integration.mjs",
     "format": "prettier --write src vite.config.js package.json",
     "format:check": "prettier --check src vite.config.js package.json",
     "package:delivery": "node scripts/package-delivery.mjs",
