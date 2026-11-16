@@ -1,0 +1,10 @@
+:root {
+  --ink: #1e2a38;
+  --muted: #65707e;
+  --yellow: #f5a623;
+  --paper: #f7f8fa;
+  --bs-body-color: var(--ink);
+  --bs-body-bg: var(--paper);
+  --bs-font-sans-serif: "Inter", sans-serif;
+  --bs-border-radius: 0.6rem;
+}

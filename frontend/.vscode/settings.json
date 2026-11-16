@@ -1,0 +1,5 @@
+{
+  "livePreview.openPreviewTarget": "Embedded Preview",
+  "livePreview.useIntegratedBrowser": true,
+  "livePreview.defaultPreviewPath": "/index.html"
+}

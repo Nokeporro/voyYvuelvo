@@ -1,0 +1,66 @@
+export const routes = [
+  {
+    id: 1,
+    nombre: "Circuito Base Torres",
+    ubicacion: "Torres del Paine · Magallanes",
+    dificultad: "Alta",
+    precio: 210000,
+    cupoMaximo: 12,
+    aptoNinos: false,
+    aptoMascotas: false,
+    duracion: "4 días",
+    categorias: ["montana"],
+    imagen: "/img/portada1.jpg",
+    descripcion:
+      "Una experiencia de varios días entre montañas, miradores y paisajes de la Patagonia.",
+  },
+  {
+    id: 2,
+    nombre: "Laguna del Inca",
+    ubicacion: "Portillo · Valparaíso",
+    dificultad: "Fácil",
+    precio: 35000,
+    cupoMaximo: 24,
+    aptoNinos: true,
+    aptoMascotas: false,
+    duracion: "1 día",
+    categorias: ["montana", "lagos", "familia"],
+    imagen: "/img/portada2.jpg",
+    descripcion: "Disfruta del paisaje cordillerano en una caminata de un día.",
+  },
+  {
+    id: 3,
+    nombre: "Sendero Los Lirios",
+    ubicacion: "Parque Conguillío · Araucanía",
+    dificultad: "Media",
+    precio: 78000,
+    cupoMaximo: 18,
+    aptoNinos: true,
+    aptoMascotas: false,
+    duracion: "2 días",
+    categorias: ["bosque"],
+    imagen: "/img/sendero-lirios-2.png",
+    descripcion:
+      "Recorre bosque nativo y naturaleza volcánica en una salida de dificultad media.",
+  },
+];
+export const rentalEquipment = [
+  {
+    id: 1,
+    nombre: "Bastones de Trekking",
+    valorArriendo: 5000,
+    imagen: "/img/bastones.png",
+  },
+  {
+    id: 2,
+    nombre: "Mochila Trekking",
+    valorArriendo: 8000,
+    imagen: "/img/mochila.png",
+  },
+  {
+    id: 3,
+    nombre: "Carpa de Montaña",
+    valorArriendo: 15000,
+    imagen: "/img/carpa.png",
+  },
+];

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.voy.vuelvo</groupId>
+    <artifactId>voy-vuelvo-backend</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Voy y Vuelvo - Backend</name>
+    <!-- Agrega los módulos sin cambiar sus parents ni sus dependencias. -->
+    <modules>
+        <module>infrastructure/eureka-server</module>
+        <module>infrastructure/api-gateway</module>
+        <module>services/ms-usuario</module>
+        <module>services/ms-equipamiento</module>
+        <module>services/ms-ruta</module>
+        <module>services/ms-reserva</module>
+        <module>services/ms-pago</module>
+    </modules>
+</project>
