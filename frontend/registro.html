@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Crea tu cuenta Voy y Vuelvo y prepárate para tu próxima salida de trekking.">
+  <title>Crear cuenta | Voy y Vuelvo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header"><div class="container header-container">
+    <a href="index.html" class="logo" aria-label="Voy y Vuelvo, inicio"><span class="logo-mark" aria-hidden="true">🏔️</span><span class="logo-name">Voy y Vuelvo</span></a>
+    <nav class="main-nav" aria-label="Navegación principal"><a class="nav-link" href="index.html">Inicio</a><a class="nav-link" href="productos.html">Productos</a><a class="nav-link" href="blogs.html">Blog</a><a class="nav-link" href="nosotros.html">Nosotros</a><a class="nav-link" href="contacto.html">Contacto</a></nav>
+    <div class="header-actions"><a class="btn btn-secondary" href="login.html">Iniciar sesión</a><a href="carrito.html" class="cart-button" aria-label="Ver carrito"><span class="cart-icon" aria-hidden="true">🛒</span><span class="cart-label">Carrito</span></a></div>
+  </div></header>
+  <main class="account-page account-page-wide"><section class="account-card account-card-wide" aria-labelledby="page-title">
+    <div class="account-visual"><span class="eyebrow">Súmate a la aventura</span><h1>Equípate para llegar más lejos.</h1><p>Crea tu cuenta para guardar tus datos y preparar cada salida con el equipo adecuado.</p><div class="visual-points"><span>✓ Tu equipo, a tu ritmo</span><span>✓ Consejos para cada ruta</span></div></div>
+    <div class="account-form-wrap"><span class="eyebrow">Unos datos y partimos</span><h2 id="page-title">Crear cuenta</h2><p class="form-intro">Completa tus datos para registrarte en Voy y Vuelvo.</p>
+      <form id="registro-form" novalidate>
+        <div class="form-grid">
+          <div class="form-field"><label for="run">RUN</label><input id="run" name="run" type="text" inputmode="text" autocomplete="off" placeholder="19011022K" maxlength="9" required aria-describedby="run-help run-error"><small class="field-hint" id="run-help">Sin puntos ni guion. Ejemplo: 19011022K</small><small class="field-error" id="run-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="nombre">Nombre</label><input id="nombre" name="nombre" type="text" autocomplete="given-name" maxlength="50" required aria-describedby="nombre-error"><small class="field-error" id="nombre-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="apellidos">Apellidos</label><input id="apellidos" name="apellidos" type="text" autocomplete="family-name" maxlength="100" required aria-describedby="apellidos-error"><small class="field-error" id="apellidos-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="correo">Correo electrónico</label><input id="correo" name="correo" type="email" autocomplete="email" maxlength="100" placeholder="nombre@gmail.com" required aria-describedby="correo-error"><small class="field-error" id="correo-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="contrasena">Contraseña</label><div class="password-field"><input id="contrasena" name="contrasena" type="password" autocomplete="new-password" minlength="4" maxlength="10" required aria-describedby="contrasena-error"><button class="password-toggle" type="button" data-toggle-password="contrasena" aria-label="Mostrar contraseña">Mostrar</button></div><small class="field-hint">Entre 4 y 10 caracteres.</small><small class="field-error" id="contrasena-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="fecha-nacimiento">Fecha de nacimiento <span class="optional-label">(opcional)</span></label><input id="fecha-nacimiento" name="fechaNacimiento" type="date" autocomplete="bday"></div>
+          <div class="form-field"><label for="region">Región</label><select id="region" name="region" required aria-describedby="region-error"><option value="">Selecciona una región</option></select><small class="field-error" id="region-error" aria-live="polite"></small></div>
+          <div class="form-field"><label for="comuna">Comuna</label><select id="comuna" name="comuna" required disabled aria-describedby="comuna-error"><option value="">Primero selecciona una región</option></select><small class="field-error" id="comuna-error" aria-live="polite"></small></div>
+          <div class="form-field form-field-full"><label for="direccion">Dirección</label><input id="direccion" name="direccion" type="text" autocomplete="street-address" maxlength="300" required aria-describedby="direccion-error"><small class="field-error" id="direccion-error" aria-live="polite"></small></div>
+        </div>
+        <div class="form-feedback" id="registro-feedback" role="status" aria-live="polite"></div>
+        <button class="btn btn-primary btn-large form-submit" type="submit">Crear mi cuenta <span aria-hidden="true">→</span></button>
+      </form>
+      <p class="form-switch">¿Ya tienes una cuenta? <a href="login.html">Inicia sesión</a></p>
+      <p class="demo-note">El registro se simula en esta entrega y no envía datos a un servidor.</p>
+    </div>
+  </section></main>
+  <footer class="site-footer"><div class="container footer-bottom-content"><p>© 2026 Voy y Vuelvo · Nos vemos en la ruta.</p></div></footer>
+  <script src="js/regiones-comunas.js" defer></script>
+  <script src="js/validaciones-registro.js" defer></script>
+</body>
+</html>

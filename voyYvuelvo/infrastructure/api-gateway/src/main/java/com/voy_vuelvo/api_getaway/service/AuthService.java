@@ -2,8 +2,13 @@ package com.voy_vuelvo.api_getaway.service;
 
 import com.voy_vuelvo.api_getaway.model.Usuario;
 import com.voy_vuelvo.api_getaway.repository.UsuarioRepository;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Locale;
+import java.util.Set;
 
 @Service
 public class AuthService {
@@ -17,33 +22,182 @@ public class AuthService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public boolean validarCredenciales(String username, String password) {
+    // 1. AUTENTICAR USUARIO
+    // Comprueba el usuario y su contraseña en MySQL.
+    public Usuario autenticar(String username, String password) {
+
+        if (username == null || username.isBlank()
+                || password == null) {
+            return null;
+        }
+
+        Usuario usuario =
+                usuarioRepository.findByUsername(username.trim());
+
+        if (usuario == null || usuario.getPassword() == null) {
+            return null;
+        }
+
+        boolean passwordCorrecta = passwordEncoder.matches(
+                password,
+                usuario.getPassword()
+        );
+
+        return passwordCorrecta ? usuario : null;
+    }
+
+    // Mantiene compatibilidad con el sistema existente.
+    public boolean validarCredenciales(
+            String username,
+            String password) {
+
+        return autenticar(username, password) != null;
+    }
+
+    // 2. OBTENER ROL
+    // Utiliza el rol realmente guardado en MySQL.
+    public String obtenerRol(Usuario usuario) {
+
+        if (usuario == null
+                || usuario.getRol() == null
+                || usuario.getRol().isBlank()) {
+
+            throw new IllegalStateException(
+                    "El usuario no tiene un rol asignado."
+            );
+        }
+
+        String rol = usuario.getRol()
+                .trim()
+                .toUpperCase(Locale.ROOT)
+                .replaceFirst("^ROLE_", "");
+
+        if (!Set.of(
+                "ADMINISTRADOR",
+                "VENDEDOR",
+                "CLIENTE"
+        ).contains(rol)) {
+
+            throw new IllegalStateException(
+                    "El usuario tiene un rol no válido."
+            );
+        }
+
+        return rol;
+    }
+
+    // 3. REGISTRAR USUARIO
+    // Todas las cuentas nuevas reciben el rol CLIENTE.
+    public void registrarUsuario(
+            String username,
+            String password) {
+
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException(
+                    "El nombre de usuario es obligatorio."
+            );
+        }
+
+        if (password == null || password.length() < 8) {
+            throw new IllegalArgumentException(
+                    "La contraseña debe tener al menos 8 caracteres."
+            );
+        }
+
+        String nombreUsuario = username.trim();
+
+        if (usuarioRepository.findByUsername(nombreUsuario) != null) {
+            throw new IllegalArgumentException(
+                    "El usuario ya está registrado."
+            );
+        }
+
+        String hash = passwordEncoder.encode(password);
+
+        Usuario usuario = new Usuario(nombreUsuario, hash);
+
+        usuario.setRol("CLIENTE");
+
+        // Las cuentas nuevas comienzan sin perfil vinculado.
+        usuario.setPerfilUsuarioId(null);
+
+        usuarioRepository.save(usuario);
+    }
+
+    // 4. CONSULTAR PERFIL VINCULADO
+    // El username debe provenir de un JWT validado.
+    @Transactional(readOnly = true)
+    public Long obtenerPerfilUsuarioId(String username) {
+
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Usuario inválido."
+            );
+        }
 
         Usuario usuario =
                 usuarioRepository.findByUsername(username);
 
-        if (usuario != null) {
-
-            return passwordEncoder.matches(
-                    password,
-                    usuario.getPassword()
+        if (usuario == null) {
+            throw new IllegalArgumentException(
+                    "La cuenta no existe."
             );
         }
 
-        return false;
+        return usuario.getPerfilUsuarioId();
     }
 
-    public void registrarUsuario(
+    // 5. VINCULAR PERFIL NUEVO
+    //
+    // Este método debe llamarse exclusivamente desde
+    // el backend, después de crear un perfil nuevo
+    // para el usuario autenticado.
+    //
+    // Nunca se debe aceptar un ID de perfil elegido
+    // libremente por el navegador.
+    @Transactional
+    public Long vincularPerfilNuevo(
             String username,
-            String password
-    ) {
+            Long perfilUsuarioId) {
 
-        String hash =
-                passwordEncoder.encode(password);
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Usuario inválido."
+            );
+        }
+
+        if (perfilUsuarioId == null || perfilUsuarioId <= 0) {
+            throw new IllegalArgumentException(
+                    "El ID del perfil es inválido."
+            );
+        }
 
         Usuario usuario =
-                new Usuario(username, hash);
+                usuarioRepository.findByUsername(username);
 
-        usuarioRepository.save(usuario);
+        if (usuario == null) {
+            throw new IllegalArgumentException(
+                    "La cuenta no existe."
+            );
+        }
+
+        if (!"CLIENTE".equals(obtenerRol(usuario))) {
+            throw new IllegalStateException(
+                    "Solo una cuenta Cliente puede registrar un perfil."
+            );
+        }
+
+        // Evitar reemplazar una vinculación existente.
+        if (usuario.getPerfilUsuarioId() != null) {
+            throw new IllegalStateException(
+                    "La cuenta ya tiene un perfil vinculado."
+            );
+        }
+
+        usuario.setPerfilUsuarioId(perfilUsuarioId);
+
+        usuarioRepository.saveAndFlush(usuario);
+
+        return perfilUsuarioId;
     }
 }
