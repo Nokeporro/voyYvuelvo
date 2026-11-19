@@ -1,6 +1,12 @@
 package com.voy_vuelvo.api_getaway.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +24,27 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // Nombre utilizado para iniciar sesión.
     private String username;
 
+    // Contraseña cifrada con BCrypt.
     private String password;
 
+    // CLIENTE, VENDEDOR o ADMINISTRADOR.
     private String rol;
 
+    // ID del perfil correspondiente en bd_usuario.
+    // Puede quedar vacío mientras no exista vinculación.
+    @Column(
+        name = "perfil_usuario_id",
+        unique = true
+    )
+    private Long perfilUsuarioId;
+
+    // Constructor utilizado al registrar una cuenta.
     public Usuario(String username, String password) {
         this.username = username;
         this.password = password;
+        this.rol = "CLIENTE";
     }
 }

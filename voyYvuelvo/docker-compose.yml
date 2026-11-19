@@ -1,5 +1,7 @@
+
 services:
 
+  # BASE DE DATOS MYSQL
   mysql:
     image: mysql:8.0
     container_name: mysql
@@ -10,6 +12,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  # SERVIDOR EUREKA
   eureka:
     build:
       context: ./infrastructure/eureka-server
@@ -20,6 +23,7 @@ services:
     depends_on:
       - mysql
 
+  # API GATEWAY CON SEGURIDAD JWT
   api-gateway:
     build:
       context: ./infrastructure/api-gateway
@@ -27,64 +31,62 @@ services:
     container_name: api-getaway
     ports:
       - "8080:8080"
+    environment:
+      JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:?Falta configurar JWT_SECRET_BASE64}
     depends_on:
       - eureka
       - mysql
 
+  # MICROSERVICIO DE USUARIOS
   ms-usuario:
     build:
       context: ./services/ms-usuario
       dockerfile: Dockerfile
     container_name: ms-usuario
-    ports:
-      - "8084:8084"
     depends_on:
       - eureka
       - mysql
 
+  # MICROSERVICIO DE EQUIPAMIENTO
   ms-equipamiento:
     build:
       context: ./services/ms-equipamiento
       dockerfile: Dockerfile
     container_name: ms-equipamiento
-    ports:
-      - "8081:8081"
     depends_on:
       - eureka
       - mysql
 
+  # MICROSERVICIO DE RUTAS
   ms-ruta:
     build:
       context: ./services/ms-ruta
       dockerfile: Dockerfile
     container_name: ms-ruta
-    ports:
-      - "8086:8086"
     depends_on:
       - eureka
       - mysql
 
+  # MICROSERVICIO DE RESERVAS
   ms-reserva:
     build:
       context: ./services/ms-reserva
       dockerfile: Dockerfile
     container_name: ms-reserva
-    ports:
-      - "8083:8083"
     depends_on:
       - eureka
       - mysql
 
+  # MICROSERVICIO DE PAGOS
   ms-pago:
     build:
       context: ./services/ms-pago
       dockerfile: Dockerfile
     container_name: ms-pago
-    ports:
-      - "8085:8085"
     depends_on:
       - eureka
       - mysql
 
+# VOLUMEN PERSISTENTE DE MYSQL
 volumes:
   mysql_data:
