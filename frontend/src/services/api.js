@@ -1,3 +1,4 @@
+
 const base = (import.meta.env.VITE_API_URL || "")
   .replace(/\/$/, "");
 
@@ -5,13 +6,14 @@ export const apiEnabled = Boolean(base);
 
 // REALIZAR PETICIONES AL BACKEND
 export async function request(path, options = {}) {
+
   const {
     token,
     headers = {},
     ...fetchOptions
   } = options;
 
-  // Agregar el JWT cuando la solicitud lo necesite.
+  // Incluir JWT cuando la solicitud lo necesite.
   const authorization = token
     ? { Authorization: `Bearer ${token}` }
     : {};
@@ -30,35 +32,20 @@ export async function request(path, options = {}) {
     },
   });
 
-  // Verificar si el backend respondió correctamente.
   if (!response.ok) {
-    if (response.status === 401) {
-      throw new Error(
-        "Tu sesión no es válida o ha expirado. Inicia sesión nuevamente."
-      );
-    }
-
-    if (response.status === 403) {
-      throw new Error(
-        "No tienes permisos para realizar esta operación."
-      );
-    }
-
     throw new Error(
       `El servicio respondió con error ${response.status}.`
     );
   }
 
-  // Respuesta sin contenido.
-  if (response.status === 204) {
-    return null;
-  }
-
-  return response.json();
+  return response.status === 204
+    ? null
+    : response.json();
 }
 
 // EXTRAER LISTAS DEVUELTAS POR SPRING BOOT
 export function embeddedList(data) {
+
   if (Array.isArray(data)) {
     return data;
   }
@@ -69,41 +56,58 @@ export function embeddedList(data) {
   );
 }
 
-// CREAR RESERVAS UTILIZANDO JWT
+// CREAR RESERVAS
+// Este flujo se adaptará a los nuevos permisos JWT.
 export async function submitReservation(
   data,
   route,
-  equipment,
-  token
+  equipment
 ) {
-  // Verificar que exista una sesión autenticada.
-  if (!token) {
+
+  const users = embeddedList(
+    await request("/api/usuarios")
+  );
+
+  const email = data.email.trim().toLowerCase();
+
+  let user = users.find(
+    (u) =>
+      String(u.email).toLowerCase() === email
+  );
+
+  if (!user) {
+
+    user = await request("/api/usuarios", {
+      method: "POST",
+
+      body: JSON.stringify({
+        nombre: data.nombre.trim(),
+        email,
+        telefono: data.telefono.trim(),
+      }),
+    });
+  }
+
+  if (!user?.id) {
     throw new Error(
-      "Debes iniciar sesión para realizar una reserva."
+      "El servicio no entregó un identificador de usuario."
     );
   }
 
-  // Preparar los datos que necesita el backend.
-  const reserva = {
-    rutaId: Number(route.id),
-
-    cantidadPersonas: Number(data.personas),
-
-    fechaReserva: data.fecha,
-
-    necesitaGuia: Boolean(data.guia),
-
-    equipamientos: equipment.map((e) => ({
-      equipamientoId: Number(e.id),
-      cantidad: 1,
-    })),
-  };
-
-  // Enviar la reserva al endpoint protegido.
-  // El backend identifica al Cliente mediante su JWT.
-  return request("/auth/reservas", {
+  return request("/api/reservas", {
     method: "POST",
-    token,
-    body: JSON.stringify(reserva),
+
+    body: JSON.stringify({
+      usuarioId: user.id,
+      rutaId: route.id,
+      cantidadPersonas: Number(data.personas),
+      fechaReserva: data.fecha,
+      necesitaGuia: data.guia,
+
+      equipamientos: equipment.map((e) => ({
+        equipamientoId: e.id,
+        cantidad: 1,
+      })),
+    }),
   });
 }
