@@ -110,16 +110,14 @@ public class SecurityConfig {
                         )
                         .hasRole("CLIENTE")
 
-                        // 6. DOCUMENTACION SWAGGER
+                        // 6. RESERVAS SEGURAS DEL CLIENTE
+                        // El ID del usuario se obtiene desde
+                        // su cuenta autenticada y no desde React.
                         .pathMatchers(
-                                "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/v3/api-docs",
-                                "/v3/api-docs/**",
-                                "/api/*/v3/api-docs",
-                                "/api/*/v3/api-docs/**"
+                                HttpMethod.POST,
+                                "/auth/reservas"
                         )
-                        .permitAll()
+                        .hasRole("CLIENTE")
 
                         // 7. CONSULTAR RUTAS Y EQUIPAMIENTO
                         // Acceso publico para GET.

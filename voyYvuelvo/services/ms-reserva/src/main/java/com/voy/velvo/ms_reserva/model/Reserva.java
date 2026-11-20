@@ -3,6 +3,7 @@ package com.voy.velvo.ms_reserva.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,53 +13,53 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "RESERVAS") // Nombra la tabla en la base de datos MySQL
+@Table(name = "RESERVAS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Reserva {
 
+    // 1. ID DE LA RESERVA
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // 2. ID DEL PERFIL DEL USUARIO
+    // Para clientes se asignara desde el JWT en el API Gateway.
     @NotNull(message = "El ID de usuario es obligatorio")
     @Column(name = "usuario_id", nullable = false)
     private Long usuarioId;
 
+    // 3. RUTA SELECCIONADA
     @NotNull(message = "El ID de ruta es obligatorio")
     @Column(name = "ruta_id", nullable = false)
     private Long rutaId;
 
-    @NotNull(message = "La cantidad de personas no puede ser nula")
+    // 4. CANTIDAD DE PERSONAS
+    @NotNull(message = "La cantidad de personas es obligatoria")
     @Positive(message = "La cantidad de personas debe ser mayor a cero")
     private Integer cantidadPersonas;
 
+    // 5. FECHA DE RESERVA
     @NotNull(message = "La fecha de reserva es obligatoria")
     private LocalDate fechaReserva;
 
-    @NotNull(message = "Debe especificar si necesita guía o no")
+    // 6. SOLICITUD DE GUIA
+    @NotNull(message = "Debe especificar si necesita guia o no")
+    @Column(name = "necesita_guia")
     private Boolean necesitaGuia;
 
+    // 7. ESTADO DEL PAGO
+    // Lo establece automaticamente ReservaService.
     @Column(name = "estado_pago")
     private String estadoPago;
 
+    // 8. EQUIPAMIENTO SOLICITADO
     @ElementCollection
-    @CollectionTable(name = "RESERVA_EQUIPAMIENTO", joinColumns = @JoinColumn(name = "reserva_id"))
-    private List<ReservaEquipamiento> equipamientos = new ArrayList<>();
+    @CollectionTable(
+            name = "RESERVA_EQUIPAMIENTO",
+            joinColumns = @JoinColumn(name = "reserva_id")
+    )
+    private List<ReservaEquipamiento> equipamientos =
+            new ArrayList<>();
 }
-
-        /* POSTMAN POST
-        {
-    "id":... //NO ES NECESARIO PONER ESTA ID YA QUE EL SISTEMA LA GENERA SOLA
-    "usuarioId": 101,
-    "rutaId": 5,
-    "cantidadPersonas": 4,
-    "fechaReserva": "2026-05-20",
-    "necesitaGuia": true,
-    "estadoPago": "PENDIENTE" ESTADO DE PAGO SIEMPRE ESTARA PENDIENTE SIN IMPORTAR EL ESTADO INGRESADO ASI QUE NO ES NECESARIO AGRREGAR
-}
-         */
-
-
-

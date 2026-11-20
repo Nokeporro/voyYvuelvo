@@ -4,30 +4,54 @@ import Text from "../components/atoms/Text";
 import Image from "../components/atoms/Image";
 import AppLink from "../components/atoms/AppLink";
 import SplitTemplate from "../components/templates/SplitTemplate";
+
 import RentalEquipmentList from "../components/organisms/RentalEquipmentList";
 import ReservationForm from "../components/organisms/ReservationForm.jsx";
+
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
+
 import { routes, rentalEquipment } from "../data/routes.js";
+
 import {
   apiEnabled,
   embeddedList,
   request,
   submitReservation,
 } from "../services/api.js";
-import { readStorage, writeStorage } from "../services/storage.js";
+
+import {
+  readStorage,
+  writeStorage,
+} from "../services/storage.js";
+
 import { useStore } from "../context/Store.jsx";
 import { validateReservation } from "../utils/validation.js";
 
 import { NotFound } from "./NotFound.jsx";
+
 export default function Reservation() {
   const { id } = useParams();
   const [params] = useSearchParams();
-  const { session } = useStore();
-  const localRoute = routes.find((r) => String(r.id) === id);
+
+  // Obtener sesión y JWT del Cliente.
+  const { session, authToken } = useStore();
+
+  // Buscar la ruta seleccionada.
+  const localRoute = routes.find(
+    (r) => String(r.id) === id
+  );
+
   const [route, setRoute] = useState(localRoute);
-  const [equipment, setEquipment] = useState(rentalEquipment);
+
+  // Equipamientos disponibles.
+  const [equipment, setEquipment] = useState(
+    rentalEquipment
+  );
+
   const [selected, setSelected] = useState([]);
+
+  // Datos del formulario.
   const [data, setData] = useState({
     nombre: session?.nombre || "",
     email: session?.correo || "",
@@ -36,66 +60,122 @@ export default function Reservation() {
     personas: params.get("personas") || 1,
     guia: false,
   });
+
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+
   const [source, setSource] = useState(
     apiEnabled
       ? "Consultando disponibilidad…"
-      : "Experiencia de demostración. La disponibilidad no ha sido confirmada.",
+      : "Experiencia de demostración. La disponibilidad no ha sido confirmada."
   );
+
+  // CONSULTAR RUTAS Y EQUIPAMIENTOS DEL BACKEND.
   useEffect(() => {
-    if (!localRoute || !apiEnabled) return;
+    if (!localRoute || !apiEnabled) {
+      return;
+    }
+
     let active = true;
+
     Promise.all([
       request(`/api/rutas/${id}`),
       request(`/api/equipamiento/recomendacion/${id}`),
     ])
       .then(([r, e]) => {
-        if (!active) return;
-        setRoute({ ...localRoute, ...r });
+        if (!active) {
+          return;
+        }
+
+        setRoute({
+          ...localRoute,
+          ...r,
+        });
+
         setEquipment(
           embeddedList(e)
-            .filter((e) => e.disponible !== false)
-            .map((e) => ({ ...e, imagen: e.imagen || "/img/mochila.png" })),
+            .filter((item) => item.disponible !== false)
+            .map((item) => ({
+              ...item,
+              imagen:
+                item.imagen || "/img/mochila.png",
+            }))
         );
+
         setSource(
-          "Datos consultados al servicio. Cupos sujetos a confirmación al reservar.",
+          "Datos consultados al servicio. Cupos sujetos a confirmación al reservar."
         );
       })
       .catch(() => {
-        if (active)
+        if (active) {
           setSource(
-            "No pudimos consultar el servicio. Mostramos datos de demostración.",
+            "No pudimos consultar el servicio. Mostramos datos de demostración."
           );
+        }
       });
+
     return () => {
       active = false;
     };
   }, [id, localRoute]);
-  if (!route) return <NotFound />;
-  const chosen = equipment.filter((e) => selected.includes(e.id));
-  const equipmentTotal = chosen.reduce(
-    (s, e) => s + Number(e.valorArriendo),
-    0,
+
+  // Validar que la ruta exista.
+  if (!route) {
+    return <NotFound />;
+  }
+
+  // Equipamientos seleccionados.
+  const chosen = equipment.filter(
+    (item) => selected.includes(item.id)
   );
+
+  // Calcular valores.
+  const equipmentTotal = chosen.reduce(
+    (total, item) =>
+      total + Number(item.valorArriendo),
+    0
+  );
+
   const total =
-    Number(route.precio) * Number(data.personas || 0) + equipmentTotal;
+    Number(route.precio) *
+      Number(data.personas || 0) +
+    equipmentTotal;
+
+  // ACTUALIZAR CAMPOS DEL FORMULARIO.
   function change(e) {
     setData({
       ...data,
       [e.target.name]:
-        e.target.type === "checkbox" ? e.target.checked : e.target.value,
+        e.target.type === "checkbox"
+          ? e.target.checked
+          : e.target.value,
     });
   }
+
+  // CREAR RESERVA.
   async function submit(e) {
     e.preventDefault();
+
+    // Validar los datos ingresados.
     const error = validateReservation(data, route);
+
     if (error) {
       setMessage(error);
       return;
     }
+
+    // Comprobar autenticación antes de reservar.
+    if (apiEnabled && !authToken) {
+      setMessage(
+        "Debes iniciar sesión como Cliente para confirmar tu reserva."
+      );
+      return;
+    }
+
     setBusy(true);
     setMessage("");
+
+    // Preparar borrador local.
     const draft = {
       ...data,
       rutaId: route.id,
@@ -103,54 +183,110 @@ export default function Reservation() {
       equipamientos: chosen,
       total,
     };
+
     try {
+      // Modo demostración sin backend.
       if (!apiEnabled) {
-        writeStorage("voy-vuelvo-reserva-borrador", draft);
+        writeStorage(
+          "voy-vuelvo-reserva-borrador",
+          draft
+        );
+
         setMessage(
-          "Borrador guardado en este navegador. Aún no existe una reserva confirmada.",
+          "Borrador guardado en este navegador. Aún no existe una reserva confirmada."
         );
         return;
       }
-      const saved = await submitReservation(data, route, chosen);
-      if (!saved?.id)
-        throw Error("El servicio no confirmó un identificador de reserva.");
+
+      // CREAR RESERVA REAL CON JWT.
+      const saved = await submitReservation(
+        data,
+        route,
+        chosen,
+        authToken
+      );
+
+      // Comprobar respuesta del backend.
+      if (!saved?.id) {
+        throw new Error(
+          "El servicio no confirmó un identificador de reserva."
+        );
+      }
+
+      // Guardar información de la última reserva.
       writeStorage("voy-vuelvo-ultima-reserva", {
         ...saved,
         rutaNombre: route.nombre,
       });
+
+      // Mostrar confirmación.
       setMessage(
-        `Reserva #${saved.id} creada. Estado de pago: ${saved.estadoPago || "pendiente"}.`,
+        `Reserva #${saved.id} creada correctamente. Estado de pago: ${saved.estadoPago || "PENDIENTE"}.`
       );
+
     } catch (error) {
+      // Conservar borrador si ocurre algún error.
       try {
-        writeStorage("voy-vuelvo-reserva-borrador", draft);
-        setMessage(
-          `${error.message} Guardamos un borrador local; no confirma tu reserva.`,
+        writeStorage(
+          "voy-vuelvo-reserva-borrador",
+          draft
         );
+
+        setMessage(
+          `${error.message} Guardamos un borrador local; no confirma tu reserva.`
+        );
+
       } catch (storageError) {
-        setMessage(`${error.message} ${storageError.message}`);
+        setMessage(
+          `${error.message} ${storageError.message}`
+        );
       }
+
     } finally {
       setBusy(false);
     }
   }
+
+  // RECUPERAR BORRADOR.
   function restore() {
-    const draft = readStorage("voy-vuelvo-reserva-borrador", null);
+    const draft = readStorage(
+      "voy-vuelvo-reserva-borrador",
+      null
+    );
+
     if (draft?.rutaId !== route.id) {
-      setMessage("No hay un borrador para esta ruta.");
+      setMessage(
+        "No hay un borrador para esta ruta."
+      );
       return;
     }
-    setData({ ...data, ...draft });
-    setSelected((draft.equipamientos || []).map((e) => e.id));
+
+    setData({
+      ...data,
+      ...draft,
+    });
+
+    setSelected(
+      (draft.equipamientos || []).map(
+        (item) => item.id
+      )
+    );
+
     setMessage(
-      "Borrador recuperado. Revisa la fecha y los datos antes de continuar.",
+      "Borrador recuperado. Revisa la fecha y los datos antes de continuar."
     );
   }
+
+  // INTERFAZ DE LA RESERVA.
   return (
     <PageTemplate className="container py-5">
-      <AppLink className="text-link" to="/rutas">
+      <AppLink
+        className="text-link"
+        to="/rutas"
+      >
         ← Todas las rutas
       </AppLink>
+
       <SplitTemplate
         className="row g-5 mt-1"
         introClass="col-lg-7"
@@ -162,20 +298,44 @@ export default function Reservation() {
               src={route.imagen}
               alt={route.nombre}
             />
-            <Text as="span" className="eyebrow d-block mt-4">
+
+            <Text
+              as="span"
+              className="eyebrow d-block mt-4"
+            >
               {route.ubicacion}
             </Text>
-            <Heading as="h1">{route.nombre}</Heading>
-            <Text>{route.descripcion}</Text>
+
+            <Heading as="h1">
+              {route.nombre}
+            </Heading>
+
             <Text>
-              {route.duracion} · Dificultad {route.dificultad} · Máximo{" "}
+              {route.descripcion}
+            </Text>
+
+            <Text>
+              {route.duracion} · Dificultad{" "}
+              {route.dificultad} · Máximo{" "}
               {route.cupoMaximo} personas
             </Text>
-            <Text className="small">{source}</Text>
-            <Heading as="h2" className="h4 mt-4">
+
+            <Text className="small">
+              {source}
+            </Text>
+
+            <Heading
+              as="h2"
+              className="h4 mt-4"
+            >
               Equipamiento para arrendar
             </Heading>
-            <Text>El arriendo se suma una vez por artículo seleccionado.</Text>
+
+            <Text>
+              El arriendo se suma una vez por
+              artículo seleccionado.
+            </Text>
+
             <RentalEquipmentList
               equipment={equipment}
               selected={selected}
@@ -185,9 +345,13 @@ export default function Reservation() {
         }
       >
         <div className="form-panel">
-          <Heading as="h2" className="h4">
+          <Heading
+            as="h2"
+            className="h4"
+          >
             Prepara tu reserva
           </Heading>
+
           <ReservationForm
             data={data}
             change={change}
