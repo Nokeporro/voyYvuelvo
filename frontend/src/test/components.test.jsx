@@ -188,12 +188,15 @@ describe("Catálogo, filtros y carrito en el DOM", () => {
   });
 });
 describe("Navegación, contacto y reservas", () => {
-  it("mantiene el enlace HTML antiguo al registro", async () => {
-    show(<App />, "/registro.html");
-    expect(
-      await screen.findByRole("heading", { name: "Crea tu cuenta" }),
-    ).toBeInTheDocument();
-  });
+  it.each(["/registro.html", "/registro-ep2.html"])(
+    "mantiene el enlace HTML %s al registro",
+    async (path) => {
+      show(<App />, path);
+      expect(
+        await screen.findByRole("heading", { name: "Crea tu cuenta" }),
+      ).toBeInTheDocument();
+    },
+  );
   it("conserva el producto indicado por un enlace HTML antiguo", async () => {
     show(<App />, "/detalle-producto.html?id=2");
     expect(

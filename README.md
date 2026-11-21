@@ -1,323 +1,158 @@
 # Voy y Vuelvo
 
-Aplicación académica de turismo aventura y equipamiento de trekking. Incluye un frontend React y un backend Spring Boot con cinco microservicios, API Gateway, Eureka y MySQL.
+Aplicación académica de turismo: interfaz React y backend Java con microservicios, MySQL y autenticación JWT. Documentación actualizada el 21 de noviembre de 2026 para el flujo de EP3.
 
-**La página web se abre en `http://127.0.0.1:5173/`. El puerto `8080` corresponde a la API del backend.**
+## Requisitos
 
-## Documentación
+- Docker Desktop iniciado, con Docker Compose y contenedores Linux.
+- Node.js 22.12 o superior compatible con Vite 8, y npm. Se recomienda Node 24.
+- Puertos disponibles: 5173 (web), 8080 (API), 8761 (registro Eureka) y 3306 (MySQL).
+- Java 21 solo si vas a compilar Java fuera de Docker. Maven Wrapper está incluido.
 
-- [Explicación detallada de la conexión frontend–backend](frontend/docs/INTEGRACION-FRONTEND-BACKEND.md): arquitectura, funciones JavaScript, HTTP, JSON, CORS, Feign, persistencia y flujo de reserva.
-- [Guía de descarga, inicio y verificación](frontend/docs/GUIA-INICIO-Y-VERIFICACION.md): instrucciones ampliadas para PowerShell y comprobación manual.
-- [Frontend](frontend/README.md): funciones de React, estructura Atomic Design y comandos npm.
-- [Backend](voyYvuelvo/README.md): servicios, puertos y Maven.
-- [Endpoints y CRUD del backend](voyYvuelvo/docs/GUIA-BACKEND.md).
-- [Requisitos actuales](frontend/docs/requisitos/ERS-EP2.md) y [ERS histórica de la primera entrega](frontend/docs/requisitos/ERS-EP1-HISTORICA.md).
+## Inicio paso a paso en Windows
 
-## 1. Qué necesitas instalar
+Descarga el repositorio completo y abre una terminal PowerShell en la carpeta que contiene `frontend` y `voyYvuelvo`. Los comandos siguientes parten de esa carpeta.
 
-| Herramienta                           | Uso                                                                                                                          |
-| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Git                                   | Descargar y actualizar el repositorio                                                                                        |
-| Node.js con npm                       | Instalar y ejecutar el frontend; se verificó con Node 24 y el proyecto requiere Node 22.12 o una versión compatible superior |
-| Docker Desktop con contenedores Linux | Construir y ejecutar el backend y MySQL; en Linux también puedes usar Docker Engine con Compose                              |
-| Navegador                             | Abrir la aplicación y revisar las llamadas HTTP                                                                              |
-
-Docker debe estar iniciado. También necesitas conexión a internet para la primera descarga de imágenes y dependencias, y tener disponibles los puertos `5173`, `8080`, `8081`, `8083`, `8084`, `8085`, `8086`, `8761` y `3306`.
-
-**Para ejecutar el backend con Docker no necesitas instalar Java ni Maven en tu equipo.** Los Dockerfile incluyen las herramientas de compilación y Java 21. JDK 21 solo se requiere si vas a compilar o ejecutar las pruebas Java fuera de Docker.
-
-En una terminal comprueba:
+### 1. Configurar la clave del backend
 
 ```powershell
-git --version
-node --version
-npm --version
-docker --version
-docker compose version
-docker info
+Set-Location voyYvuelvo
+Copy-Item .env.example .env
+node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
 ```
 
-`docker info` debe mostrar información del servidor. Si no conecta al motor, abre Docker Desktop y espera a que termine de iniciar.
+Copia la clave generada y edita `.env` para dejar `JWT_SECRET_BASE64=tu_clave_generada`, sin espacios ni comillas. Ejecuta la copia solo en la primera instalación: si ya tienes `.env`, conserva su contenido. No publiques este archivo ni reutilices una clave de ejemplo. La plantilla se puede publicar porque no contiene una clave real.
 
-## 2. Descargar la rama main
+Compose exige esta variable antes de iniciar cualquier servicio. El Gateway decodifica Base64 y requiere al menos 32 bytes. Cambiar la clave invalida los tokens emitidos con la anterior.
 
-Desde la carpeta donde quieras guardar el proyecto:
+### 2. Iniciar el backend
+
+Desde `voyYvuelvo`:
 
 ```powershell
-git clone --branch main https://github.com/Nokeporro/voyYvuelvo.git voy-vuelvo
-cd voy-vuelvo
-```
-
-La carpeta descargada se llama `voy-vuelvo` porque el comando la nombra explícitamente. Dentro hay otra carpeta `voyYvuelvo`, que contiene el backend. Evita confundir la raíz del repositorio con esa carpeta interna.
-
-```text
-voy-vuelvo/                       Raíz del repositorio descargado
-  README.md                       Esta guía
-  frontend/
-    index.html                    Única entrada HTML fuente
-    package.json                  Dependencias y comandos npm
-    package-lock.json             Versiones de instalación reproducibles
-    .env.example                  Plantilla de conexión local
-    public/img/                   Imágenes activas
-    src/                          React, componentes, páginas y servicios
-    scripts/                      Arquitectura, integración y empaquetado
-    docs/                         Manuales, requisitos y evaluación
-  voyYvuelvo/
-    docker-compose.yml            Despliegue completo del backend
-    pom.xml                       Agregador Maven de siete módulos
-    .mvn/                         Configuración del wrapper
-    mvnw, mvnw.cmd                Maven Wrapper compartido
-    infrastructure/
-      api-gateway/                Entrada de las API y autenticación
-      eureka-server/              Registro de servicios
-    services/
-      ms-usuario/
-      ms-ruta/
-      ms-equipamiento/
-      ms-reserva/
-      ms-pago/
-    docs/                         Guía backend, documentos y diagramas C4
-```
-
-También puedes descargar el ZIP de la rama `main` desde GitHub. En ese caso descomprímelo y entra en la carpeta que contiene a la vez `frontend`, `voyYvuelvo` y este README. El ZIP no incluye el historial de Git.
-
-## 3. Iniciar MySQL y el backend — terminal A
-
-Abre una terminal en la raíz descargada y entra al backend:
-
-```powershell
-cd voyYvuelvo
-docker compose up -d mysql
-docker compose logs --tail 40 mysql
-```
-
-Espera a que MySQL indique `ready for connections`. Después construye e inicia las aplicaciones Java:
-
-```powershell
+docker compose config --quiet
 docker compose up -d --build
 docker compose ps
+docker compose logs --tail 80 api-gateway
 ```
 
-La primera compilación descarga dependencias y puede tardar varios minutos. Los Dockerfile comparten una caché Maven de BuildKit para reutilizarlas entre servicios y reintentos. Docker utiliza los contextos de `infrastructure/` y `services/`; no es necesario generar JAR manualmente antes de construir.
+La primera compilación descarga dependencias y puede tardar varios minutos. `depends_on` establece el orden de inicio, pero no garantiza que MySQL ya acepte conexiones. Si un servicio termina mientras la base arranca, revisa sus registros y vuelve a ejecutar `docker compose up -d`.
 
-Debes ver ocho contenedores: MySQL, Eureka, Gateway y cinco microservicios. El estado `Up` indica que el proceso está iniciado; las aplicaciones Java todavía pueden estar cargando. Revisa el arranque y comprueba las API:
+Abre [Eureka](http://localhost:8761). Deben registrarse el Gateway y los cinco microservicios como `UP`. Prueba el catálogo público en [rutas](http://localhost:8080/api/rutas). Puede devolver JSON con estructura HAL; eso es normal.
 
-```powershell
-docker compose logs --tail 60 eureka api-gateway ms-ruta ms-equipamiento ms-usuario ms-reserva ms-pago
-Invoke-RestMethod -Uri "http://localhost:8080/api/rutas" | ConvertTo-Json -Depth 8
-Invoke-RestMethod -Uri "http://localhost:8080/api/equipamiento" | ConvertTo-Json -Depth 8
-```
+### 3. Configurar e iniciar el frontend
 
-En Linux/macOS puedes consultar estas mismas direcciones con `curl` o desde el navegador. Una respuesta JSON válida demuestra que la API atiende la consulta.
-
-Compose ordena el inicio mediante `depends_on`, pero no tiene comprobaciones de salud que esperen a la disponibilidad completa. Si un servicio se detuvo por arrancar antes de su dependencia, comprueba que MySQL y Eureka estén disponibles, revisa el error y reinicia las aplicaciones afectadas:
+En otra terminal, desde la carpeta del repositorio:
 
 ```powershell
-docker compose restart api-gateway ms-usuario ms-equipamiento ms-ruta ms-reserva ms-pago
-```
-
-## 4. Instalar y configurar el frontend — terminal B
-
-Abre una segunda terminal en la raíz del repositorio. No la abras dentro de `voyYvuelvo` para ejecutar este primer `cd`:
-
-```powershell
-cd frontend
+Set-Location frontend
 npm ci
+Copy-Item .env.example .env
 ```
 
-`npm ci` instala las versiones fijadas en `package-lock.json`. No se sube `node_modules` a GitHub: cada equipo instala sus dependencias con este comando.
-
-Crea tu archivo local de entorno si aún no existe:
-
-```powershell
-if (-not (Test-Path -LiteralPath .env)) {
-    Copy-Item -LiteralPath .env.example -Destination .env
-}
-```
-
-En Linux/macOS, el equivalente para copiar la plantilla sin reemplazar un archivo existente es:
-
-```sh
-test -f .env || cp .env.example .env
-```
-
-Abre `frontend/.env` con tu editor y configura esta línea:
+Edita `frontend/.env`:
 
 ```dotenv
 VITE_API_URL=http://localhost:8080
 ```
 
-La plantilla deja la URL vacía para permitir la demostración local. **Para conectar los microservicios debes completar la dirección anterior.** Si el archivo ya contiene otras variables, consérvalas.
-
-`.env` está ignorado por Git y cada persona debe crearlo. `.env.example` y `.env.test` sí se versionan. No cambies `.env.test`: mantiene aisladas las pruebas Vitest del backend real.
-
-## 5. Iniciar y abrir la página
-
-En la terminal B, dentro de `frontend`:
+Si ya existe el archivo, edítalo sin sobrescribir otras configuraciones. Revisa también `.env.local`, `.env.development` y `.env.development.local` si existen: las variables específicas del modo pueden prevalecer sobre `.env`. No pongas la clave JWT del backend en ninguna variable `VITE_`: esas variables se incluyen en el navegador.
 
 ```powershell
 npm run dev
 ```
 
-Cuando aparezca `Local: http://127.0.0.1:5173/`, abre **[la página web](http://127.0.0.1:5173/)**. Deja esa terminal abierta mientras utilizas el proyecto.
+Abre [la aplicación](http://127.0.0.1:5173). Reinicia Vite después de cambiar sus variables. El puerto **8080 sirve una API**, no la página web: que su raíz no muestre la interfaz no significa que el frontend esté fallando.
 
-| Dirección                                                                      | Qué encontrarás                                      |
-| ------------------------------------------------------------------------------ | ---------------------------------------------------- |
-| [http://127.0.0.1:5173/](http://127.0.0.1:5173/)                               | Sitio React: esta es la vista previa de la página    |
-| [http://127.0.0.1:5173/rutas/1](http://127.0.0.1:5173/rutas/1)                 | Reserva de la ruta 1, si ese ID existe en tu backend |
-| [http://localhost:8080/api/rutas](http://localhost:8080/api/rutas)             | Datos JSON de rutas mediante el Gateway              |
-| [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) | Documentación y pruebas de las API                   |
-| [http://localhost:8761/](http://localhost:8761/)                               | Registro de servicios Eureka                         |
+### 4. Crear una cuenta y verificar una reserva
 
-`http://localhost:8080/` no sirve la página React y su ruta raíz puede responder `401`. El Gateway está funcionando si las rutas `/api/...` responden correctamente. Para ver la aplicación utiliza `5173`.
+1. Abre `/registro` y crea una cuenta con un nombre de usuario nuevo y datos propios de prueba.
+2. El registro crea la cuenta, obtiene un JWT temporal y vincula el perfil personal. Si termina correctamente, inicia sesión desde `/login`.
+3. Entra a una ruta con cupos, completa una fecha futura y los datos solicitados, y confirma la reserva.
+4. Esta acción **sí crea datos** y consume cupos. Usa una base de desarrollo para las pruebas manuales.
 
-Vite transforma los módulos JSX. No abras `index.html` directamente desde el explorador de archivos. Para usar Show Preview en VS Code, inicia Vite y abre la vista previa sobre `frontend/index.html`. Los antiguos accesos `.html` siguen funcionando mediante las redirecciones de React y los alias generados al compilar.
+El registro público siempre asigna `CLIENTE`. No hay una cuenta administrativa de demostración garantizada en MySQL. El panel conserva un editor de usuarios locales de demostración separado de las cuentas reales; modificarlo no cambia el acceso al backend. Consulta [la guía del backend](voyYvuelvo/docs/GUIA-BACKEND.md) para habilitar un administrador en un entorno local controlado.
 
-Si modificas `.env`, detén Vite con `Ctrl+C` y vuelve a ejecutar `npm run dev`.
+La sesión actual vive en memoria: al recargar o cerrar la pestaña hay que iniciar sesión de nuevo. El JWT dura una hora y no hay renovación automática. Una cuenta creada cuyo perfil no llegó a vincularse necesita recuperación; repetir el registro con el mismo usuario producirá conflicto.
 
-## 6. Comprobar la conexión entre ambos proyectos
-
-### Desde la interfaz
-
-1. Abre la pantalla de una ruta disponible, por ejemplo `/rutas/1` en una base nueva.
-2. Espera el mensaje **Datos consultados al servicio**.
-3. En las herramientas de desarrollo del navegador, abre **Network / Red → Fetch/XHR** y recarga.
-4. Comprueba HTTP `200` en `/api/rutas/1` y `/api/equipamiento/recomendacion/1`, ambas en el puerto `8080`.
-5. Compara los datos recibidos con lo presentado en pantalla.
-
-Si ves un mensaje de datos de demostración o de consulta fallida, revisa `.env`, los contenedores, los IDs y CORS antes de enviar una reserva. La portada puede abrir correctamente aunque el backend esté detenido.
-
-### Comprobación automática real — terminal C
-
-Mantén las terminales A y B como estaban. Abre una tercera terminal dentro de `frontend`:
-
-```powershell
-npm run test:integration
-```
-
-Este comando consulta las cinco API por el Gateway y sus puertos directos, revisa el registro en Eureka, la recomendación de equipamiento, CORS y la respuesta HTML de Vite. Usa la configuración de desarrollo y solicitudes reales.
-
-Para comprobar también la escritura en los microservicios:
-
-```powershell
-npm run test:integration -- --write-test
-```
-
-La opción de escritura solo admite una API local. Crea registros propios temporales de equipamiento, usuario, reserva y pago pendiente, comprueba el total y el descuento de cupos, e intenta retirarlos en `finally` para restaurar la disponibilidad. Una ejecución completa termina con **12 comprobaciones aprobadas**. Si falla la conexión durante la limpieza, revisa el error y los registros de prueba antes de repetirla.
-
-No se procesa un cobro real. La guía de [integración frontend–backend](frontend/docs/INTEGRACION-FRONTEND-BACKEND.md) explica cada llamada y sus límites.
-
-## 7. Datos iniciales y alcance de la aplicación
-
-En una base nueva, el backend carga tres rutas y siete equipamientos cuando sus tablas están vacías. Los datos de MySQL del equipo que publica el repositorio no se descargan con GitHub. Tampoco se copian sus usuarios, reservas, pagos ni los datos guardados en su navegador.
-
-Las reservas pueden consultar y guardar datos en el backend. El registro y login de React, sus roles, la administración del catálogo, el carrito y el contacto de demostración continúan utilizando almacenamiento del navegador. Los contactos de reservas y las cuentas locales son modelos diferentes. Consulta el [alcance exacto de la integración](frontend/docs/INTEGRACION-FRONTEND-BACKEND.md#1-qué-funciones-están-conectadas).
-
-Para probar el panel local:
-
-| Perfil        | Correo             | Contraseña de demostración |
-| ------------- | ------------------ | -------------------------- |
-| Administrador | `admin@duoc.cl`    | `Demo2026!`                |
-| Vendedor      | `vendedor@duoc.cl` | `Demo2026!`                |
-
-Para un cliente, crea una cuenta desde `/registro` con datos de prueba. Estas cuentas son académicas y pertenecen al navegador actual.
-
-## 8. Pruebas, compilación y producción local
+## Comprobaciones
 
 Desde `frontend`:
 
 ```powershell
-npm test
 npm run check:architecture
-npm run format:check
+npm test -- --maxWorkers=1
 npm run build
+npm run test:integration
 ```
 
-- `npm test` ejecuta Vitest y React Testing Library con respuestas simuladas; no requiere Docker.
-- `npm run test:coverage` ejecuta la misma suite y genera `coverage/index.html`.
-- `npm run build` genera `dist/`; puedes servirlo después con `npm run preview` y abrir la dirección que imprima Vite.
-- Un hosting de la SPA debe redirigir las rutas de React a `index.html` para que se puedan recargar direcciones como `/rutas/1`.
+Las tres primeras comprobaciones no necesitan Docker. La última necesita el backend y Vite iniciados: consulta catálogos, Eureka, CORS y bloqueos de acceso sin token. No crea ni borra datos; el antiguo argumento `--write-test` se retiró. Para verificar también un acceso autenticado se puede proporcionar `INTEGRATION_TOKEN` mediante el entorno. No compartas el token ni lo guardes en el repositorio. Consulta [el recorrido de revisión](frontend/docs/RECORRIDO-DE-REVISION.md).
 
-Para compilar Java sin Docker, instala JDK 21, configura `JAVA_HOME` y ejecuta desde `voyYvuelvo`:
+Las pruebas de React usan respuestas simuladas: no demuestran por sí solas que MySQL y los contenedores estén funcionando. `npm run format:check` comprueba estilo; una advertencia de formato no equivale a una prueba funcional fallida.
+
+Para revisar la compilación web:
 
 ```powershell
-.\mvnw.cmd -DskipTests package
-.\mvnw.cmd -pl services/ms-reserva "-Dtest=ReservaServiceTest" test
+npm run preview -- --host 127.0.0.1
 ```
 
-En Linux/macOS puedes invocar el wrapper con `sh ./mvnw`. El primer comando compila los siete módulos y omite la ejecución de las pruebas; el segundo ejecuta únicamente las cinco pruebas unitarias de reservas con JUnit y Mockito, sin MySQL.
+Abre la dirección que muestre Vite, normalmente el puerto 4173. Las URL antiguas terminadas en `.html` se conservan mediante aliases generados desde la aplicación React.
 
-Las pruebas `*ApplicationTests` cargan Spring y algunas requieren base de datos. El perfil `test` de reservas utiliza `create-drop` sobre su base configurada: no lo actives contra datos que quieras conservar.
+## Detener y conservar los datos
 
-La última verificación de la reorganización aprobó 99 pruebas del frontend, cinco pruebas unitarias de reservas, compilación de los siete módulos Java, construcción de las siete imágenes y las 12 comprobaciones de integración con escritura temporal. Esto no sustituye una revisión visual manual de todas las pantallas.
-
-## 9. Detener y volver a iniciar
-
-Para detener React, usa `Ctrl+C` en su terminal. Desde `voyYvuelvo`:
+Desde `voyYvuelvo`:
 
 ```powershell
-docker compose stop
+docker compose down
 ```
 
-En el siguiente uso, con Docker iniciado:
+El volumen `mysql_data` conserva las bases. No uses `down -v` si necesitas mantener cuentas, reservas y pagos. MySQL se configura localmente sin contraseña de root: esta configuración está destinada al desarrollo académico y requiere adaptación antes de publicar servicios en Internet.
 
-```powershell
-docker compose up -d
+## Qué persiste y dónde
+
+| Información                                                                | Persistencia actual                      |
+| -------------------------------------------------------------------------- | ---------------------------------------- |
+| Cuentas, roles y vínculo al perfil                                         | MySQL del Gateway                        |
+| Perfiles, rutas, equipamiento, reservas y pagos                            | MySQL de cada microservicio              |
+| Sesión y JWT del navegador                                                 | Memoria de React; se pierden al recargar |
+| Carrito, catálogo de productos local y usuarios del editor de demostración | Almacenamiento local del navegador       |
+| Mensajes del formulario de contacto                                        | Almacenamiento local; no se envía correo |
+
+Con `VITE_API_URL` vacío hay funciones locales de demostración, pero no registro, login ni reservas reales. La confirmación de pago del backend representa un cambio de estado; no hay una pasarela bancaria integrada.
+
+## Organización y documentación
+
+```text
+frontend/                    React, estilos, imágenes, pruebas y documentación web
+  src/components/            Atomic Design
+  src/services/              HTTP, autenticación y persistencia local
+  src/routes/                Compatibilidad de URL antiguas
+  scripts/                   Comprobaciones y generación de aliases
+voyYvuelvo/
+  infrastructure/            Gateway y Eureka
+  services/                  Cinco microservicios de dominio
+  docs/                      Guía técnica del backend y entregas históricas
 ```
 
-En otra terminal, desde `frontend`, ejecuta `npm run dev`. No necesitas repetir `npm ci` si no cambiaron las dependencias. Si cambió el código Java o los Dockerfile, utiliza `docker compose up -d --build` para actualizar las imágenes.
+- [Frontend](frontend/README.md).
+- [Backend](voyYvuelvo/README.md).
+- [Integración detallada de frontend y backend](frontend/docs/INTEGRACION-FRONTEND-BACKEND.md).
+- [Atomic Design](frontend/docs/ATOMIC-DESIGN.md).
+- [Recorrido para verificar la aplicación](frontend/docs/RECORRIDO-DE-REVISION.md).
+- [Requisitos históricos de EP2](frontend/docs/requisitos/ERS-EP2.md) y [EP1](frontend/docs/requisitos/ERS-EP1-HISTORICA.md).
 
-`docker compose down` retira los contenedores y la red conservando el volumen. No agregues `-v` si quieres conservar MySQL: esa opción elimina los volúmenes de Compose.
+Los documentos Word/PDF de entregas anteriores se conservan como antecedentes. Pueden describir comportamientos anteriores; para iniciar el proyecto y entender JWT usa las guías actuales enlazadas aquí.
 
-## 10. Problemas frecuentes
+## Problemas habituales
 
-| Problema                                              | Qué comprobar                                                                                                                              |
-| ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| La vista previa de `8080` está vacía o responde `401` | Abre el sitio en `http://127.0.0.1:5173/`; `8080` es el Gateway                                                                            |
-| `npm` no encuentra `package.json`                     | Ejecuta los comandos npm dentro de `frontend`                                                                                              |
-| Compose no encuentra su configuración                 | Ejecuta Docker Compose dentro de `voyYvuelvo`                                                                                              |
-| Docker no conecta al motor                            | Inicia Docker Desktop en modo Linux y comprueba `docker info`                                                                              |
-| Un puerto está ocupado                                | Revisa otras aplicaciones o contenedores que utilicen los puertos indicados                                                                |
-| Falla una descarga de Maven o de imágenes             | Revisa internet y repite la construcción; la caché Maven permite reutilizar dependencias                                                   |
-| La portada abre, pero la reserva solo guarda borrador | Completa `VITE_API_URL` en `.env` y reinicia Vite                                                                                          |
-| La reserva muestra datos de demostración              | Revisa Network, la disponibilidad de la API y que exista el ID solicitado                                                                  |
-| El navegador bloquea CORS                             | Comprueba el origen y los encabezados del Gateway; consulta la guía técnica                                                                |
-| El envío de reserva falla                             | Revisa la respuesta y consulta reservas, cupos y pagos antes de repetirlo; no hay una transacción distribuida que revierta todos los pasos |
-| Los datos nuevos del catálogo inicial no aparecen     | El navegador puede conservar un catálogo local; consulta el manual antes de retirar datos guardados                                        |
-
-## 11. Actualizar GitHub manualmente en main
-
-Estos comandos los ejecuta quien publica el proyecto. Parte de la raíz del repositorio, donde está este README, y revisa cada salida antes de avanzar.
-
-Primero comprueba tu rama y tus archivos:
-
-```powershell
-git status
-git branch --show-current
-git switch main
-```
-
-Incluye tanto los archivos nuevos como las modificaciones y eliminaciones de la reorganización:
-
-```powershell
-git add -A -- README.md frontend voyYvuelvo
-git diff --cached --stat
-git diff --cached --name-only
-git diff --cached --check
-```
-
-Verifica que estén las carpetas nuevas `voyYvuelvo/services`, `voyYvuelvo/infrastructure`, el wrapper compartido y los documentos. `.env`, `node_modules`, `target`, `dist`, `coverage` y los temporales no deben formar parte del commit; las plantillas `.env.example` y `.env.test` del frontend sí deben incluirse.
-
-Cuando hayas revisado el contenido:
-
-```powershell
-git commit -m "Organiza proyecto y documenta inicio e integracion"
-git pull --rebase origin main
-git push origin main
-git status -sb
-git log -1 --oneline
-```
-
-Si `pull --rebase` presenta conflictos, resuélvelos y termina el rebase antes de hacer push. Puedes cancelar ese rebase con `git rebase --abort` y revisar la situación manteniendo tu commit local. No utilices un push forzado como solución automática.
-
-El push requiere acceso de escritura al repositorio y autenticación con tu cuenta. Después revisa en GitHub la rama `main`, el último commit y los enlaces de esta documentación.
+| Síntoma                                     | Revisión                                                                                     |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| Compose exige `JWT_SECRET_BASE64`           | Crear y completar `voyYvuelvo/.env` antes de ejecutar Compose                                |
+| 8080 no muestra una página                  | Abrir la web en 5173 y probar `/api/rutas` en 8080                                           |
+| Error de conexión                           | Revisar `docker compose ps`, registros, `VITE_API_URL` y reiniciar Vite                      |
+| HTTP 401                                    | Iniciar sesión; el token puede haber expirado o haberse perdido al recargar                  |
+| HTTP 403                                    | La cuenta no tiene el rol necesario para ese recurso                                         |
+| HTTP 409 al reservar                        | Revisar perfil vinculado, cupos y reservas duplicadas; consultar registros                   |
+| Login funciona pero no hay perfil           | La creación de cuenta y perfil son pasos separados; requiere recuperación del perfil         |
+| CORS                                        | Usar localhost o 127.0.0.1 en el puerto 5173; otros orígenes requieren configurar el Gateway |
+| Un puerto interno no responde desde Windows | Los microservicios no publican 8081, 8083, 8084, 8085 ni 8086; entrar por 8080               |

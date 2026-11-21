@@ -2,7 +2,9 @@
 export const legacyHtmlRoutes = {
   "/index.html": "/",
   "/registro.html": "/registro",
+  "/registro-ep2.html": "/registro",
   "/login.html": "/login",
+  "/login.legacy.html": "/login",
   "/productos.html": "/productos",
   "/rutas.html": "/rutas",
   "/carrito.html": "/carrito",

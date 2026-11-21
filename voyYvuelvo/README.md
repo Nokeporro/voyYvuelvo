@@ -1,89 +1,32 @@
-# Voy y Vuelvo — Backend
+# Backend de Voy y Vuelvo
 
-Backend Spring Boot con cinco microservicios, API Gateway, Eureka y MySQL. El frontend React está en la carpeta hermana `../frontend/`.
+Java 25, Spring Boot, Spring Cloud Gateway, Eureka y MySQL. Actualizado para autenticación JWT de EP3 el 21 de noviembre de 2026.
 
-Para la instalación completa, consulta el [README principal](../README.md). La [guía detallada de integración](../frontend/docs/INTEGRACION-FRONTEND-BACKEND.md) explica HTTP, JSON, CORS, Feign, persistencia y la creación de reservas desde React.
+La [instalación completa](../README.md) explica los pasos desde una descarga limpia. Antes de usar Compose copia `.env.example` como `.env` y configura `JWT_SECRET_BASE64` con al menos 32 bytes aleatorios codificados en Base64. No sobrescribas un `.env` existente ni publiques la clave real.
 
-## Estructura
-
-```text
-voyYvuelvo/
-  infrastructure/
-    api-gateway/      Entrada HTTP, autenticación y enrutamiento
-    eureka-server/    Registro de servicios
-  services/
-    ms-equipamiento/  Catálogo y recomendaciones de arriendo
-    ms-pago/          Pagos de las reservas
-    ms-reserva/       Reservas, cupos y comunicación entre servicios
-    ms-ruta/          Rutas de trekking
-    ms-usuario/       Contactos de las reservas
-  docs/
-    diagramas/        Diagramas C4
-    GUIA-BACKEND.md   Endpoints, CRUD y guía detallada de verificación
-  .mvn/               Configuración del Maven Wrapper compartido
-  mvnw, mvnw.cmd      Maven para Linux/macOS y Windows
-  pom.xml             Agregador de los siete módulos Java
-  docker-compose.yml  Despliegue local completo
-```
-
-Cada módulo conserva su `pom.xml`, `Dockerfile`, `src/main/` y `src/test/`. El código se organiza en `controller/`, `service/`, `repository/`, `model/`, `dto/`, `client/` y `config/`, según corresponda. Los DTO de reservas están en `dto/`; las entidades de usuarios están en `model/`.
-
-Los nombres internos de las aplicaciones, los artefactos Maven y los contenedores se conservan para mantener las integraciones existentes. La carpeta antes llamada `api-getaway/` está ahora en `infrastructure/api-gateway/`.
-
-## Iniciar con Docker
-
-Requiere Docker Desktop en modo contenedores Linux. Desde esta carpeta:
+Desde esta carpeta:
 
 ```powershell
+docker compose config --quiet
 docker compose up -d --build
 docker compose ps
-docker compose logs --tail 60 api-gateway
+docker compose logs --tail 80 api-gateway
 ```
 
-Los Dockerfile comparten una caché Maven de BuildKit para reutilizar dependencias entre servicios y reintentos de construcción. La compilación utiliza salida sin progreso de descargas.
+El Gateway publica 8080; Eureka 8761 y MySQL 3306. Los cinco microservicios son accesibles internamente en Docker y no publican sus puertos en el equipo anfitrión. Consulta el catálogo público en [rutas](http://localhost:8080/api/rutas) y el registro en [Eureka](http://localhost:8761).
 
-MySQL conserva sus datos en el volumen `mysql_data`. Si una aplicación arranca antes de que sus dependencias estén listas, revisa los logs y reinicia el servicio cuando MySQL y Eureka estén disponibles.
-
-| Componente | Puerto |
-| --- | --- |
-| API Gateway | 8080 |
-| Eureka | 8761 |
-| Equipamiento | 8081 |
-| Reservas | 8083 |
-| Usuarios | 8084 |
-| Pagos | 8085 |
-| Rutas | 8086 |
-| MySQL | 3306 |
-
-El frontend utiliza `VITE_API_URL=http://localhost:8080` en su `.env`. Las cuentas locales del frontend y los contactos del microservicio de usuarios tienen modelos distintos; consulta [la integración](../frontend/docs/CONEXION-BACKEND.md).
-
-## Compilar y ejecutar pruebas
-
-Requiere JDK 21 y `JAVA_HOME` configurado. El wrapper descarga Maven si hace falta. Ejecuta estos comandos desde la raíz del backend:
-
-```powershell
-# Compilar y empaquetar los siete módulos sin ejecutar pruebas de contexto.
-.\mvnw.cmd -DskipTests package
-
-# Pruebas unitarias de reservas, sin MySQL ni otros servicios.
-.\mvnw.cmd -pl services/ms-reserva "-Dtest=ReservaServiceTest" test
-
-# Compilar solamente un módulo.
-.\mvnw.cmd -pl services/ms-ruta -DskipTests package
+```text
+infrastructure/api-gateway/     Autenticación, roles, perfiles y entrada HTTP
+infrastructure/eureka-server/   Registro de servicios
+services/ms-usuario/            Datos personales
+services/ms-ruta/               Rutas y cupos
+services/ms-equipamiento/       Equipamiento y recomendaciones
+services/ms-reserva/            Coordinación de reservas
+services/ms-pago/               Estado de pagos
 ```
 
-En Linux/macOS usa `./mvnw`. También puedes seleccionar un POM con `-f services/ms-ruta/pom.xml`. Los JAR y reportes se generan en `target/` dentro de cada módulo. `pom.xml` agrega los proyectos sin cambiar sus dependencias ni sus versiones.
+Para compilar sin Docker necesitas Java 25. Desde esta carpeta puedes ejecutar `./mvnw.cmd -DskipTests package`. Esa opción compila sin ejecutar pruebas; no demuestra el funcionamiento de las bases ni la red. Para ejecutar las pruebas usa `./mvnw.cmd test` y configura la variable JWT en el entorno cuando se levante el contexto del Gateway.
 
-Las pruebas `*ApplicationTests` cargan Spring y algunas necesitan MySQL. La [guía detallada](docs/GUIA-BACKEND.md) explica las opciones de conexión y el CRUD. El perfil `test` de reservas usa `create-drop`: no debe apuntar a una base con datos que quieras conservar.
+Consulta la [guía técnica actual](docs/GUIA-BACKEND.md) y la [integración con React](../frontend/docs/INTEGRACION-FRONTEND-BACKEND.md). Los PDF y Word de `docs` son antecedentes de entregas anteriores y no reemplazan estas guías.
 
-Con Docker y el frontend iniciados, `npm run test:integration` desde `../frontend/` comprueba las API reales, Eureka y CORS. La opción `-- --write-test` añade una reserva con datos temporales propios y comprueba su limpieza y la restauración de cupos. Consulta [la verificación de integración](../frontend/docs/CONEXION-BACKEND.md).
-
-## Detener
-
-```powershell
-docker compose stop
-```
-
-`docker compose down` retira contenedores y red, conservando el volumen mientras no agregues `-v`.
-
-Los resultados `target/`, los logs y la configuración personal del IDE están ignorados por Git y excluidos de los contextos de construcción Docker.
+`docker compose down` detiene los servicios y conserva el volumen de MySQL. Eliminar el volumen destruye los datos. La configuración MySQL sin contraseña es para desarrollo local; no publiques estos servicios con esa configuración.

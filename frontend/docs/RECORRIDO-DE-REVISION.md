@@ -1,69 +1,51 @@
-# Recorrido para revisar Voy y Vuelvo
+# Recorrido de revisión
 
-Con Vite ejecutándose, abre http://127.0.0.1:5173/ en Show Preview. Usa el mismo navegador durante todo el recorrido, porque los datos de demostración se guardan por origen y navegador.
+Actualizado el 21 de noviembre de 2026. Preparación: [README principal](../../README.md).
 
-## 1 Inicio
+## Revisión sin escribir datos
 
-Dirección: http://127.0.0.1:5173/
+Desde `frontend` ejecuta:
 
-Revisa la portada, navegación común, rutas y equipamiento destacados. Reduce el ancho del panel para ver el menú móvil. Usa el buscador para filtrar destinos.
+```powershell
+npm run check:architecture
+npm test -- --maxWorkers=1
+npm run build
+```
 
-## 2 Registro chileno y extranjero
+Con Docker y Vite iniciados:
 
-Dirección: http://127.0.0.1:5173/registro
+```powershell
+npm run test:integration
+```
 
-Primero envía vacío para comprobar errores y foco. Selecciona RUT chileno: ejemplo de prueba 12.345.678-5. Escoge región y comuna; al cambiar de región se limpia la comuna.
+El comprobador consulta catálogos, recomendaciones, Eureka y la página de reserva; verifica CORS y respuestas 401 de recursos protegidos sin JWT. No crea ni elimina registros. Para comprobar además permisos autenticados proporciona `INTEGRATION_TOKEN` en el entorno del proceso. También admite credenciales mediante `INTEGRATION_USERNAME` y `INTEGRATION_PASSWORD` para solicitar un token por login. No compartas esas variables.
 
-Luego selecciona Pasaporte. Aparecen número y país emisor, y desaparecen los selectores obligatorios de región y comuna. Usa datos ficticios: pasaporte AB1234567, país Francia y alojamiento Hotel de prueba. Se admite correo internacional. Completa contraseña de al menos ocho caracteres, confirmación y consentimiento. La cuenta se crea en este navegador.
+## Revisión manual con datos de prueba
 
-## 3 Inicio de sesión
+1. Abre la web en 5173 y comprueba navegación, productos, rutas, contacto y carrito. El contacto y el carrito son locales.
+2. Registra una cuenta nueva. Deben completarse los tres pasos: cuenta, login técnico y perfil. No hay credenciales de demostración garantizadas en MySQL.
+3. Inicia sesión como cliente y abre una ruta. Comprueba que se recupera tu perfil.
+4. Crea una reserva futura con cupos disponibles. Esta prueba crea registros y consume cupos; utilízala solo en una base de desarrollo.
+5. Cierra sesión y comprueba que la reserva requiere autenticación. Al recargar también se pierde la sesión actual.
+6. Con una cuenta administrativa real, revisa la lista de cuentas remotas. Distingue esta lista del editor de usuarios locales de demostración.
+7. Abre `/registro-ep2.html`, `/login.legacy.html`, `/contacto.html` y `/nosotros.html`: deben llevar a las pantallas actuales.
 
-Dirección: http://127.0.0.1:5173/login
+Si el registro creó la cuenta pero falló al vincular el perfil, no repitas el registro con el mismo nombre. Revisa el error y recupera el perfil con una intervención controlada; la interfaz todavía no incluye ese recorrido.
 
-Ingresa con la cuenta que acabas de registrar. Los datos del cliente ayudan a precargar el formulario de reserva. La autenticación es una demostración local.
+## Alcance de las comprobaciones
 
-## 4 Productos y carrito
+Las pruebas de React usan mocks y no sustituyen una prueba completa de Docker. El comprobador de integración no prueba creación de reservas, transacciones ni pagos reales. La operación de pago del backend cambia un estado y no cobra dinero.
 
-Direcciones: http://127.0.0.1:5173/productos y http://127.0.0.1:5173/productos/1
+Consulta [Atomic Design](ATOMIC-DESIGN.md), la [integración](INTEGRACION-FRONTEND-BACKEND.md) y los [requisitos históricos de EP2](requisitos/ERS-EP2.md). Las cifras de cobertura de entregas anteriores no representan una medición nueva.
 
-Busca mochila, cambia el filtro de dificultad y abre una ficha. Agrega unidades y comprueba que la suma no pueda superar el stock.
+## Resultado de esta actualización documental
 
-Abre http://127.0.0.1:5173/carrito. Cambia cantidades, prueba AVENTURA10, elimina productos y recarga para comprobar persistencia. El descuento es 10%; no existe cobro ni pedido real.
+El 21 de noviembre de 2026 se verificaron:
 
-## 5 Rutas y reserva
+- 100 pruebas de React aprobadas en 8 archivos, con un solo trabajador.
+- Compilación de producción y comprobación de Atomic Design correctas.
+- 74 enlaces locales y 35 anclas de documentación, sin referencias rotas.
+- Configuración de Compose válida al proporcionar una clave temporal de prueba, sin guardarla ni iniciar servicios.
+- Comprobador de integración validado contra un servidor HTTP simulado: acceso sin token, CLIENTE, ADMINISTRADOR, VENDEDOR y rechazo del modo de escritura retirado.
 
-Direcciones: http://127.0.0.1:5173/rutas y http://127.0.0.1:5173/rutas/1
-
-Filtra por destino o categoría. En una ruta, cambia personas y selecciona equipamiento para arrendar: el total debe cambiar. Usa fecha posterior a hoy. Sin API configurada, la acción guarda un borrador, no una reserva confirmada. Recupera ese borrador con el botón correspondiente.
-
-## 6 Administración
-
-Vuelve a http://127.0.0.1:5173/login. Si tienes sesión iniciada, usa Salir.
-
-Cuenta de administrador de demostración: admin@duoc.cl. Contraseña: Demo2026!
-
-Panel: http://127.0.0.1:5173/admin
-
-Productos: http://127.0.0.1:5173/admin/productos
-
-Usuarios: http://127.0.0.1:5173/admin/usuarios
-
-Cambia el precio o nombre de un producto y vuelve al catálogo público: debe reflejar el mismo dato. En usuarios, comprueba que aparezca la cuenta creada con su tipo de documento y país emisor.
-
-Cierra sesión y entra como vendedor@duoc.cl con Demo2026! para contrastar permisos. El vendedor consulta productos sin botones de modificación ni acceso a usuarios. Estos permisos de interfaz no sustituyen autorización de servidor.
-
-## 7 Contenido y contacto
-
-Blog: http://127.0.0.1:5173/blogs
-
-Nosotros: http://127.0.0.1:5173/nosotros
-
-Contacto: http://127.0.0.1:5173/contacto
-
-Revisa ambos artículos del blog. En contacto prueba errores y un mensaje válido: el resultado informa que es una simulación local, sin envío de correo.
-
-## 8 Evidencia técnica
-
-Ejecuta npm test o npm run test:coverage. La limpieza se verificó con 99 pruebas aprobadas. La cobertura histórica tras integrar Atomic Design fue de 88,88% de líneas; no se volvió a medir durante la limpieza. El detalle y las ramas pendientes están en [Cobertura de testing](evaluacion/COBERTURA-TESTING.md). La compilación se comprueba con npm run build. Revisa la composición de las cinco capas en ATOMIC-DESIGN.md y comprueba sus dependencias con npm run check:architecture.
-
-Para evaluar cumplimiento, consulta [Análisis y criterios](evaluacion/ANALISIS-Y-CRITERIOS.md) y [ERS actualizada](requisitos/ERS-EP2.md). Falta publicar el enlace público de GitHub y realizar la presentación individual. La ERS de EP2 está en Markdown; el DOCX de `docs/requisitos/` conserva el documento histórico de EP1.
+No se ejecutó una prueba completa contra los contenedores reales: la configuración local no proporcionaba la clave JWT y Vite no estaba disponible. Las comprobaciones simuladas no sustituyen esa verificación ni la creación manual de una reserva de prueba.

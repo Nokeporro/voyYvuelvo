@@ -1,16 +1,16 @@
 # Atomic Design en Voy y Vuelvo
 
-Actualización del 16 de octubre de 2026. La interfaz pública y el panel administrativo utilizan Atomic Design sobre React + Vite. La reorganización conserva las rutas, el registro con RUT o pasaporte, Bootstrap y el funcionamiento de Show Preview.
+Actualización del 21 de noviembre de 2026. La interfaz pública y el panel administrativo utilizan Atomic Design sobre React + Vite. La reorganización conserva las rutas, el registro con RUT o pasaporte, Bootstrap y el funcionamiento de Show Preview.
 
 ## Capas implementadas
 
-| Capa | Ubicación | Responsabilidad y ejemplos |
-| --- | --- | --- |
-| Átomos | src/components/atoms | Once controles y elementos básicos: Button, AppLink, Input, Select, Textarea, Label, Heading, Text, Image, Badge y MountainIcon |
-| Moléculas | src/components/molecules | Doce composiciones: FormField, Brand, ProductCard, RouteCard, BlogCard, CartItem, CouponForm, RentalOption, ConfirmationPrompt, SectionHeading, StatCard y TotalsSummary |
-| Organismos | src/components/organisms | Veinticuatro bloques de interfaz: cabecera, pie, formularios, filtros, grillas, tablas, secciones de inicio y de Nosotros |
-| Plantillas | src/components/templates | SiteTemplate, AdminTemplate, PageTemplate, SplitTemplate y ArticleTemplate; organizan las regiones de una vista |
-| Páginas | src/pages y src/pages/admin | Contenido concreto de las rutas, datos, selección de registros, filtros y coordinación de los casos de uso |
+| Capa       | Ubicación                   | Responsabilidad y ejemplos                                                                                                                                               |
+| ---------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Átomos     | src/components/atoms        | Once controles y elementos básicos: Button, AppLink, Input, Select, Textarea, Label, Heading, Text, Image, Badge y MountainIcon                                          |
+| Moléculas  | src/components/molecules    | Doce composiciones: FormField, Brand, ProductCard, RouteCard, BlogCard, CartItem, CouponForm, RentalOption, ConfirmationPrompt, SectionHeading, StatCard y TotalsSummary |
+| Organismos | src/components/organisms    | Veinticuatro bloques de interfaz: cabecera, pie, formularios, filtros, grillas, tablas, secciones de inicio y de Nosotros                                                |
+| Plantillas | src/components/templates    | SiteTemplate, AdminTemplate, PageTemplate, SplitTemplate y ArticleTemplate; organizan las regiones de una vista                                                          |
+| Páginas    | src/pages y src/pages/admin | Contenido concreto de las rutas, datos, selección de registros, filtros y coordinación de los casos de uso                                                               |
 
 Los átomos conservan las propiedades HTML necesarias para accesibilidad, eventos y estilos Bootstrap. FormField combina etiqueta, control, ayuda y error. Los organismos agrupan tareas completas; algunos formularios administran su estado local. Las páginas coordinan datos de dominio y suministran propiedades y callbacks a los componentes controlados.
 
@@ -30,26 +30,26 @@ App y ruta /registro
     SiteFooter
 ```
 
-El mismo RegistrationForm se reutiliza en UserEditor del panel. Las reglas del RUT, pasaporte, país emisor y datos personales permanecen en utils/validation.js. El registro local permanece en services/accounts.js. Así el sistema de componentes no duplica esas reglas.
+El mismo RegistrationForm se reutiliza en UserEditor del panel. Las reglas del RUT, pasaporte, país emisor y datos personales permanecen en utils/validation.js. El registro público utiliza services/registration.js para crear la cuenta CLIENTE y su perfil en el backend. services/accounts.js conserva únicamente el editor de usuarios locales de demostración; esos usuarios no conceden acceso a MySQL. Así el sistema de componentes no duplica esas reglas.
 
 ## Cobertura de las vistas
 
-| Vista o área | Composición principal |
-| --- | --- |
-| Inicio | PageTemplate, HomeHero, RouteSearchForm, FeaturedRoutes, FeaturedProducts, AdventureInvite y BlogRecommendations |
-| Productos | PageTemplate, ProductFilters, CardGrid y ProductCard |
-| Detalle de producto | PageTemplate, SplitTemplate y ProductPurchaseForm |
-| Rutas | PageTemplate, controles atómicos, CardGrid y RouteCard |
-| Reserva | PageTemplate, SplitTemplate, RentalEquipmentList y ReservationForm |
-| Carrito | PageTemplate, CartItem, CouponForm y TotalsSummary |
-| Registro | PageTemplate, SplitTemplate y RegistrationForm |
-| Login | PageTemplate y LoginForm; la página decide la navegación posterior |
-| Contacto | PageTemplate, SplitTemplate y ContactForm |
-| Nosotros | PageTemplate, AboutHero, AboutStory, AboutValues y AboutTeam |
-| Blog | PageTemplate, BlogList y BlogCard |
-| Artículos | PageTemplate y ArticleTemplate con contenido y átomos |
-| Panel | AdminTemplate, páginas individuales, ProductsTable, UsersTable, ProductForm, RegistrationForm, ConfirmationPrompt y StatCard |
-| Página inexistente | PageTemplate, Heading, Text y AppLink |
+| Vista o área        | Composición principal                                                                                                        |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Inicio              | PageTemplate, HomeHero, RouteSearchForm, FeaturedRoutes, FeaturedProducts, AdventureInvite y BlogRecommendations             |
+| Productos           | PageTemplate, ProductFilters, CardGrid y ProductCard                                                                         |
+| Detalle de producto | PageTemplate, SplitTemplate y ProductPurchaseForm                                                                            |
+| Rutas               | PageTemplate, controles atómicos, CardGrid y RouteCard                                                                       |
+| Reserva             | PageTemplate, SplitTemplate, RentalEquipmentList y ReservationForm                                                           |
+| Carrito             | PageTemplate, CartItem, CouponForm y TotalsSummary                                                                           |
+| Registro            | PageTemplate, SplitTemplate y RegistrationForm                                                                               |
+| Login               | PageTemplate y LoginForm; la página decide la navegación posterior                                                           |
+| Contacto            | PageTemplate, SplitTemplate y ContactForm                                                                                    |
+| Nosotros            | PageTemplate, AboutHero, AboutStory, AboutValues y AboutTeam                                                                 |
+| Blog                | PageTemplate, BlogList y BlogCard                                                                                            |
+| Artículos           | PageTemplate y ArticleTemplate con contenido y átomos                                                                        |
+| Panel               | AdminTemplate, páginas individuales, ProductsTable, UsersTable, ProductForm, RegistrationForm, ConfirmationPrompt y StatCard |
+| Página inexistente  | PageTemplate, Heading, Text y AppLink                                                                                        |
 
 Se eliminaron los archivos que agrupaban vistas distintas: Catalog.jsx y Admin.jsx. Sus exportaciones ahora están en páginas individuales. Los antiguos Field.jsx, Cards.jsx y Layout.jsx se reemplazaron por los componentes de sus respectivas capas; no se mantienen adaptadores con las rutas antiguas.
 
