@@ -1,10 +1,16 @@
-
 const base = (import.meta.env.VITE_API_URL || "")
   .replace(/\/$/, "");
 
+// ==========================================
+// 1. COMPROBAR CONEXION CON BACKEND
+// ==========================================
+
 export const apiEnabled = Boolean(base);
 
-// REALIZAR PETICIONES AL BACKEND
+// ==========================================
+// 2. REALIZAR PETICIONES HTTP
+// ==========================================
+
 export async function request(path, options = {}) {
 
   const {
@@ -13,7 +19,7 @@ export async function request(path, options = {}) {
     ...fetchOptions
   } = options;
 
-  // Incluir JWT cuando la solicitud lo necesite.
+  // Agregar JWT cuando exista.
   const authorization = token
     ? { Authorization: `Bearer ${token}` }
     : {};
@@ -32,18 +38,25 @@ export async function request(path, options = {}) {
     },
   });
 
+  // Comprobar errores HTTP.
   if (!response.ok) {
     throw new Error(
       `El servicio respondió con error ${response.status}.`
     );
   }
 
-  return response.status === 204
-    ? null
-    : response.json();
+  // Respuestas sin contenido.
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
 }
 
-// EXTRAER LISTAS DEVUELTAS POR SPRING BOOT
+// ==========================================
+// 3. EXTRAER LISTAS NORMALES O HAL
+// ==========================================
+
 export function embeddedList(data) {
 
   if (Array.isArray(data)) {
@@ -56,58 +69,51 @@ export function embeddedList(data) {
   );
 }
 
-// CREAR RESERVAS
-// Este flujo se adaptará a los nuevos permisos JWT.
+// ==========================================
+// 4. CREAR RESERVAS SEGURAS CON JWT
+// ==========================================
+
 export async function submitReservation(
   data,
   route,
-  equipment
+  equipment,
+  token
 ) {
 
-  const users = embeddedList(
-    await request("/api/usuarios")
-  );
-
-  const email = data.email.trim().toLowerCase();
-
-  let user = users.find(
-    (u) =>
-      String(u.email).toLowerCase() === email
-  );
-
-  if (!user) {
-
-    user = await request("/api/usuarios", {
-      method: "POST",
-
-      body: JSON.stringify({
-        nombre: data.nombre.trim(),
-        email,
-        telefono: data.telefono.trim(),
-      }),
-    });
-  }
-
-  if (!user?.id) {
+  // Comprobar autenticacion ANTES de
+  // enviar cualquier solicitud al backend.
+  if (!token) {
     throw new Error(
-      "El servicio no entregó un identificador de usuario."
+      "Debes iniciar sesión para realizar una reserva."
     );
   }
 
-  return request("/api/reservas", {
-    method: "POST",
+  // Preparar el cuerpo de la reserva.
+  // IMPORTANTE:
+  // No enviamos usuarioId desde React.
+  const reserva = {
+    rutaId: Number(route.id),
 
-    body: JSON.stringify({
-      usuarioId: user.id,
-      rutaId: route.id,
-      cantidadPersonas: Number(data.personas),
-      fechaReserva: data.fecha,
-      necesitaGuia: data.guia,
+    cantidadPersonas: Number(data.personas),
 
-      equipamientos: equipment.map((e) => ({
-        equipamientoId: e.id,
+    fechaReserva: data.fecha,
+
+    necesitaGuia: Boolean(data.guia),
+
+    equipamientos: (equipment || []).map(
+      (item) => ({
+        equipamientoId: Number(item.id),
         cantidad: 1,
-      })),
-    }),
+      })
+    ),
+  };
+
+  // El API Gateway identifica al cliente
+  // mediante su JWT y obtiene su perfil
+  // directamente desde MySQL.
+  return request("/auth/reservas", {
+    method: "POST",
+    token,
+    body: JSON.stringify(reserva),
   });
 }

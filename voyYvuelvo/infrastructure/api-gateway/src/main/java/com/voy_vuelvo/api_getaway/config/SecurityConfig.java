@@ -28,19 +28,16 @@ public class SecurityConfig {
     }
 
     // 1. CONFIGURACION CORS
-    // Permite la comunicacion entre React y Spring Boot.
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        // Direcciones permitidas durante el desarrollo.
         config.setAllowedOrigins(List.of(
                 "http://127.0.0.1:5173",
                 "http://localhost:5173"
         ));
 
-        // Metodos HTTP permitidos.
         config.setAllowedMethods(List.of(
                 "GET",
                 "POST",
@@ -50,7 +47,6 @@ public class SecurityConfig {
                 "OPTIONS"
         ));
 
-        // Encabezados necesarios para JSON y JWT.
         config.setAllowedHeaders(List.of(
                 "Content-Type",
                 "Authorization"
@@ -74,43 +70,63 @@ public class SecurityConfig {
 
         return http
 
-                // Desactivar autenticacion tradicional.
+                // Desactivar autenticacion tradicional
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
 
-                // Activar configuracion CORS.
+                // Activar CORS
                 .cors(cors -> cors.configurationSource(
                         corsConfigurationSource()
                 ))
 
-                // 3. REGLAS DE ACCESO
                 .authorizeExchange(exchange -> exchange
 
-                        // Solicitudes previas CORS.
+                        // 3. SOLICITUDES CORS
                         .pathMatchers(
                                 HttpMethod.OPTIONS,
                                 "/**"
                         )
                         .permitAll()
 
-                        // 4. LOGIN Y REGISTRO
-                        // Acceso publico.
+                        // 4. LOGIN Y REGISTRO PUBLICOS
                         .pathMatchers(
                                 "/auth/login",
                                 "/auth/register"
                         )
                         .permitAll()
 
-                        // 5. PERFIL DEL CLIENTE
-                        // Solo CLIENTE con JWT valido.
+                        // 5. CREAR PERFIL DEL CLIENTE
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/auth/perfil"
                         )
                         .hasRole("CLIENTE")
 
-                        // 6. DOCUMENTACION SWAGGER
+                        // 6. CONSULTAR PERFIL PROPIO
+                        .pathMatchers(
+                                HttpMethod.GET,
+                                "/auth/perfil"
+                        )
+                        .hasRole("CLIENTE")
+
+                        // 7. CONSULTAR CUENTAS REALES
+                        // Solo Administrador
+                        .pathMatchers(
+                                HttpMethod.GET,
+                                "/auth/cuentas"
+                        )
+                        .hasRole("ADMINISTRADOR")
+
+                        // 8. RESERVAS SEGURAS DEL CLIENTE
+                        .pathMatchers(
+                                HttpMethod.POST,
+                                "/auth/reservas"
+                        )
+                        .hasRole("CLIENTE")
+
+                        // 9. DOCUMENTACION SWAGGER
+                        // Se conserva la configuracion de main
                         .pathMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
@@ -121,8 +137,7 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // 7. CONSULTAR RUTAS Y EQUIPAMIENTO
-                        // Acceso publico para GET.
+                        // 10. CONSULTAR RUTAS Y EQUIPAMIENTO
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/api/rutas",
@@ -132,8 +147,8 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // 8. CONSULTAR RESERVAS
-                        // Administrador y Vendedor.
+                        // 11. CONSULTAR RESERVAS
+                        // Administrador y Vendedor
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/api/reservas",
@@ -144,68 +159,61 @@ public class SecurityConfig {
                                 "VENDEDOR"
                         )
 
-                        // 9. CREAR RESERVAS
-                        // TEMPORALMENTE solo Administrador.
-                        // El Cliente podra crear reservas cuando
-                        // el backend obtenga su perfil desde JWT
-                        // y no desde un ID enviado por React.
+                        // 12. CREAR RESERVAS ADMINISTRATIVAS
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/api/reservas"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 10. CREAR USUARIOS
-                        // Solo Administrador mediante API Gateway.
-                        // El Cliente debe utilizar /auth/perfil.
+                        // 13. CREAR PERFILES ADMINISTRATIVOS
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/api/usuarios"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 11. ADMINISTRACION DE USUARIOS
+                        // 14. ADMINISTRACION DE USUARIOS
                         .pathMatchers(
                                 "/api/usuarios",
                                 "/api/usuarios/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 12. ADMINISTRACION DE PAGOS
+                        // 15. ADMINISTRACION DE PAGOS
                         .pathMatchers(
                                 "/api/pagos",
                                 "/api/pagos/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 13. MODIFICAR RUTAS
+                        // 16. MODIFICAR RUTAS
                         .pathMatchers(
                                 "/api/rutas",
                                 "/api/rutas/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 14. MODIFICAR EQUIPAMIENTO
+                        // 17. MODIFICAR EQUIPAMIENTO
                         .pathMatchers(
                                 "/api/equipamiento",
                                 "/api/equipamiento/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 15. OTRAS OPERACIONES DE RESERVAS
-                        // Solo Administrador.
+                        // 18. OTRAS OPERACIONES DE RESERVAS
                         .pathMatchers(
                                 "/api/reservas",
                                 "/api/reservas/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 16. BLOQUEAR RUTAS NO DEFINIDAS
+                        // 19. BLOQUEAR RUTAS NO DEFINIDAS
                         .anyExchange()
                         .denyAll()
                 )
 
-                // 17. VALIDACION JWT
+                // 20. VALIDACION JWT
                 .addFilterAt(
                         jwtFilter,
                         SecurityWebFiltersOrder.AUTHENTICATION

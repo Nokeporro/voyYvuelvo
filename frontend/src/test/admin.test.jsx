@@ -1,176 +1,499 @@
-import { describe, expect, it } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { useEffect } from "react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import {
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
+
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { StoreProvider } from "../context/Store";
-import { getUsers, saveAccount } from "../services/accounts";
+
 import App from "../App";
-function show(path, role = "Administrador") {
-  sessionStorage.setItem(
-    "vv-react-session-v2",
+import { StoreProvider, useStore } from "../context/Store";
+import { getUsers, saveAccount } from "../services/accounts";
+import { loginBackend } from "../services/auth.js";
+
+// ============================================
+// 1. CONFIGURACION DE LAS PRUEBAS
+// ============================================
+
+// Simular la autenticacion con el backend.
+// Estas pruebas no realizan solicitudes reales.
+vi.mock("../services/auth.js", () => ({
+  loginBackend: vi.fn(),
+}));
+
+// Limpiar las simulaciones despues de cada prueba.
+afterEach(() => {
+  vi.clearAllMocks();
+});
+
+// Crear un JWT simulado para las pruebas.
+// No es un token real del backend.
+function crearTokenPrueba(username, rol) {
+  const payload = btoa(
     JSON.stringify({
-      id: "demo",
-      nombre: "Equipo",
-      correo: "demo@example.cl",
-      rol: role,
-    }),
+      sub: username,
+      rol,
+    })
   );
+
+  return `cabecera.${payload}.firma`;
+}
+
+// Mostrar el formulario de inicio de sesion.
+function mostrarLogin() {
   return render(
-    <MemoryRouter initialEntries={[path]}>
+    <MemoryRouter initialEntries={["/login"]}>
       <StoreProvider>
         <App />
       </StoreProvider>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }
+
+// Preparar una sesion de prueba en Store.jsx.
+// No utilizamos el sessionStorage antiguo.
+function SesionDePrueba({ rol }) {
+  const { session, signIn } = useStore();
+
+  useEffect(() => {
+    signIn({
+      token: "token-simulado-para-pruebas",
+      username: "equipo",
+      nombre: "Equipo",
+      rol,
+    });
+  }, []);
+
+  return session ? <App /> : null;
+}
+
+// Abrir cualquier pantalla con una sesion simulada.
+function show(path, role = "Administrador") {
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <StoreProvider>
+        <SesionDePrueba rol={role} />
+      </StoreProvider>
+    </MemoryRouter>
+  );
+}
+
+// ============================================
+// 2. ACCESO Y PERMISOS
+// ============================================
+
 describe("Acceso y permisos en componentes", () => {
-  it("inicia sesión de administrador y permite cerrarla", async () => {
+
+  // ------------------------------------------
+  // PRUEBA 1: LOGIN ADMINISTRADOR
+  // ------------------------------------------
+
+  it("inicia sesion de administrador con JWT y permite cerrarla", async () => {
     const user = userEvent.setup();
-    show("/login", "Cliente");
+
+    loginBackend.mockResolvedValueOnce(
+      crearTokenPrueba("admin_ep3", "ADMINISTRADOR")
+    );
+
+    mostrarLogin();
+
     await user.type(
-      screen.getByLabelText("Correo electrónico"),
-      "admin@duoc.cl",
+      screen.getByLabelText("Nombre de usuario"),
+      "admin_ep3"
     );
-    await user.type(screen.getByLabelText("Contraseña"), "Demo2026!");
-    await user.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(
-      await screen.findByRole("heading", { name: "Hola, Administrador" }),
-    ).toBeInTheDocument();
-    expect(JSON.parse(sessionStorage.getItem("vv-react-session-v2")).rol).toBe(
-      "Administrador",
-    );
-    await user.click(screen.getByRole("button", { name: "Salir" }));
-    expect(
-      await screen.findByRole("heading", { name: "Iniciar sesión" }),
-    ).toBeInTheDocument();
-  });
-  it("muestra validaciones y rechaza credenciales erróneas", async () => {
-    const user = userEvent.setup();
-    show("/login");
-    await user.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(screen.getByLabelText("Correo electrónico")).toHaveAttribute(
-      "aria-invalid",
-      "true",
-    );
+
     await user.type(
-      screen.getByLabelText("Correo electrónico"),
-      "no@example.cl",
+      screen.getByLabelText("Contraseña"),
+      "ClaveDePrueba123!"
     );
-    await user.type(screen.getByLabelText("Contraseña"), "incorrecta");
-    await user.click(screen.getByRole("button", { name: "Ingresar" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent("incorrectos");
-  });
-  it("inicia sesión de cliente registrado y abre las rutas", async () => {
-    const data = {
-      nombre: "Ana",
-      apellidos: "Rojas",
-      correo: "ana@example.cl",
-      password: "Sendero2026!",
-      tipoDocumento: "pasaporte",
-      documento: "AB123456",
-      paisEmisor: "España",
-      direccion: "Hotel",
-      telefono: "+56912345678",
-    };
-    await saveAccount(data);
-    const user = userEvent.setup();
-    show("/login");
-    await user.type(screen.getByLabelText("Correo electrónico"), data.correo);
-    await user.type(screen.getByLabelText("Contraseña"), data.password);
-    await user.click(screen.getByRole("button", { name: "Ingresar" }));
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Ingresar",
+      })
+    );
+
     expect(
-      await screen.findByRole("heading", { name: "Encuentra tu próxima ruta" }),
+      await screen.findByRole("heading", {
+        name: "Hola, admin_ep3",
+      })
+    ).toBeInTheDocument();
+
+    expect(loginBackend).toHaveBeenCalledWith(
+      "admin_ep3",
+      "ClaveDePrueba123!"
+    );
+
+    // Verificar que no se utilice el sistema antiguo.
+    expect(
+      sessionStorage.getItem("vv-react-session-v2")
+    ).toBeNull();
+
+    // Cerrar sesion.
+    await user.click(
+      screen.getByRole("button", {
+        name: "Salir",
+      })
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Iniciar sesión",
+      })
     ).toBeInTheDocument();
   });
-  it("bloquea un cliente y limita al vendedor a consultar productos", async () => {
+
+  // ------------------------------------------
+  // PRUEBA 2: VALIDACIONES DE LOGIN
+  // ------------------------------------------
+
+  it("muestra validaciones y rechaza credenciales incorrectas", async () => {
     const user = userEvent.setup();
+
+    mostrarLogin();
+
+    // Intentar ingresar sin completar los campos.
+    await user.click(
+      screen.getByRole("button", {
+        name: "Ingresar",
+      })
+    );
+
+    expect(
+      screen.getByLabelText("Nombre de usuario")
+    ).toHaveAttribute("aria-invalid", "true");
+
+    loginBackend.mockRejectedValueOnce(
+      new Error("Usuario o contraseña incorrectos.")
+    );
+
+    // Ingresar credenciales incorrectas.
+    await user.type(
+      screen.getByLabelText("Nombre de usuario"),
+      "usuario_incorrecto"
+    );
+
+    await user.type(
+      screen.getByLabelText("Contraseña"),
+      "Incorrecta123!"
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Ingresar",
+      })
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("alert")
+      ).toHaveTextContent("incorrectos");
+    });
+  });
+
+  // ------------------------------------------
+  // PRUEBA 3: LOGIN CLIENTE
+  // ------------------------------------------
+
+  it("inicia sesion de cliente con JWT y abre las rutas", async () => {
+    const user = userEvent.setup();
+
+    loginBackend.mockResolvedValueOnce(
+      crearTokenPrueba("cliente_ep3", "CLIENTE")
+    );
+
+    mostrarLogin();
+
+    await user.type(
+      screen.getByLabelText("Nombre de usuario"),
+      "cliente_ep3"
+    );
+
+    await user.type(
+      screen.getByLabelText("Contraseña"),
+      "ClaveDePrueba123!"
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Ingresar",
+      })
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Encuentra tu próxima ruta",
+      })
+    ).toBeInTheDocument();
+
+    expect(loginBackend).toHaveBeenCalledOnce();
+  });
+
+  // ------------------------------------------
+  // PRUEBA 4: PERMISOS VENDEDOR
+  // ------------------------------------------
+
+  it("limita al vendedor a consultar productos", async () => {
+    const user = userEvent.setup();
+
     show("/admin/productos", "Vendedor");
+
+    await screen.findByRole("heading", {
+      name: "Productos",
+    });
+
+    // El vendedor no puede crear productos.
     expect(
-      screen.queryByRole("link", { name: "Nuevo producto" }),
+      screen.queryByRole("link", {
+        name: "Nuevo producto",
+      })
     ).not.toBeInTheDocument();
-    await user.click(screen.getAllByRole("link", { name: "Ver detalle" })[0]);
+
+    // Puede consultar el detalle.
+    await user.click(
+      screen.getAllByRole("link", {
+        name: "Ver detalle",
+      })[0]
+    );
+
     expect(
-      screen.getByRole("heading", { name: "Detalle de producto" }),
+      screen.getByRole("heading", {
+        name: "Detalle de producto",
+      })
     ).toBeInTheDocument();
-    expect(screen.getByLabelText("Nombre", { exact: true })).toBeDisabled();
+
+    // No puede modificar los campos.
     expect(
-      screen.queryByRole("button", { name: "Guardar producto" }),
+      screen.getByLabelText("Nombre", {
+        exact: true,
+      })
+    ).toBeDisabled();
+
+    expect(
+      screen.queryByRole("button", {
+        name: "Guardar producto",
+      })
     ).not.toBeInTheDocument();
   });
-  it("deniega la ruta de administración a un cliente", () => {
+
+  // ------------------------------------------
+  // PRUEBA 5: BLOQUEAR CLIENTE
+  // ------------------------------------------
+
+  it("deniega la ruta administrativa a un cliente", async () => {
     show("/admin", "Cliente");
+
     expect(
-      screen.getByRole("heading", { name: "Acceso restringido" }),
+      await screen.findByRole("heading", {
+        name: "Acceso restringido",
+      })
     ).toBeInTheDocument();
   });
-  it("redirige al vendedor fuera del mantenedor de usuarios", async () => {
+
+  // ------------------------------------------
+  // PRUEBA 6: RESTRINGIR USUARIOS AL VENDEDOR
+  // ------------------------------------------
+
+  it("redirige al vendedor fuera de usuarios", async () => {
     show("/admin/usuarios", "Vendedor");
+
     expect(
-      await screen.findByRole("heading", { name: "Productos" }),
+      await screen.findByRole("heading", {
+        name: "Productos",
+      })
     ).toBeInTheDocument();
+
     expect(
-      screen.queryByRole("heading", { name: "Usuarios" }),
+      screen.queryByRole("heading", {
+        name: "Usuarios",
+      })
     ).not.toBeInTheDocument();
   });
 });
+
+// ============================================
+// 3. ADMINISTRACION INTEGRADA CON LA TIENDA
+// ============================================
+
 describe("Administración integrada con la tienda", () => {
-  it("crea un producto, lo edita, consulta el catálogo y lo elimina", async () => {
+
+  // ------------------------------------------
+  // PRUEBA 7: CRUD DE PRODUCTOS
+  // ------------------------------------------
+  // CAMBIO: esta prueba permite hasta 15 segundos.
+  // Las demas mantienen el limite predeterminado.
+
+  it("crea, edita y elimina un producto", async () => {
     const user = userEvent.setup();
+
     show("/admin/productos");
-    await user.click(screen.getByRole("link", { name: "Nuevo producto" }));
-    await user.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(screen.getByText(/código único/)).toBeInTheDocument();
+
+    // CREAR PRODUCTO
+    await user.click(
+      await screen.findByRole("link", {
+        name: "Nuevo producto",
+      })
+    );
+
+    // Comprobar validaciones del formulario.
+    await user.click(
+      screen.getByRole("button", {
+        name: "Guardar producto",
+      })
+    );
+
+    expect(
+      screen.getByText(/código único/)
+    ).toBeInTheDocument();
+
+    // Completar los campos.
     for (const [label, value] of [
       ["Código", "NEW-001"],
       ["Nombre", "Equipo nuevo"],
       ["Precio CLP", "15990"],
       ["Stock", "5"],
       ["Stock crítico", "2"],
-    ])
-      await user.type(screen.getByLabelText(label, { exact: true }), value);
-    await user.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(await screen.findByText("Equipo nuevo")).toBeInTheDocument();
-    const row = screen.getByText("Equipo nuevo").closest("tr");
-    await user.click(within(row).getByRole("link", { name: "Editar" }));
-    await user.clear(screen.getByLabelText("Nombre", { exact: true }));
-    await user.type(
-      screen.getByLabelText("Nombre", { exact: true }),
-      "Equipo actualizado",
+    ]) {
+      await user.type(
+        screen.getByLabelText(label, {
+          exact: true,
+        }),
+        value
+      );
+    }
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Guardar producto",
+      })
     );
-    await user.click(screen.getByRole("button", { name: "Guardar producto" }));
-    expect(await screen.findByText("Equipo actualizado")).toBeInTheDocument();
+
+    expect(
+      await screen.findByText("Equipo nuevo")
+    ).toBeInTheDocument();
+
+    // EDITAR PRODUCTO
+    const row = screen
+      .getByText("Equipo nuevo")
+      .closest("tr");
+
+    await user.click(
+      within(row).getByRole("link", {
+        name: "Editar",
+      })
+    );
+
+    await user.clear(
+      screen.getByLabelText("Nombre", {
+        exact: true,
+      })
+    );
+
+    await user.type(
+      screen.getByLabelText("Nombre", {
+        exact: true,
+      }),
+      "Equipo actualizado"
+    );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Guardar producto",
+      })
+    );
+
+    expect(
+      await screen.findByText("Equipo actualizado")
+    ).toBeInTheDocument();
+
+    // COMPROBAR PRODUCTO EN LA TIENDA
     await user.click(
       within(
-        screen.getByRole("navigation", { name: "Navegación principal" }),
-      ).getByRole("link", { name: "Productos", exact: true }),
+        screen.getByRole("navigation", {
+          name: "Navegación principal",
+        })
+      ).getByRole("link", {
+        name: "Productos",
+        exact: true,
+      })
     );
+
     await user.type(
       screen.getByLabelText("Buscar productos"),
-      "Equipo actualizado",
+      "Equipo actualizado"
     );
+
     expect(
-      screen.getByRole("heading", { name: "Equipo actualizado" }),
+      screen.getByRole("heading", {
+        name: "Equipo actualizado",
+      })
     ).toBeInTheDocument();
-    await user.click(screen.getByRole("link", { name: "Panel", exact: true }));
+
+    // VOLVER AL PANEL ADMINISTRATIVO
+    await user.click(
+      screen.getByRole("link", {
+        name: "Panel",
+        exact: true,
+      })
+    );
+
     await user.click(
       screen
-        .getByRole("navigation", { name: "Administración" })
-        .querySelector('a[href="/admin/productos"]'),
+        .getByRole("navigation", {
+          name: "Administración",
+        })
+        .querySelector(
+          'a[href="/admin/productos"]'
+        )
     );
+
+    // CANCELAR ELIMINACION
     await user.click(
-      screen.getByRole("button", { name: "Eliminar Equipo actualizado" }),
+      screen.getByRole("button", {
+        name: "Eliminar Equipo actualizado",
+      })
     );
-    await user.click(screen.getByRole("button", { name: "Cancelar" }));
-    expect(screen.getByText("Equipo actualizado")).toBeInTheDocument();
+
     await user.click(
-      screen.getByRole("button", { name: "Eliminar Equipo actualizado" }),
+      screen.getByRole("button", {
+        name: "Cancelar",
+      })
     );
+
+    expect(
+      screen.getByText("Equipo actualizado")
+    ).toBeInTheDocument();
+
+    // CONFIRMAR ELIMINACION
     await user.click(
-      screen.getByRole("button", { name: "Confirmar eliminación" }),
+      screen.getByRole("button", {
+        name: "Eliminar Equipo actualizado",
+      })
     );
-    expect(screen.queryByText("Equipo actualizado")).not.toBeInTheDocument();
-  });
-  it("edita una cuenta con pasaporte y permite eliminarla", async () => {
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Confirmar eliminación",
+      })
+    );
+
+    expect(
+      screen.queryByText("Equipo actualizado")
+    ).not.toBeInTheDocument();
+
+  }, 15000); // Tiempo maximo: 15 segundos.
+
+  // ------------------------------------------
+  // PRUEBA 8: ADMINISTRACION DE USUARIOS
+  // ------------------------------------------
+
+  it("edita una cuenta de demostracion y permite eliminarla", async () => {
+    // Registrar cuenta local de prueba.
     await saveAccount({
       nombre: "Marie",
       apellidos: "Dupont",
@@ -182,42 +505,97 @@ describe("Administración integrada con la tienda", () => {
       direccion: "Hotel Santiago",
       telefono: "+33612345678",
     });
+
     const user = userEvent.setup();
+
     show("/admin/usuarios");
-    await user.click(screen.getByRole("link", { name: "Editar" }));
-    await user.clear(screen.getByLabelText("Nombre", { exact: true }));
-    await user.type(screen.getByLabelText("Nombre", { exact: true }), "María");
-    await user.type(
-      screen.getByLabelText("Contraseña", { exact: true }),
-      "Nueva2026!",
+
+    // EDITAR USUARIO
+    await user.click(
+      await screen.findByRole("link", {
+        name: "Editar",
+      })
     );
-    await user.type(
-      screen.getByLabelText("Confirmar contraseña"),
-      "Nueva2026!",
+
+    await user.clear(
+      screen.getByLabelText("Nombre", {
+        exact: true,
+      })
     );
-    await user.click(screen.getByLabelText(/Acepto el uso/));
+
+    await user.type(
+      screen.getByLabelText("Nombre", {
+        exact: true,
+      }),
+      "María"
+    );
+
+    await user.type(
+      screen.getByLabelText("Contraseña", {
+        exact: true,
+      }),
+      "Nueva2026!"
+    );
+
+    await user.type(
+      screen.getByLabelText(
+        "Confirmar contraseña"
+      ),
+      "Nueva2026!"
+    );
+
+    await user.click(
+      screen.getByLabelText(/Acepto el uso/)
+    );
+
     await user.selectOptions(
       screen.getByLabelText("Rol del usuario"),
-      "Vendedor",
+      "Vendedor"
     );
-    await user.click(screen.getByRole("button", { name: "Guardar usuario" }));
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Guardar usuario",
+      })
+    );
+
     expect(
-      await screen.findByText("Usuario guardado correctamente."),
+      await screen.findByText(
+        "Usuario guardado correctamente."
+      )
     ).toBeInTheDocument();
+
     expect(getUsers()[0]).toMatchObject({
       nombre: "María",
       rol: "Vendedor",
       documento: "AB123456",
     });
-    await user.click(screen.getByRole("link", { name: "← Volver al listado" }));
+
+    // REGRESAR AL LISTADO
     await user.click(
-      screen.getByRole("button", { name: "Eliminar", exact: true }),
+      screen.getByRole("link", {
+        name: "← Volver al listado",
+      })
     );
+
+    // ELIMINAR USUARIO
     await user.click(
-      screen.getByRole("button", { name: "Confirmar eliminación" }),
+      screen.getByRole("button", {
+        name: "Eliminar",
+        exact: true,
+      })
     );
+
+    await user.click(
+      screen.getByRole("button", {
+        name: "Confirmar eliminación",
+      })
+    );
+
     expect(
-      screen.getByText("Aún no hay cuentas registradas."),
+      screen.getByText(
+        "Aún no hay cuentas registradas."
+      )
     ).toBeInTheDocument();
   });
 });

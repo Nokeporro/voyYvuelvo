@@ -43,8 +43,11 @@ public class PerfilController {
                 .build();
     }
 
-    // 2. REGISTRAR PERFIL
+    // ==========================================
+    // 2. REGISTRAR PERFIL DEL CLIENTE
     // POST /auth/perfil
+    // ==========================================
+
     @PostMapping("/perfil")
     public Mono<ResponseEntity<Map<String, Object>>> crearPerfil(
             @RequestBody PerfilRequest request) {
@@ -72,7 +75,7 @@ public class PerfilController {
 
         String telefono = request.getTelefono().trim();
 
-        // Validar el formato del correo.
+        // Validar el correo.
         if (!email.matches(
                 "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
 
@@ -82,7 +85,7 @@ public class PerfilController {
             ));
         }
 
-        // 3. OBTENER USUARIO AUTENTICADO
+        // Obtener usuario autenticado.
         return ReactiveSecurityContextHolder.getContext()
 
                 .switchIfEmpty(Mono.error(
@@ -108,7 +111,7 @@ public class PerfilController {
                         );
                     }
 
-                    // 4. COMPROBAR ROL CLIENTE
+                    // Comprobar rol CLIENTE.
                     boolean esCliente = authentication
                             .getAuthorities()
                             .stream()
@@ -127,12 +130,11 @@ public class PerfilController {
                         );
                     }
 
-                    // Identidad obtenida desde Spring Security.
                     String username = authentication.getName();
 
-                    // 5. COMPROBAR PERFIL EXISTENTE
-                    // JPA es bloqueante; se ejecuta
-                    // fuera del hilo reactivo principal.
+                    // Consultar si ya existe un perfil.
+                    // JPA es bloqueante, por eso usamos
+                    // boundedElastic.
                     return Mono.fromCallable(() -> {
 
                                 Long perfilExistente =
@@ -159,8 +161,7 @@ public class PerfilController {
                                     );
                                 }
 
-                                // 6. CREAR PERFIL EN MS-USUARIO
-                                // No recibimos ningun ID del navegador.
+                                // Crear el perfil en ms-usuario.
                                 return usuarioClient.post()
                                         .uri("/api/usuarios")
                                         .bodyValue(Map.of(
@@ -171,10 +172,11 @@ public class PerfilController {
                                         .retrieve()
                                         .bodyToMono(JsonNode.class)
 
-                                        // Gestionar errores del servicio.
+                                        // Gestionar errores del microservicio.
                                         .onErrorMap(
                                                 WebClientResponseException.class,
                                                 error -> {
+
                                                     HttpStatus status =
                                                             error.getStatusCode().value() == 409
                                                                     ? HttpStatus.CONFLICT
@@ -202,9 +204,7 @@ public class PerfilController {
 
                                         .flatMap(perfilCreado -> {
 
-                                            // 7. OBTENER ID DEL NUEVO PERFIL
-                                            // ms-usuario entrega el ID
-                                            // en la respuesta JSON.
+                                            // Obtener el ID creado.
                                             Long perfilId = perfilCreado
                                                     .path("id")
                                                     .asLong(0L);
@@ -218,7 +218,7 @@ public class PerfilController {
                                                 );
                                             }
 
-                                            // 8. VINCULAR PERFIL A LA CUENTA JWT
+                                            // Vincular perfil con la cuenta JWT.
                                             return vincularPerfil(
                                                     username,
                                                     perfilId,
@@ -231,7 +231,134 @@ public class PerfilController {
                 });
     }
 
-    // 9. GUARDAR VINCULACION EN BD_GATEWAY
+    // ==========================================
+    // 3. CONSULTAR MI PERFIL CON JWT
+    // GET /auth/perfil
+    // NUEVO METODO
+    // ==========================================
+
+    @GetMapping("/perfil")
+    public Mono<ResponseEntity<JsonNode>> consultarMiPerfil() {
+
+        // Recuperar el usuario autenticado
+        // desde Spring Security.
+        return ReactiveSecurityContextHolder.getContext()
+
+                .switchIfEmpty(Mono.error(
+                        new ResponseStatusException(
+                                HttpStatus.UNAUTHORIZED,
+                                "Debes iniciar sesion."
+                        )
+                ))
+
+                .flatMap(context -> {
+
+                    Authentication authentication =
+                            context.getAuthentication();
+
+                    if (authentication == null
+                            || !authentication.isAuthenticated()) {
+
+                        return Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.UNAUTHORIZED,
+                                        "Usuario no autenticado."
+                                )
+                        );
+                    }
+
+                    // Solo CLIENTE puede consultar
+                    // este endpoint de perfil personal.
+                    boolean esCliente = authentication
+                            .getAuthorities()
+                            .stream()
+                            .anyMatch(autoridad ->
+                                    "ROLE_CLIENTE".equals(
+                                            autoridad.getAuthority()
+                                    )
+                            );
+
+                    if (!esCliente) {
+                        return Mono.error(
+                                new ResponseStatusException(
+                                        HttpStatus.FORBIDDEN,
+                                        "Solo los clientes pueden consultar su perfil."
+                                )
+                        );
+                    }
+
+                    // El username viene del JWT validado.
+                    // No aceptamos un ID desde React.
+                    String username = authentication.getName();
+
+                    // Buscar el perfil vinculado en bd_gateway.
+                    return Mono.fromCallable(() -> {
+
+                                Long perfilId =
+                                        authService.obtenerPerfilUsuarioId(
+                                                username
+                                        );
+
+                                return perfilId == null
+                                        ? 0L
+                                        : perfilId;
+                            })
+
+                            .subscribeOn(Schedulers.boundedElastic())
+
+                            .flatMap(perfilId -> {
+
+                                if (perfilId <= 0) {
+                                    return Mono.error(
+                                            new ResponseStatusException(
+                                                    HttpStatus.NOT_FOUND,
+                                                    "La cuenta no tiene un perfil vinculado."
+                                            )
+                                    );
+                                }
+
+                                // Consultar el perfil en ms-usuario.
+                                return usuarioClient.get()
+                                        .uri(
+                                                "/api/usuarios/{id}",
+                                                perfilId
+                                        )
+                                        .retrieve()
+                                        .bodyToMono(JsonNode.class)
+
+                                        // Si el perfil no existe.
+                                        .onErrorMap(
+                                                WebClientResponseException.class,
+                                                error ->
+                                                        new ResponseStatusException(
+                                                                error.getStatusCode().value() == 404
+                                                                        ? HttpStatus.NOT_FOUND
+                                                                        : HttpStatus.BAD_GATEWAY,
+                                                                "No fue posible consultar el perfil.",
+                                                                error
+                                                        )
+                                        )
+
+                                        // Si ms-usuario no responde.
+                                        .onErrorMap(
+                                                WebClientRequestException.class,
+                                                error ->
+                                                        new ResponseStatusException(
+                                                                HttpStatus.BAD_GATEWAY,
+                                                                "No se pudo conectar con ms-usuario.",
+                                                                error
+                                                        )
+                                        )
+
+                                        .map(ResponseEntity::ok);
+                            });
+                });
+    }
+
+    // ==========================================
+    // 4. VINCULAR PERFIL EN BD_GATEWAY
+    // ==========================================
+
     private Mono<ResponseEntity<Map<String, Object>>> vincularPerfil(
             String username,
             Long perfilId,
@@ -252,7 +379,8 @@ public class PerfilController {
                 .map(idVinculado -> {
 
                     Map<String, Object> respuesta = Map.of(
-                            "mensaje", "Perfil creado y vinculado correctamente.",
+                            "mensaje",
+                            "Perfil creado y vinculado correctamente.",
                             "perfilUsuarioId", idVinculado,
                             "nombre", nombre,
                             "email", email,
@@ -264,7 +392,6 @@ public class PerfilController {
                             .body(respuesta);
                 })
 
-                // 10. RECUPERACION ANTE ERRORES
                 // Si falla la vinculacion, intentar
                 // eliminar el perfil recien creado.
                 .onErrorResume(error ->
