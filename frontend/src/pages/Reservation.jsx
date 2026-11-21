@@ -11,7 +11,10 @@ import ReservationForm from "../components/organisms/ReservationForm.jsx";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 
-import { routes, rentalEquipment } from "../data/routes.js";
+import {
+  routes,
+  rentalEquipment,
+} from "../data/routes.js";
 
 import {
   apiEnabled,
@@ -31,10 +34,15 @@ import { validateReservation } from "../utils/validation.js";
 import { NotFound } from "./NotFound.jsx";
 
 export default function Reservation() {
+
+  // ==========================================
+  // 1. OBTENER RUTA Y CLIENTE AUTENTICADO
+  // ==========================================
+
   const { id } = useParams();
   const [params] = useSearchParams();
 
-  // Obtener sesión y JWT del Cliente.
+  // Datos de la sesion y token JWT.
   const { session, authToken } = useStore();
 
   // Buscar la ruta seleccionada.
@@ -44,14 +52,20 @@ export default function Reservation() {
 
   const [route, setRoute] = useState(localRoute);
 
-  // Equipamientos disponibles.
+  // ==========================================
+  // 2. EQUIPAMIENTO
+  // ==========================================
+
   const [equipment, setEquipment] = useState(
     rentalEquipment
   );
 
   const [selected, setSelected] = useState([]);
 
-  // Datos del formulario.
+  // ==========================================
+  // 3. DATOS DEL FORMULARIO
+  // ==========================================
+
   const [data, setData] = useState({
     nombre: session?.nombre || "",
     email: session?.correo || "",
@@ -64,37 +78,141 @@ export default function Reservation() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
+  // Aviso para errores de carga del perfil.
+  const [perfilAviso, setPerfilAviso] = useState("");
+
+  // Estado de la consulta de rutas.
   const [source, setSource] = useState(
     apiEnabled
       ? "Consultando disponibilidad…"
       : "Experiencia de demostración. La disponibilidad no ha sido confirmada."
   );
 
-  // CONSULTAR RUTAS Y EQUIPAMIENTOS DEL BACKEND.
+  // ==========================================
+  // 4. CARGAR PERFIL DEL CLIENTE DESDE MYSQL
+  // NUEVA FUNCIONALIDAD
+  // GET /auth/perfil
+  // ==========================================
+
   useEffect(() => {
+
+    // Solo consultar cuando:
+    // - Hay conexion con el backend.
+    // - Existe un JWT.
+    // - El usuario tiene rol Cliente.
+    if (
+      !apiEnabled ||
+      !authToken ||
+      session?.rol !== "Cliente"
+    ) {
+      return;
+    }
+
+    let activo = true;
+
+    setPerfilAviso("");
+
+    // El API Gateway identifica al cliente
+    // usando su JWT, sin recibir un usuarioId.
+    request("/auth/perfil", {
+      token: authToken,
+    })
+      .then((perfil) => {
+
+        if (!activo) {
+          return;
+        }
+
+        // Completar los datos recuperados de MySQL.
+        setData((actual) => ({
+
+          ...actual,
+
+          // Reemplazar el username inicial por
+          // el nombre completo del perfil.
+          // No sobrescribir un nombre ingresado
+          // manualmente por el usuario.
+          nombre:
+            !actual.nombre?.trim() ||
+            actual.nombre === session?.nombre
+              ? perfil.nombre || actual.nombre
+              : actual.nombre,
+
+          // Solo completar el correo si esta vacio.
+          email:
+            actual.email?.trim()
+              ? actual.email
+              : perfil.email || "",
+
+          // Solo completar telefono si esta vacio.
+          telefono:
+            actual.telefono?.trim()
+              ? actual.telefono
+              : perfil.telefono || "",
+        }));
+
+        setPerfilAviso("");
+      })
+      .catch(() => {
+
+        if (!activo) {
+          return;
+        }
+
+        // Permitir que el cliente complete
+        // sus datos manualmente si falla la consulta.
+        setPerfilAviso(
+          "No pudimos cargar tu perfil automáticamente. Puedes completar tus datos manualmente."
+        );
+      });
+
+    // Evitar actualizar el formulario
+    // si el usuario abandona esta pantalla.
+    return () => {
+      activo = false;
+    };
+
+  }, [
+    authToken,
+    session?.rol,
+    session?.nombre,
+  ]);
+
+  // ==========================================
+  // 5. CONSULTAR RUTAS Y EQUIPAMIENTO
+  // ==========================================
+
+  useEffect(() => {
+
     if (!localRoute || !apiEnabled) {
       return;
     }
 
     let active = true;
 
+    // Consultar los microservicios.
     Promise.all([
       request(`/api/rutas/${id}`),
       request(`/api/equipamiento/recomendacion/${id}`),
     ])
       .then(([r, e]) => {
+
         if (!active) {
           return;
         }
 
+        // Actualizar ruta.
         setRoute({
           ...localRoute,
           ...r,
         });
 
+        // Actualizar equipamientos disponibles.
         setEquipment(
           embeddedList(e)
-            .filter((item) => item.disponible !== false)
+            .filter(
+              (item) => item.disponible !== false
+            )
             .map((item) => ({
               ...item,
               imagen:
@@ -107,6 +225,7 @@ export default function Reservation() {
         );
       })
       .catch(() => {
+
         if (active) {
           setSource(
             "No pudimos consultar el servicio. Mostramos datos de demostración."
@@ -117,19 +236,25 @@ export default function Reservation() {
     return () => {
       active = false;
     };
+
   }, [id, localRoute]);
 
-  // Validar que la ruta exista.
+  // ==========================================
+  // 6. COMPROBAR QUE LA RUTA EXISTA
+  // ==========================================
+
   if (!route) {
     return <NotFound />;
   }
 
-  // Equipamientos seleccionados.
+  // ==========================================
+  // 7. CALCULAR EQUIPAMIENTO Y TOTAL
+  // ==========================================
+
   const chosen = equipment.filter(
     (item) => selected.includes(item.id)
   );
 
-  // Calcular valores.
   const equipmentTotal = chosen.reduce(
     (total, item) =>
       total + Number(item.valorArriendo),
@@ -141,10 +266,15 @@ export default function Reservation() {
       Number(data.personas || 0) +
     equipmentTotal;
 
-  // ACTUALIZAR CAMPOS DEL FORMULARIO.
+  // ==========================================
+  // 8. ACTUALIZAR CAMPOS DEL FORMULARIO
+  // ==========================================
+
   function change(e) {
+
     setData({
       ...data,
+
       [e.target.name]:
         e.target.type === "checkbox"
           ? e.target.checked
@@ -152,8 +282,13 @@ export default function Reservation() {
     });
   }
 
-  // CREAR RESERVA.
+  // ==========================================
+  // 9. CREAR RESERVA UTILIZANDO JWT
+  // POST /auth/reservas
+  // ==========================================
+
   async function submit(e) {
+
     e.preventDefault();
 
     // Validar los datos ingresados.
@@ -164,7 +299,7 @@ export default function Reservation() {
       return;
     }
 
-    // Comprobar autenticación antes de reservar.
+    // Comprobar autenticacion.
     if (apiEnabled && !authToken) {
       setMessage(
         "Debes iniciar sesión como Cliente para confirmar tu reserva."
@@ -175,7 +310,7 @@ export default function Reservation() {
     setBusy(true);
     setMessage("");
 
-    // Preparar borrador local.
+    // Preparar borrador.
     const draft = {
       ...data,
       rutaId: route.id,
@@ -185,8 +320,10 @@ export default function Reservation() {
     };
 
     try {
-      // Modo demostración sin backend.
+
+      // Modo demostracion sin backend.
       if (!apiEnabled) {
+
         writeStorage(
           "voy-vuelvo-reserva-borrador",
           draft
@@ -195,10 +332,11 @@ export default function Reservation() {
         setMessage(
           "Borrador guardado en este navegador. Aún no existe una reserva confirmada."
         );
+
         return;
       }
 
-      // CREAR RESERVA REAL CON JWT.
+      // Crear reserva real utilizando JWT.
       const saved = await submitReservation(
         data,
         route,
@@ -206,27 +344,32 @@ export default function Reservation() {
         authToken
       );
 
-      // Comprobar respuesta del backend.
+      // Verificar el ID de la reserva.
       if (!saved?.id) {
         throw new Error(
           "El servicio no confirmó un identificador de reserva."
         );
       }
 
-      // Guardar información de la última reserva.
-      writeStorage("voy-vuelvo-ultima-reserva", {
-        ...saved,
-        rutaNombre: route.nombre,
-      });
+      // Guardar datos de la ultima reserva.
+      writeStorage(
+        "voy-vuelvo-ultima-reserva",
+        {
+          ...saved,
+          rutaNombre: route.nombre,
+        }
+      );
 
-      // Mostrar confirmación.
+      // Mostrar confirmacion del backend.
       setMessage(
         `Reserva #${saved.id} creada correctamente. Estado de pago: ${saved.estadoPago || "PENDIENTE"}.`
       );
 
     } catch (error) {
-      // Conservar borrador si ocurre algún error.
+
+      // Conservar el borrador si ocurre un error.
       try {
+
         writeStorage(
           "voy-vuelvo-reserva-borrador",
           draft
@@ -237,6 +380,7 @@ export default function Reservation() {
         );
 
       } catch (storageError) {
+
         setMessage(
           `${error.message} ${storageError.message}`
         );
@@ -247,8 +391,12 @@ export default function Reservation() {
     }
   }
 
-  // RECUPERAR BORRADOR.
+  // ==========================================
+  // 10. RECUPERAR BORRADOR
+  // ==========================================
+
   function restore() {
+
     const draft = readStorage(
       "voy-vuelvo-reserva-borrador",
       null
@@ -258,6 +406,7 @@ export default function Reservation() {
       setMessage(
         "No hay un borrador para esta ruta."
       );
+
       return;
     }
 
@@ -277,9 +426,14 @@ export default function Reservation() {
     );
   }
 
-  // INTERFAZ DE LA RESERVA.
+  // ==========================================
+  // 11. MOSTRAR INTERFAZ DE RESERVA
+  // ==========================================
+
   return (
     <PageTemplate className="container py-5">
+
+      {/* VOLVER A LAS RUTAS */}
       <AppLink
         className="text-link"
         to="/rutas"
@@ -293,12 +447,15 @@ export default function Reservation() {
         contentClass="col-lg-5"
         intro={
           <>
+
+            {/* IMAGEN DE LA RUTA */}
             <Image
               className="reservation-photo"
               src={route.imagen}
               alt={route.nombre}
             />
 
+            {/* INFORMACION DE LA RUTA */}
             <Text
               as="span"
               className="eyebrow d-block mt-4"
@@ -324,6 +481,7 @@ export default function Reservation() {
               {source}
             </Text>
 
+            {/* EQUIPAMIENTO */}
             <Heading
               as="h2"
               className="h4 mt-4"
@@ -341,16 +499,27 @@ export default function Reservation() {
               selected={selected}
               onSelectionChange={setSelected}
             />
+
           </>
         }
       >
+
+        {/* FORMULARIO DE RESERVA */}
         <div className="form-panel">
+
           <Heading
             as="h2"
             className="h4"
           >
             Prepara tu reserva
           </Heading>
+
+          {/* AVISO SI FALLA LA CARGA DEL PERFIL */}
+          {perfilAviso && (
+            <Text className="small text-danger">
+              {perfilAviso}
+            </Text>
+          )}
 
           <ReservationForm
             data={data}
@@ -364,8 +533,11 @@ export default function Reservation() {
             restore={restore}
             apiEnabled={apiEnabled}
           />
+
         </div>
+
       </SplitTemplate>
+
     </PageTemplate>
   );
 }
