@@ -6,6 +6,8 @@ import Text from "../components/atoms/Text";
 import SplitTemplate from "../components/templates/SplitTemplate";
 
 import { RegistrationForm } from "../components/organisms/RegistrationForm.jsx";
+import { registrarClienteBackend } from "../services/registration.js";
+
 export default function Register() {
   return (
     <PageTemplate className="container py-5">
@@ -18,23 +20,31 @@ export default function Register() {
             <Text as="span" className="eyebrow">
               Tu próximo camino empieza aquí
             </Text>
+
             <Heading as="h1">
               La aventura
               <br />
               no tiene fronteras.
             </Heading>
+
             <Text className="lead">
-              Regístrate con tu RUT o pasaporte y prepara tu próxima experiencia
+              Regístrate con tu RUT o pasaporte
+              y prepara tu próxima experiencia
               de trekking en Chile.
             </Text>
+
             <Image
               className="registration-photo"
               src="/img/montana-sendero.png"
               alt="Sendero entre montañas de Chile"
             />
+
             <Text className="mt-4">
               ¿Ya tienes cuenta?{" "}
-              <AppLink className="text-link" to="/login">
+              <AppLink
+                className="text-link"
+                to="/login"
+              >
                 Inicia sesión →
               </AppLink>
             </Text>
@@ -42,13 +52,22 @@ export default function Register() {
         }
       >
         <div className="form-panel">
-          <Heading as="h2" className="h4 mb-4">
+          <Heading
+            as="h2"
+            className="h4 mb-4"
+          >
             Crea tu cuenta
           </Heading>
-          <RegistrationForm />
+
+          {/* REGISTRO CON SPRING BOOT */}
+          <RegistrationForm
+            backend
+            onSave={registrarClienteBackend}
+          />
+
           <Text className="demo-note mt-3 mb-0">
-            Demostración académica: tu cuenta se guarda en este navegador. Usa
-            datos de prueba.
+            Proyecto académico. Utiliza datos
+            de prueba para registrarte.
           </Text>
         </div>
       </SplitTemplate>
