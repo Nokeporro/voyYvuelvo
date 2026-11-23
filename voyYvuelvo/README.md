@@ -15,6 +15,8 @@ docker compose logs --tail 80 api-gateway
 
 El Gateway publica 8080; Eureka 8761 y MySQL 3306. Los cinco microservicios son accesibles internamente en Docker y no publican sus puertos en el equipo anfitrión. Consulta el catálogo público en [rutas](http://localhost:8080/api/rutas) y el registro en [Eureka](http://localhost:8761).
 
+El mismo Compose inicia el frontend React en un contenedor Nginx independiente: abre [la web](http://127.0.0.1:5173). Su contexto de compilación es `../frontend`, por lo que ambas carpetas deben estar presentes. No hace falta iniciar Vite para usar la aplicación en Docker. Los servicios esperan a que el chequeo de MySQL indique que está disponible. Consulta la [guía de Docker](../frontend/docs/DOCKER.md) para verificar el proxy y desarrollar con Vite.
+
 ```text
 infrastructure/api-gateway/     Autenticación, roles, perfiles y entrada HTTP
 infrastructure/eureka-server/   Registro de servicios

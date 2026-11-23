@@ -2,6 +2,8 @@
 
 Actualizado el 21 de noviembre de 2026. La guía única de instalación está en el [README principal](../../README.md): requisitos, generación de la clave JWT, Docker, variables de Vite, registro, comprobaciones y solución de problemas.
 
+Para iniciar también el frontend en Docker, sigue la [guía de contenedores](DOCKER.md): Compose levanta Nginx, el backend y MySQL. Los pasos siguientes corresponden a la alternativa de desarrollo con Vite; detén primero el servicio `frontend` si vas a usar su puerto 5173.
+
 Orden de trabajo:
 
 1. Configurar `voyYvuelvo/.env` desde su plantilla, con una clave Base64 de al menos 32 bytes.

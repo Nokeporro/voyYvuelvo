@@ -1,6 +1,16 @@
 
 services:
 
+  # FRONTEND REACT SERVIDO POR NGINX
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:5173:80"
+    depends_on:
+      - api-gateway
+
   # BASE DE DATOS MYSQL
   mysql:
     image: mysql:8.0
@@ -11,6 +21,12 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 5s
+      timeout: 3s
+      start_period: 30s
+      retries: 30
 
   # SERVIDOR EUREKA
   eureka:
@@ -21,7 +37,8 @@ services:
     ports:
       - "8761:8761"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   # API GATEWAY CON SEGURIDAD JWT
   api-gateway:
@@ -34,8 +51,10 @@ services:
     environment:
       JWT_SECRET_BASE64: ${JWT_SECRET_BASE64:?Falta configurar JWT_SECRET_BASE64}
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
   # MICROSERVICIO DE USUARIOS
   ms-usuario:
@@ -44,8 +63,10 @@ services:
       dockerfile: Dockerfile
     container_name: ms-usuario
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
   # MICROSERVICIO DE EQUIPAMIENTO
   ms-equipamiento:
@@ -54,8 +75,10 @@ services:
       dockerfile: Dockerfile
     container_name: ms-equipamiento
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
   # MICROSERVICIO DE RUTAS
   ms-ruta:
@@ -64,8 +87,10 @@ services:
       dockerfile: Dockerfile
     container_name: ms-ruta
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
   # MICROSERVICIO DE RESERVAS
   ms-reserva:
@@ -74,8 +99,10 @@ services:
       dockerfile: Dockerfile
     container_name: ms-reserva
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
   # MICROSERVICIO DE PAGOS
   ms-pago:
@@ -84,8 +111,10 @@ services:
       dockerfile: Dockerfile
     container_name: ms-pago
     depends_on:
-      - eureka
-      - mysql
+      eureka:
+        condition: service_started
+      mysql:
+        condition: service_healthy
 
 # VOLUMEN PERSISTENTE DE MYSQL
 volumes:

@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+tmp
+entrega
+docs
+.git
+.github
+.vscode
+.codex
+.agents
+.env*
+*.local
+*.log

@@ -6,7 +6,7 @@ import { createServer, loadEnv } from "vite";
 const args = process.argv.slice(2);
 if (args.includes("--help")) {
   console.log(
-    "Uso: npm run test:integration\nRequiere Docker y Vite iniciados. Solo consultas; no crea ni elimina datos.\nOpcional: INTEGRATION_TOKEN o INTEGRATION_USERNAME + INTEGRATION_PASSWORD.\nDirecciones opcionales: INTEGRATION_FRONTEND_URL e INTEGRATION_EUREKA_URL.",
+    "Uso: npm run test:integration\nRequiere el backend y el frontend (Docker o Vite) iniciados. Solo consultas; no crea ni elimina datos.\nOpcional: INTEGRATION_TOKEN o INTEGRATION_USERNAME + INTEGRATION_PASSWORD.\nDirecciones opcionales: INTEGRATION_API_URL, INTEGRATION_FRONTEND_URL e INTEGRATION_EUREKA_URL.",
   );
   process.exit(0);
 }
@@ -16,10 +16,12 @@ assert.ok(
 );
 assert.equal(args.length, 0, "Argumento no reconocido; utiliza --help.");
 const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
-const base = loadEnv("development", root).VITE_API_URL?.replace(/\/$/, "");
+const base = (
+  process.env.INTEGRATION_API_URL || loadEnv("development", root).VITE_API_URL
+)?.replace(/\/$/, "");
 assert.ok(
   base,
-  "Configura VITE_API_URL y reinicia Vite antes de verificar la integración.",
+  "Configura VITE_API_URL o INTEGRATION_API_URL antes de verificar la integración.",
 );
 const origin = process.env.INTEGRATION_FRONTEND_URL || "http://127.0.0.1:5173";
 const eureka = process.env.INTEGRATION_EUREKA_URL || "http://localhost:8761";
@@ -43,6 +45,7 @@ async function http(url, options = {}, expected = 200) {
 }
 const vite = await createServer({
   root,
+  define: { "import.meta.env.VITE_API_URL": JSON.stringify(base) },
   server: { middlewareMode: true },
   logLevel: "error",
 });
@@ -133,7 +136,7 @@ try {
     headers: { Accept: "text/html" },
   });
   assert.match(await page.text(), /id="root"/);
-  passed("Vite sirve el HTML de la pantalla de reserva");
+  passed("El frontend sirve el HTML de la pantalla de reserva");
 
   let token = process.env.INTEGRATION_TOKEN;
   const username = process.env.INTEGRATION_USERNAME;

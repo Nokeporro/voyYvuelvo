@@ -1,8 +1,21 @@
 # Frontend de Voy y Vuelvo
 
-Interfaz React con Vite. La instalación completa, incluyendo Docker y la clave JWT, está en el [README del proyecto](../README.md).
+Interfaz React con Vite. El frontend también se compila y sirve con Nginx en su propio contenedor. Consulta la [guía de Docker](docs/DOCKER.md) para iniciar toda la aplicación sin instalar Node ni Java en el equipo. El [README del proyecto](../README.md) explica la clave JWT y el desarrollo local.
 
-## Inicio
+## Inicio con Docker
+
+Con Docker Desktop iniciado y `voyYvuelvo/.env` configurado con `JWT_SECRET_BASE64`, ejecuta desde la carpeta `voyYvuelvo`:
+
+```powershell
+docker compose up -d --build
+docker compose ps
+```
+
+Abre [la web](http://127.0.0.1:5173). Nginx sirve React y reenvía `/backend/` al Gateway por la red interna de Docker. La imagen usa `VITE_API_URL=/backend`; no necesita el `.env` local del frontend. La base conserva su volumen y los servicios esperan a que MySQL esté disponible.
+
+Si vas a ejecutar Vite en el mismo puerto para desarrollar, detén primero el contenedor web con `docker compose stop frontend` desde `voyYvuelvo`.
+
+## Inicio con Vite para desarrollo
 
 Desde esta carpeta, instala con `npm ci`. Copia `.env.example` como `.env` solo si no existe, establece `VITE_API_URL=http://localhost:8080` y ejecuta `npm run dev`. Abre [la web](http://127.0.0.1:5173). Reinicia Vite al cambiar variables de entorno.
 
@@ -30,13 +43,14 @@ npm run build
 npm run preview -- --host 127.0.0.1
 ```
 
-Con Docker y Vite disponibles, `npm run test:integration` comprueba consultas públicas y protección de recursos sin escribir datos de negocio. Opcionalmente acepta `INTEGRATION_TOKEN`, o `INTEGRATION_USERNAME` junto con `INTEGRATION_PASSWORD`, como variables del proceso para verificar acceso autenticado. La segunda alternativa solicita un token mediante login. No imprimas ni publiques estos valores. `--write-test` ya no está disponible.
+Con el backend y el frontend disponibles, `npm run test:integration` comprueba consultas públicas y protección de recursos sin escribir datos de negocio. Para verificar el proxy Docker establece `$env:INTEGRATION_API_URL='http://127.0.0.1:5173/backend'` antes del comando y elimina esa variable al terminar. Opcionalmente acepta `INTEGRATION_TOKEN`, o `INTEGRATION_USERNAME` junto con `INTEGRATION_PASSWORD`, como variables del proceso para verificar acceso autenticado. La segunda alternativa solicita un token mediante login. No imprimas ni publiques estos valores. `--write-test` ya no está disponible.
 
 `npm run format:check` revisa el estilo del código. `npm run test:coverage` genera cobertura de las pruebas locales; no comprueba los contenedores.
 
 ## Guías
 
 - [Instalación y verificación](docs/GUIA-INICIO-Y-VERIFICACION.md).
+- [Frontend, backend y MySQL con Docker](docs/DOCKER.md).
 - [Conexión: referencia rápida](docs/CONEXION-BACKEND.md).
 - [Integración detallada, JWT y reservas](docs/INTEGRACION-FRONTEND-BACKEND.md).
 - [Atomic Design](docs/ATOMIC-DESIGN.md).
