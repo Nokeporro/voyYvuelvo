@@ -1,9 +1,9 @@
-name: EP3 - Build, Test, Publish, Provision, Deploy
+name: EP3 - Pruebas y build en rama_JAVA
 on:
   push:
-    branches: [main]
+    branches: [rama_JAVA]
   pull_request:
-    branches: [main]
+    branches: [rama_JAVA]
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   backend:
+    if: github.ref == 'refs/heads/rama_JAVA' || (github.event_name == 'pull_request' && github.base_ref == 'rama_JAVA')
     name: Java - Maven verify
     runs-on: ubuntu-latest
     steps:
@@ -24,6 +25,7 @@ jobs:
           cache-dependency-path: voyYvuelvo/**/pom.xml
       - run: mvn -B -ntp -f voyYvuelvo/pom.xml clean verify
   frontend:
+    if: github.ref == 'refs/heads/rama_JAVA' || (github.event_name == 'pull_request' && github.base_ref == 'rama_JAVA')
     name: React - Vitest y build
     runs-on: ubuntu-latest
     defaults:
@@ -40,6 +42,7 @@ jobs:
       - run: npm test
       - run: npm run build
   serverless:
+    if: github.ref == 'refs/heads/rama_JAVA' || (github.event_name == 'pull_request' && github.base_ref == 'rama_JAVA')
     name: Lambda - pruebas unitarias
     runs-on: ubuntu-latest
     steps:
@@ -48,9 +51,28 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m unittest discover -s serverless -v
+  configuration:
+    name: Docker - validar Compose, Swarm y scripts
+    if: github.ref == 'refs/heads/rama_JAVA' || (github.event_name == 'pull_request' && github.base_ref == 'rama_JAVA')
+    runs-on: ubuntu-latest
+    env:
+      DB_ROOT_PASSWORD: config-validation-only
+      DB_PASSWORD: config-validation-only
+      JWT_SECRET_BASE64: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      IMAGE_PREFIX: voyvuelvo-local/ep3
+      IMAGE_TAG: validation
+      SQS_QUEUE_URL: https://example.invalid/not-used
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validar Compose local sin iniciar contenedores
+        run: docker compose --env-file voyYvuelvo/.env.example -f voyYvuelvo/docker-compose.yml config --quiet
+      - name: Validar definición Swarm sin desplegar
+        run: docker stack config -c voyYvuelvo/docker-compose.swarm.yml > /dev/null
+      - name: Revisar sintaxis de los scripts Bash sin ejecutarlos
+        run: for script in scripts/*.sh; do bash -n "$script"; done
   images:
-    name: Docker - build y publicación (${{ matrix.service }})
-    needs: [backend, frontend, serverless]
+    name: Docker - solo build (${{ matrix.service }})
+    needs: [backend, frontend, serverless, configuration]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -67,27 +89,19 @@ jobs:
           - {service: frontend, context: frontend}
     steps:
       - uses: actions/checkout@v4
-      - id: names
-        env:
-          DOCKERHUB_USER: ${{ vars.DOCKERHUB_USER }}
-        run: echo "prefix=docker.io/${DOCKERHUB_USER:-voyvuelvo-local}/voyvuelvo-ep3" >> "$GITHUB_OUTPUT"
       - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
-        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DOCKERHUB_USER != ''
-        with:
-          username: ${{ vars.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
       - uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.context }}
           platforms: linux/amd64
-          push: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.DOCKERHUB_USER != '' }}
-          tags: ${{ steps.names.outputs.prefix }}:${{ matrix.service }}-${{ github.sha }}
+          push: false
+          tags: voyvuelvo-local/ep3:${{ matrix.service }}-${{ github.sha }}
           labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
   cloud:
     name: AWS - provisión y despliegue Swarm
     needs: images
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && vars.CLOUD_ENABLED == 'true'
+    # AWS aplazado: este job no se ejecuta aunque existan credenciales.
+    if: ${{ false }}
     runs-on: ubuntu-latest
     environment: cloud
     env:

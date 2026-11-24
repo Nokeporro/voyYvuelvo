@@ -58,7 +58,29 @@ cd ..
 python -m unittest discover -s serverless -v
 ```
 
-## Docker Swarm en AWS
+## Fase actual: validación local en rama_JAVA
+
+AWS y el video están aplazados. Los archivos cloud previos se conservan, pero el pipeline no publica imágenes ni ejecuta provisión o despliegue. No se necesitan credenciales AWS o Docker Hub para ejecutar las pruebas actuales.
+
+Usa JDK 25 para Maven. Comprueba `java -version` y `JAVA_HOME`; si Windows selecciona otra versión, configura `JAVA_HOME` solo en la terminal de trabajo con la ruta real de tu JDK 25. Desde la raíz:
+
+```powershell
+.\voyYvuelvo\mvnw.cmd -v
+.\voyYvuelvo\mvnw.cmd -B -ntp -f voyYvuelvo/pom.xml clean verify
+python -m unittest discover -s serverless -v
+npm.cmd --prefix frontend test -- --maxWorkers=2
+npm.cmd --prefix frontend run build
+```
+
+Las pruebas Java usan su configuración de test; las pruebas Python usan servicios simulados. No acreditan una ejecución real en AWS. Para validar Docker sin iniciar contenedores, después de generar la configuración local con `scripts/init-env.py`:
+
+```powershell
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml config --quiet
+```
+
+El workflow también comprueba la definición Swarm con valores de validación y revisa la sintaxis de los scripts Bash. Eso comprueba la configuración, pero no sustituye la ejecución en un clúster con nodos manager y worker. Docker Desktop debe estar iniciado para las comprobaciones de contenedores y endpoints descritas en Ejecución local.
+
+## Docker Swarm en AWS (fase aplazada)
 
 Crear dos instancias EC2 Ubuntu 24.04 x86_64 en la misma VPC, con memoria suficiente para los contenedores (por ejemplo, 4 GB por nodo). Permitir TCP 2377, TCP/UDP 7946 y UDP 4789 solamente entre los nodos. Restringir SSH y HTTP a las IP autorizadas. No publicar los puertos internos de MySQL, Eureka ni los microservicios.
 
@@ -92,6 +114,10 @@ El archivo `voyYvuelvo/docker-compose.swarm.yml` define las imágenes, redes, r�
 
 ## GitHub Actions
 
+La fase actual se desarrolla exclusivamente en `rama_JAVA`: pruebas de Java, frontend y función existente, validación de configuración Docker y construcción de imágenes sin publicarlas. AWS y la preparación del video están aplazados. El job cloud está desactivado expresamente; no se necesitan credenciales AWS ni Docker Hub para esta fase.
+
+### Configuración cloud pendiente (no necesaria para las pruebas actuales)
+
 Crear un repositorio de imágenes `voyvuelvo-ep3` en Docker Hub. En GitHub, Settings > Secrets and variables > Actions, configurar:
 
 | Variables | Valor |
@@ -122,7 +148,7 @@ Crear un repositorio de imágenes `voyvuelvo-ep3` en Docker Hub. En GitHub, Sett
 
 Las contraseñas y la clave JWT pueden generarse con `python scripts/init-env.py` en una copia separada para cloud. No reutilizar claves locales. Verificar la huella SSH por un canal confiable. El runner debe tener acceso SSH al manager: usar `SSH_SECURITY_GROUP` con permisos de autorización y revocación de reglas EC2, o un runner autorizado con IP fija. No abrir SSH a todo Internet.
 
-El workflow `.github/workflows/ci-cd.yml` ejecuta las pruebas, construye las imágenes y las publica con el SHA del commit. Si `CLOUD_ENABLED=true`, provisiona los recursos AWS y despliega automáticamente el stack en el manager. Se puede iniciar con un push a `main` o desde Actions. Las credenciales AWS deben tener permisos sobre CloudFormation y sus recursos, incluyendo `iam:PassRole` si corresponde. Si se utiliza un rol Lambda existente, debe permitir recibir y eliminar mensajes SQS, escribir en DynamoDB y publicar logs.
+El workflow `.github/workflows/ci-cd.yml` se activa con un push a `rama_JAVA` o un pull request dirigido a esa rama. Actualmente ejecuta pruebas y construye imágenes, sin publicación ni despliegue. El job cloud no se activa ni siquiera con `CLOUD_ENABLED=true`; requiere una fase posterior autorizada de configuración y habilitación. Las credenciales AWS deben tener permisos sobre CloudFormation y sus recursos, incluyendo `iam:PassRole` si corresponde. Si se utiliza un rol Lambda existente, debe permitir recibir y eliminar mensajes SQS, escribir en DynamoDB y publicar logs.
 
 ## Confirmación de reservas
 
