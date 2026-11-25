@@ -1,84 +1,101 @@
 server:
   port: 8080
+
 spring:
   application:
     name: api-getaway
+
   datasource:
-    url: jdbc:mysql://${DB_HOST:mysql}:3306/bd_gateway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${DB_USER:voyapp}
-    password: ${DB_PASSWORD:}
+    url: jdbc:mysql://mysql:3306/bd_gateway?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+    username: root
+    password:
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false
+    show-sql: true
+
   cloud:
     gateway:
-      server:
-        webflux:
-          discovery:
-            locator:
-              enabled: false
-          routes:
-          - id: ms-usuario
-            uri: http://ms-usuario:8084
-            predicates:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOriginPatterns:
+              - "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+      discovery:
+        locator:
+          enabled: false  # 🔥 CAMBIO  Apagado para quitar las rutas MS-RUTA
+
+      routes:
+        - id: ms-usuario
+          uri: http://ms-usuario:8084  # 🔥 CAMBIO  Usamos la red interna de Docker
+          predicates:
             - Path=/api/usuarios/**
-            filters:
-            - RewritePath=/api/usuarios/v3/api-docs, /v3/api-docs
-          - id: ms-equipamiento
-            uri: http://ms-equipamiento:8081
-            predicates:
+          filters:
+            - RewritePath=/api/usuarios/v3/api-docs, /v3/api-docs  # 🔥 CAMBIO Filtro para Swagger
+
+        - id: ms-equipamiento
+          uri: http://ms-equipamiento:8081
+          predicates:
             - Path=/api/equipamiento/**
-            filters:
+          filters:
             - RewritePath=/api/equipamiento/v3/api-docs, /v3/api-docs
-          - id: ms-reserva
-            uri: http://ms-reserva:8083
-            predicates:
+
+        - id: ms-reserva
+          uri: http://ms-reserva:8083
+          predicates:
             - Path=/api/reservas/**
-            filters:
+          filters:
             - RewritePath=/api/reservas/v3/api-docs, /v3/api-docs
-          - id: ms-ruta
-            uri: http://ms-ruta:8086
-            predicates:
+
+        - id: ms-ruta
+          uri: http://ms-ruta:8086
+          predicates:
             - Path=/api/rutas/**
-            filters:
+          filters:
             - RewritePath=/api/rutas/v3/api-docs, /v3/api-docs
-          - id: ms-pago
-            uri: http://ms-pago:8085
-            predicates:
+
+        - id: ms-pago
+          uri: http://ms-pago:8085
+          predicates:
             - Path=/api/pagos/**
-            filters:
+          filters:
             - RewritePath=/api/pagos/v3/api-docs, /v3/api-docs
+
 springdoc:
   swagger-ui:
     urls:
-    - name: Microservicio Usuarios
-      url: /api/usuarios/v3/api-docs
-    - name: Microservicio Equipamiento
-      url: /api/equipamiento/v3/api-docs
-    - name: Microservicio Reservas
-      url: /api/reservas/v3/api-docs
-    - name: Microservicio Rutas
-      url: /api/rutas/v3/api-docs
-    - name: Microservicio Pagos
-      url: /api/pagos/v3/api-docs
+      - name: Microservicio Usuarios
+        url: /api/usuarios/v3/api-docs
+      - name: Microservicio Equipamiento
+        url: /api/equipamiento/v3/api-docs
+      - name: Microservicio Reservas
+        url: /api/reservas/v3/api-docs
+      - name: Microservicio Rutas
+        url: /api/rutas/v3/api-docs
+      - name: Microservicio Pagos
+        url: /api/pagos/v3/api-docs
+
+jwt:
+  secret: MiClaveSuperSecretaVoyVuelvo2026
+  expiration: 86400000
+
 eureka:
   client:
     service-url:
       defaultZone: http://eureka:8761/eureka/
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}:${HOSTNAME:local}:${server.port}
+
 logging:
   level:
-    root: INFO
-    org.springframework.cloud.gateway: INFO
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  endpoint:
-    health:
-      show-details: never
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    reactor.netty.http.client: DEBUG
+    com.netflix.discovery: DEBUG

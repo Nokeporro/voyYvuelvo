@@ -1,7 +1,6 @@
 package com.voy.velvo.ms_reserva.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "RESERVAS", uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "ruta_id"}))
+@Table(name = "RESERVAS")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -56,7 +55,6 @@ public class Reserva {
     private String estadoPago;
 
     // 8. EQUIPAMIENTO SOLICITADO
-    @Valid
     @ElementCollection
     @CollectionTable(
             name = "RESERVA_EQUIPAMIENTO",

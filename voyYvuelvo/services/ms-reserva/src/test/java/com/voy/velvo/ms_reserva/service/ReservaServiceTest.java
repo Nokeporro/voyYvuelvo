@@ -1,7 +1,6 @@
 package com.voy.velvo.ms_reserva.service;
 
 import com.voy.velvo.ms_reserva.client.PagoClient;
-import com.voy.velvo.ms_reserva.client.EquipamientoClient;
 import com.voy.velvo.ms_reserva.client.RutaClient;
 import com.voy.velvo.ms_reserva.client.UsuarioClient;
 import com.voy.velvo.ms_reserva.exception.CuposInsuficientesException;
@@ -38,9 +37,6 @@ class ReservaServiceTest {
 
     @Mock
     private RutaClient rutaClient;
-
-    @Mock
-    private EquipamientoClient equipamientoClient;
 
     @InjectMocks
     private ReservaService reservaService;

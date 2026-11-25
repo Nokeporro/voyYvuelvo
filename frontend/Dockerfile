@@ -2,17 +2,17 @@ FROM node:24-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --no-audit --no-fund
+RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 COPY . .
 
 # El navegador utiliza el proxy de Nginx en el mismo origen que la web.
 ENV VITE_API_URL=/backend
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:stable-alpine
+FROM nginx:stable-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 8080
+EXPOSE 80
 HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1
+  CMD wget -q -O /dev/null http://127.0.0.1/healthz || exit 1
