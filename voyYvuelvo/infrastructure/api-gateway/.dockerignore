@@ -1,6 +1,6 @@
-target
-.git
-.env*
+target/
+.git/
+.idea/
+.vscode/
 *.log
-.idea
-.vscode
+.env*
