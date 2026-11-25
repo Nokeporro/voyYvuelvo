@@ -1,6 +1,7 @@
 package com.voy.velvo.ms_reserva.controller;
 
 import com.voy.velvo.ms_reserva.model.Reserva;
+import com.voy.velvo.ms_reserva.event.SqsPublisher;
 import com.voy.velvo.ms_reserva.service.ReservaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.Name;
 import java.util.List;
 
 @RestController
@@ -20,11 +20,13 @@ import java.util.List;
 public class ReservaController {
 
     private final ReservaService reservaService;
+    private final SqsPublisher sqsPublisher;
 
     @PostMapping
     @Operation(summary = "crea una nueva reserva", description = "crea la ruta si el id de usuario y ruta son validos esperando la confirmacion del estado de pago a 'PAGADO'.")
     public ResponseEntity<?> nuevaReserva(@RequestBody @Valid Reserva reserva) {
         Reserva nueva = reservaService.crearReserva(reserva);
+        sqsPublisher.publicar(nueva);
         return ResponseEntity.status(HttpStatus.CREATED).body(nueva);
     }
 

@@ -7,6 +7,9 @@ import com.voy.vuelvo.ms_ruta.model.Ruta;
 import com.voy.vuelvo.ms_ruta.repository.RutaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 import com.voy.vuelvo.ms_ruta.dto.RutaDTO;
 
 import java.util.List;
@@ -91,15 +94,16 @@ public class RutaService {
 
 //-----------------------------------------------------------
 
+    @Transactional
     public Ruta descontarCupos(Long id, Integer cantidad) {
+        if (cantidad == null || cantidad <= 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cantidad inválida");
 
-        Ruta ruta = rutaRepository.findById(id)
+        Ruta ruta = rutaRepository.buscarParaActualizar(id)
                 .orElseThrow(() ->
                         new RuntimeException("Ruta no encontrada"));
 
         if (ruta.getCupoMaximo() < cantidad) {
-            throw new RuntimeException(
-                    "No hay cupos suficientes");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "No hay cupos suficientes");
         }
 
         ruta.setCupoMaximo(
@@ -108,9 +112,11 @@ public class RutaService {
         return rutaRepository.save(ruta);
     }
 //-------------------------
-public Ruta aumentarCupos(Long id, Integer cantidad) {
+@Transactional
+    public Ruta aumentarCupos(Long id, Integer cantidad) {
+        if (cantidad == null || cantidad <= 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cantidad inválida");
 
-    Ruta ruta = rutaRepository.findById(id)
+    Ruta ruta = rutaRepository.buscarParaActualizar(id)
             .orElseThrow(() -> new RuntimeException("Ruta no encontrada"));
 
     ruta.setCupoMaximo(ruta.getCupoMaximo() + cantidad);

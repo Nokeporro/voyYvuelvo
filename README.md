@@ -1,158 +1,188 @@
 # Voy y Vuelvo
 
-Aplicación académica de turismo: interfaz React y backend Java con microservicios, MySQL y autenticación JWT. Documentación actualizada el 21 de noviembre de 2026 para el flujo de EP3.
+Aplicación de rutas de trekking, reservas, arriendo de equipamiento y pagos.
 
-## Requisitos
+## Tecnologías
 
-- Docker Desktop iniciado, con Docker Compose y contenedores Linux.
-- Node.js 22.12 o superior compatible con Vite 8, y npm. Se recomienda Node 24.
-- Puertos disponibles: 5173 (web), 8080 (API), 8761 (registro Eureka) y 3306 (MySQL).
-- Java 21 solo si vas a compilar Java fuera de Docker. Maven Wrapper está incluido.
+Java 25, Spring Boot, MySQL, Eureka, Spring Cloud Gateway, JWT, React, Docker, Docker Swarm, GitHub Actions y AWS.
 
-## Inicio paso a paso en Windows
+## Ejecución local
 
-Descarga el repositorio completo y abre una terminal PowerShell en la carpeta que contiene `frontend` y `voyYvuelvo`. Los comandos siguientes parten de esa carpeta.
-
-### 1. Configurar la clave del backend
+Requisitos: Docker Desktop (contenedores Linux) y Python 3. Desde la raíz:
 
 ```powershell
-Set-Location voyYvuelvo
-Copy-Item .env.example .env
-node -e "console.log(require('node:crypto').randomBytes(32).toString('base64'))"
+python scripts/init-env.py
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml up -d --build
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml ps
 ```
 
-Copia la clave generada y edita `.env` para dejar `JWT_SECRET_BASE64=tu_clave_generada`, sin espacios ni comillas. Ejecuta la copia solo en la primera instalación: si ya tienes `.env`, conserva su contenido. No publiques este archivo ni reutilices una clave de ejemplo. La plantilla se puede publicar porque no contiene una clave real.
+- Web: http://localhost:5173
+- Gateway: http://localhost:8080
+- Swagger: http://localhost:8080/swagger-ui.html
+- Eureka: http://localhost:8761
 
-Compose exige esta variable antes de iniciar cualquier servicio. El Gateway decodifica Base64 y requiere al menos 32 bytes. Cambiar la clave invalida los tokens emitidos con la anterior.
-
-### 2. Iniciar el backend
-
-Desde `voyYvuelvo`:
+Para comprobar los endpoints:
 
 ```powershell
-docker compose config --quiet
-docker compose up -d --build
-docker compose ps
-docker compose logs --tail 80 api-gateway
+python scripts/smoke.py
+python scripts/smoke.py --e2e
 ```
 
-La primera compilación descarga dependencias y puede tardar varios minutos. `depends_on` establece el orden de inicio, pero no garantiza que MySQL ya acepte conexiones. Si un servicio termina mientras la base arranca, revisa sus registros y vuelve a ejecutar `docker compose up -d`.
+La segunda prueba crea una cuenta, perfil y reserva de prueba y ocupa un cupo. En local, `SQS_QUEUE_URL` puede quedar vacío. No subir el archivo `.env`.
 
-Abre [Eureka](http://localhost:8761). Deben registrarse el Gateway y los cinco microservicios como `UP`. Prueba el catálogo público en [rutas](http://localhost:8080/api/rutas). Puede devolver JSON con estructura HAL; eso es normal.
-
-### 3. Configurar e iniciar el frontend
-
-En otra terminal, desde la carpeta del repositorio:
+Para crear un administrador de prueba, registrar una cuenta y actualizar su rol en MySQL:
 
 ```powershell
-Set-Location frontend
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml exec mysql mysql -u voyapp -p bd_gateway
+```
+
+```sql
+UPDATE usuarios SET rol='ADMINISTRADOR' WHERE username='usuario_de_prueba';
+```
+
+Volver a iniciar sesión para obtener el nuevo token. Para detener el proyecto sin borrar los datos:
+
+```powershell
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml down
+```
+
+## Pruebas
+
+```bash
+mvn -B -f voyYvuelvo/pom.xml clean verify
+cd frontend
 npm ci
-Copy-Item .env.example .env
-```
-
-Edita `frontend/.env`:
-
-```dotenv
-VITE_API_URL=http://localhost:8080
-```
-
-Si ya existe el archivo, edítalo sin sobrescribir otras configuraciones. Revisa también `.env.local`, `.env.development` y `.env.development.local` si existen: las variables específicas del modo pueden prevalecer sobre `.env`. No pongas la clave JWT del backend en ninguna variable `VITE_`: esas variables se incluyen en el navegador.
-
-```powershell
-npm run dev
-```
-
-Abre [la aplicación](http://127.0.0.1:5173). Reinicia Vite después de cambiar sus variables. El puerto **8080 sirve una API**, no la página web: que su raíz no muestre la interfaz no significa que el frontend esté fallando.
-
-### 4. Crear una cuenta y verificar una reserva
-
-1. Abre `/registro` y crea una cuenta con un nombre de usuario nuevo y datos propios de prueba.
-2. El registro crea la cuenta, obtiene un JWT temporal y vincula el perfil personal. Si termina correctamente, inicia sesión desde `/login`.
-3. Entra a una ruta con cupos, completa una fecha futura y los datos solicitados, y confirma la reserva.
-4. Esta acción **sí crea datos** y consume cupos. Usa una base de desarrollo para las pruebas manuales.
-
-El registro público siempre asigna `CLIENTE`. No hay una cuenta administrativa de demostración garantizada en MySQL. El panel conserva un editor de usuarios locales de demostración separado de las cuentas reales; modificarlo no cambia el acceso al backend. Consulta [la guía del backend](voyYvuelvo/docs/GUIA-BACKEND.md) para habilitar un administrador en un entorno local controlado.
-
-La sesión actual vive en memoria: al recargar o cerrar la pestaña hay que iniciar sesión de nuevo. El JWT dura una hora y no hay renovación automática. Una cuenta creada cuyo perfil no llegó a vincularse necesita recuperación; repetir el registro con el mismo usuario producirá conflicto.
-
-## Comprobaciones
-
-Desde `frontend`:
-
-```powershell
-npm run check:architecture
-npm test -- --maxWorkers=1
+npm test
 npm run build
-npm run test:integration
+cd ..
+python -m unittest discover -s serverless -v
 ```
 
-Las tres primeras comprobaciones no necesitan Docker. La última necesita el backend y Vite iniciados: consulta catálogos, Eureka, CORS y bloqueos de acceso sin token. No crea ni borra datos; el antiguo argumento `--write-test` se retiró. Para verificar también un acceso autenticado se puede proporcionar `INTEGRATION_TOKEN` mediante el entorno. No compartas el token ni lo guardes en el repositorio. Consulta [el recorrido de revisión](frontend/docs/RECORRIDO-DE-REVISION.md).
+## Fase actual: validación local en rama_JAVA
 
-Las pruebas de React usan respuestas simuladas: no demuestran por sí solas que MySQL y los contenedores estén funcionando. `npm run format:check` comprueba estilo; una advertencia de formato no equivale a una prueba funcional fallida.
+AWS y el video están aplazados. Los archivos cloud previos se conservan, pero el pipeline no publica imágenes ni ejecuta provisión o despliegue. No se necesitan credenciales AWS o Docker Hub para ejecutar las pruebas actuales.
 
-Para revisar la compilación web:
+Usa JDK 25 para Maven. Comprueba `java -version` y `JAVA_HOME`; si Windows selecciona otra versión, configura `JAVA_HOME` solo en la terminal de trabajo con la ruta real de tu JDK 25. Desde la raíz:
 
 ```powershell
-npm run preview -- --host 127.0.0.1
+.\voyYvuelvo\mvnw.cmd -v
+.\voyYvuelvo\mvnw.cmd -B -ntp -f voyYvuelvo/pom.xml clean verify
+python -m unittest discover -s serverless -v
+npm.cmd --prefix frontend test -- --maxWorkers=2
+npm.cmd --prefix frontend run build
 ```
 
-Abre la dirección que muestre Vite, normalmente el puerto 4173. Las URL antiguas terminadas en `.html` se conservan mediante aliases generados desde la aplicación React.
-
-## Detener y conservar los datos
-
-Desde `voyYvuelvo`:
+Las pruebas Java usan su configuración de test; las pruebas Python usan servicios simulados. No acreditan una ejecución real en AWS. Para validar Docker sin iniciar contenedores, después de generar la configuración local con `scripts/init-env.py`:
 
 ```powershell
-docker compose down
+docker compose --env-file voyYvuelvo/.env -f voyYvuelvo/docker-compose.yml config --quiet
 ```
 
-El volumen `mysql_data` conserva las bases. No uses `down -v` si necesitas mantener cuentas, reservas y pagos. MySQL se configura localmente sin contraseña de root: esta configuración está destinada al desarrollo académico y requiere adaptación antes de publicar servicios en Internet.
+El workflow también comprueba la definición Swarm con valores de validación y revisa la sintaxis de los scripts Bash. Eso comprueba la configuración, pero no sustituye la ejecución en un clúster con nodos manager y worker. Docker Desktop debe estar iniciado para las comprobaciones de contenedores y endpoints descritas en Ejecución local.
 
-## Qué persiste y dónde
+## Docker Swarm en AWS (fase aplazada)
 
-| Información                                                                | Persistencia actual                      |
-| -------------------------------------------------------------------------- | ---------------------------------------- |
-| Cuentas, roles y vínculo al perfil                                         | MySQL del Gateway                        |
-| Perfiles, rutas, equipamiento, reservas y pagos                            | MySQL de cada microservicio              |
-| Sesión y JWT del navegador                                                 | Memoria de React; se pierden al recargar |
-| Carrito, catálogo de productos local y usuarios del editor de demostración | Almacenamiento local del navegador       |
-| Mensajes del formulario de contacto                                        | Almacenamiento local; no se envía correo |
+Crear dos instancias EC2 Ubuntu 24.04 x86_64 en la misma VPC, con memoria suficiente para los contenedores (por ejemplo, 4 GB por nodo). Permitir TCP 2377, TCP/UDP 7946 y UDP 4789 solamente entre los nodos. Restringir SSH y HTTP a las IP autorizadas. No publicar los puertos internos de MySQL, Eureka ni los microservicios.
 
-Con `VITE_API_URL` vacío hay funciones locales de demostración, pero no registro, login ni reservas reales. La confirmación de pago del backend representa un cambio de estado; no hay una pasarela bancaria integrada.
+Las dos instancias necesitan acceso a Docker Hub y un perfil IAM con permiso `sqs:SendMessage` para la cola. Configurar IMDSv2 obligatorio y hop limit 2 para el acceso al perfil desde el contenedor. Copiar los scripts `install-docker.sh`, `swarm-init.sh` y `swarm-worker.sh` a las instancias.
 
-## Organización y documentación
+En ambas instancias:
 
-```text
-frontend/                    React, estilos, imágenes, pruebas y documentación web
-  src/components/            Atomic Design
-  src/services/              HTTP, autenticación y persistencia local
-  src/routes/                Compatibilidad de URL antiguas
-  scripts/                   Comprobaciones y generación de aliases
-voyYvuelvo/
-  infrastructure/            Gateway y Eureka
-  services/                  Cinco microservicios de dominio
-  docs/                      Guía técnica del backend y entregas históricas
+```bash
+bash install-docker.sh
 ```
 
-- [Frontend](frontend/README.md).
-- [Backend](voyYvuelvo/README.md).
-- [Integración detallada de frontend y backend](frontend/docs/INTEGRACION-FRONTEND-BACKEND.md).
-- [Atomic Design](frontend/docs/ATOMIC-DESIGN.md).
-- [Recorrido para verificar la aplicación](frontend/docs/RECORRIDO-DE-REVISION.md).
-- [Requisitos históricos de EP2](frontend/docs/requisitos/ERS-EP2.md) y [EP1](frontend/docs/requisitos/ERS-EP1-HISTORICA.md).
+Volver a conectarse por SSH para aplicar los permisos de Docker. En el manager:
 
-Los documentos Word/PDF de entregas anteriores se conservan como antecedentes. Pueden describir comportamientos anteriores; para iniciar el proyecto y entender JWT usa las guías actuales enlazadas aquí.
+```bash
+bash swarm-init.sh IP_PRIVADA_MANAGER
+```
 
-## Problemas habituales
+En el worker:
 
-| Síntoma                                     | Revisión                                                                                     |
-| ------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Compose exige `JWT_SECRET_BASE64`           | Crear y completar `voyYvuelvo/.env` antes de ejecutar Compose                                |
-| 8080 no muestra una página                  | Abrir la web en 5173 y probar `/api/rutas` en 8080                                           |
-| Error de conexión                           | Revisar `docker compose ps`, registros, `VITE_API_URL` y reiniciar Vite                      |
-| HTTP 401                                    | Iniciar sesión; el token puede haber expirado o haberse perdido al recargar                  |
-| HTTP 403                                    | La cuenta no tiene el rol necesario para ese recurso                                         |
-| HTTP 409 al reservar                        | Revisar perfil vinculado, cupos y reservas duplicadas; consultar registros                   |
-| Login funciona pero no hay perfil           | La creación de cuenta y perfil son pasos separados; requiere recuperación del perfil         |
-| CORS                                        | Usar localhost o 127.0.0.1 en el puerto 5173; otros orígenes requieren configurar el Gateway |
-| Un puerto interno no responde desde Windows | Los microservicios no publican 8081, 8083, 8084, 8085 ni 8086; entrar por 8080               |
+```bash
+bash swarm-worker.sh IP_PRIVADA_MANAGER
+```
+
+Introducir el token que entrega el manager. No compartirlo. Verificar desde el manager:
+
+```bash
+docker node ls
+```
+
+El archivo `voyYvuelvo/docker-compose.swarm.yml` define las imágenes, redes, réplicas y volumen de MySQL. MySQL se mantiene en el nodo etiquetado por `swarm-init.sh`.
+
+## GitHub Actions
+
+La fase actual se desarrolla exclusivamente en `rama_JAVA`: pruebas de Java, frontend y función existente, validación de configuración Docker y construcción de imágenes sin publicarlas. AWS y la preparación del video están aplazados. El job cloud está desactivado expresamente; no se necesitan credenciales AWS ni Docker Hub para esta fase.
+
+### Configuración cloud pendiente (no necesaria para las pruebas actuales)
+
+Crear un repositorio de imágenes `voyvuelvo-ep3` en Docker Hub. En GitHub, Settings > Secrets and variables > Actions, configurar:
+
+| Variables | Valor |
+|---|---|
+| DOCKERHUB_USER | Usuario de Docker Hub |
+| CLOUD_ENABLED | `true` cuando AWS esté configurado |
+| AWS_REGION | Región de AWS, por ejemplo `us-east-1` |
+| CLOUD_STACK | `voyvuelvo-ep3` |
+| SSH_USER | `ubuntu` |
+| APP_CORS_ORIGINS | Origen HTTP de la web de prueba |
+| SSH_SECURITY_GROUP | ID del grupo de seguridad para acceso temporal SSH (opcional) |
+| LAMBDA_ROLE_ARN | ARN del rol Lambda existente, si corresponde |
+| PUBLISHER_ROLE_NAME | Nombre del rol EC2 existente, si corresponde |
+
+| Secrets | Valor |
+|---|---|
+| DOCKERHUB_TOKEN | Token de publicación de Docker Hub |
+| DOCKERHUB_READ_TOKEN | Token de lectura para desplegar (opcional) |
+| AWS_ACCESS_KEY_ID | Credencial AWS |
+| AWS_SECRET_ACCESS_KEY | Clave AWS |
+| AWS_SESSION_TOKEN | Token de sesión, si corresponde |
+| SSH_HOST | IP pública o DNS del manager |
+| SSH_PRIVATE_KEY | Llave privada SSH |
+| SSH_KNOWN_HOSTS | Huella SSH del manager verificada |
+| DB_ROOT_PASSWORD | Contraseña MySQL root |
+| DB_PASSWORD | Contraseña MySQL de aplicación |
+| JWT_SECRET_BASE64 | Clave aleatoria de al menos 32 bytes en Base64 |
+
+Las contraseñas y la clave JWT pueden generarse con `python scripts/init-env.py` en una copia separada para cloud. No reutilizar claves locales. Verificar la huella SSH por un canal confiable. El runner debe tener acceso SSH al manager: usar `SSH_SECURITY_GROUP` con permisos de autorización y revocación de reglas EC2, o un runner autorizado con IP fija. No abrir SSH a todo Internet.
+
+El workflow `.github/workflows/ci-cd.yml` se activa con un push a `rama_JAVA` o un pull request dirigido a esa rama. Actualmente ejecuta pruebas y construye imágenes, sin publicación ni despliegue. El job cloud no se activa ni siquiera con `CLOUD_ENABLED=true`; requiere una fase posterior autorizada de configuración y habilitación. Las credenciales AWS deben tener permisos sobre CloudFormation y sus recursos, incluyendo `iam:PassRole` si corresponde. Si se utiliza un rol Lambda existente, debe permitir recibir y eliminar mensajes SQS, escribir en DynamoDB y publicar logs.
+
+## Confirmación de reservas
+
+`SqsPublisher.java` envía el evento `RESERVA_CREADA` después de guardar una reserva. `serverless/handler.py` consume los mensajes y guarda una confirmación de registro en DynamoDB. No confirma el pago ni envía correos. CloudWatch registra los identificadores de los eventos. Los mensajes que agotan los reintentos pasan a la DLQ. Si falla la publicación inicial, se registra el error en el backend.
+
+El template `cloud/template.yaml` y `scripts/provision.sh` configuran la cola, la función Lambda, DynamoDB y CloudWatch. El pipeline llama al script de provisión. También se puede ejecutar con AWS CLI configurada:
+
+```bash
+export AWS_REGION=us-east-1 CLOUD_STACK=voyvuelvo-ep3
+bash scripts/provision.sh
+```
+
+Configurar `LAMBDA_ROLE_ARN` y `PUBLISHER_ROLE_NAME` si el laboratorio usa roles existentes. Si se omiten, el rol Lambda se crea en CloudFormation y el perfil EC2 debe tener permiso de publicación por separado.
+
+## Verificación cloud
+
+En el manager:
+
+```bash
+docker stack services voyvuelvo
+docker service ps voyvuelvo_ms-ruta
+docker service scale voyvuelvo_ms-ruta=2
+docker service ps voyvuelvo_ms-ruta
+curl -fsS http://127.0.0.1/backend/api/rutas
+docker service scale voyvuelvo_ms-ruta=1
+```
+
+Desde el computador:
+
+```powershell
+python scripts/smoke.py --base http://IP_PUBLICA_MANAGER/backend
+python scripts/smoke.py --base http://IP_PUBLICA_MANAGER/backend --e2e
+```
+
+Consultar la reserva creada en DynamoDB y sus logs en CloudWatch. Los nombres y URL de los recursos se obtienen desde los Outputs del stack CloudFormation. El Gateway de Spring protege las rutas con JWT y roles. HTTP se utiliza únicamente para la demostración con datos ficticios y acceso restringido; en producción se requiere HTTPS.
+
+El clúster tiene un manager y un worker; permite escalar servicios sin estado, pero MySQL y el manager no son redundantes. AWS puede generar cargos. Al finalizar, detener el stack (`docker stack rm voyvuelvo`) y revisar en AWS las instancias, discos y recursos que ya no se necesitan.

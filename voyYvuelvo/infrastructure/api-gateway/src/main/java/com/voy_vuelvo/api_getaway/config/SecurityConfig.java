@@ -1,6 +1,9 @@
 package com.voy_vuelvo.api_getaway.config;
 
 import com.voy_vuelvo.api_getaway.filter.JwtFilter;
+import com.voy_vuelvo.api_getaway.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Value;
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -23,8 +26,11 @@ public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    public SecurityConfig(JwtFilter jwtFilter) {
-        this.jwtFilter = jwtFilter;
+    @Value("${APP_CORS_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}")
+    private String corsOrigins;
+
+    public SecurityConfig(JwtUtil jwtUtil) {
+        this.jwtFilter = new JwtFilter(jwtUtil);
     }
 
     // 1. CONFIGURACION CORS
@@ -33,10 +39,7 @@ public class SecurityConfig {
 
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-                "http://127.0.0.1:5173",
-                "http://localhost:5173"
-        ));
+        config.setAllowedOrigins(Arrays.asList(corsOrigins.split(",")));
 
         config.setAllowedMethods(List.of(
                 "GET",
@@ -92,7 +95,8 @@ public class SecurityConfig {
                         // 4. LOGIN Y REGISTRO PUBLICOS
                         .pathMatchers(
                                 "/auth/login",
-                                "/auth/register"
+                                "/auth/register",
+                                "/actuator/health"
                         )
                         .permitAll()
 
@@ -136,6 +140,9 @@ public class SecurityConfig {
                                 "/api/*/v3/api-docs/**"
                         )
                         .permitAll()
+
+                        .pathMatchers("/api/equipamiento/interno", "/api/equipamiento/interno/**",
+                                "/api/rutas/*/descontar-cupos", "/api/rutas/*/aumentar-cupos").denyAll()
 
                         // 10. CONSULTAR RUTAS Y EQUIPAMIENTO
                         .pathMatchers(

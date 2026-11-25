@@ -11,7 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 
-import org.springframework.stereotype.Component;
+
 
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-@Component
 public class JwtFilter implements WebFilter {
 
     private final JwtUtil jwtUtil;
@@ -53,6 +52,7 @@ public class JwtFilter implements WebFilter {
                 HttpMethod.OPTIONS.equals(method)
 
                 // Inicio de sesion y registro.
+                || path.equals("/actuator/health")
                 || path.equals("/auth/login")
                 || path.equals("/auth/register")
 

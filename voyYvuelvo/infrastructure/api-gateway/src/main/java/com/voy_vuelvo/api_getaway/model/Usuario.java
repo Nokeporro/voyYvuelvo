@@ -25,6 +25,7 @@ public class Usuario {
     private Long id;
 
     // Nombre utilizado para iniciar sesión.
+    @Column(nullable = false, unique = true)
     private String username;
 
     // Contraseña cifrada con BCrypt.

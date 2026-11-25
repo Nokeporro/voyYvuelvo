@@ -17,6 +17,10 @@ import com.voy.velvo.ms_reserva.model.Reserva;
 import com.voy.velvo.ms_reserva.repository.ReservaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+import java.util.Objects;
 
 import com.voy.velvo.ms_reserva.exception.RecursoNoEncontradoException;
 
@@ -34,12 +38,13 @@ public class ReservaService {
 
 
 
+    @Transactional
     public Reserva crearReserva(Reserva reserva) {
 
         // 1. VALIDAR QUE EL USUARIO EXISTA
         try {
             UsuarioDTO usuario = usuarioClient.obtenerUsuarioPorId(reserva.getUsuarioId());
-            System.out.println("Usuario encontrado: " + usuario);
+            if (usuario == null) throw new RecursoNoEncontradoException("Usuario no encontrado");
         } catch (Exception e) {
             throw new RecursoNoEncontradoException(
                     "El usuario con ID " + reserva.getUsuarioId() + " no existe.");
@@ -92,14 +97,16 @@ public class ReservaService {
             }
         }
 
-        // 6. DESCONTAR CUPOS EN MS-RUTA
-        rutaClient.descontarCupos(
-                reserva.getRutaId(),
-                reserva.getCantidadPersonas());
-
-        // 7. ESTABLECER ESTADO INICIAL Y GUARDAR LA RESERVA
+        // Registrar primero para que la restricción única se compruebe antes de descontar cupos.
         reserva.setEstadoPago("PENDIENTE");
         Reserva reservaGuardada = reservaRepository.save(reserva);
+
+        // El servicio de rutas bloquea la fila de cupos durante la actualización.
+        try {
+            rutaClient.descontarCupos(reserva.getRutaId(), reserva.getCantidadPersonas());
+        } catch (feign.FeignException.Conflict ex) {
+            throw new CuposInsuficientesException("No hay cupos suficientes para esta ruta.");
+        }
 
         // 8. CREAR EL PAGO
         PagoDTO pagoParaEnviar = new PagoDTO();
@@ -108,7 +115,13 @@ public class ReservaService {
         pagoParaEnviar.setEstado("PENDIENTE");
         pagoParaEnviar.setFechaPago(reservaGuardada.getFechaReserva().toString());
 
-        pagoClient.crearPagoInterno(pagoParaEnviar);
+        try {
+            pagoClient.crearPagoInterno(pagoParaEnviar);
+        } catch (RuntimeException ex) {
+            // Compensación de cupos ante un error informado por pagos.
+            rutaClient.aumentarCupos(reserva.getRutaId(), reserva.getCantidadPersonas());
+            throw ex;
+        }
 
         // 9. ACTUALIZAR EL ESTADO DE LA RESERVA
         reservaGuardada.setEstadoPago("PROCESANDO");
@@ -140,10 +153,13 @@ public class ReservaService {
         Reserva reservaExistente = obtenerPorId(id);
 
         // 2. Actualizamos los datos que permitimos cambiar
-        reservaExistente.setCantidadPersonas(detallesNuevos.getCantidadPersonas());
+        if (!Objects.equals(reservaExistente.getCantidadPersonas(), detallesNuevos.getCantidadPersonas())
+                || !Objects.equals(reservaExistente.getEquipamientos(), detallesNuevos.getEquipamientos())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Para cambiar personas o equipamiento se requiere una nueva reserva");
+        }
         reservaExistente.setFechaReserva(detallesNuevos.getFechaReserva());
         reservaExistente.setNecesitaGuia(detallesNuevos.getNecesitaGuia());
-        reservaExistente.setEquipamientos(detallesNuevos.getEquipamientos());
+
         // No actualizamos el ID ni el usuarioId por seguridad
         return reservaRepository.save(reservaExistente);
     }
