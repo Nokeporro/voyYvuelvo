@@ -23,7 +23,6 @@ public class AuthService {
     }
 
     // 1. AUTENTICAR USUARIO
-    // Comprueba el usuario y su contraseña en MySQL.
     public Usuario autenticar(String username, String password) {
 
         if (username == null || username.isBlank()
@@ -46,7 +45,7 @@ public class AuthService {
         return passwordCorrecta ? usuario : null;
     }
 
-    // Mantiene compatibilidad con el sistema existente.
+    // 2. VALIDAR CREDENCIALES
     public boolean validarCredenciales(
             String username,
             String password) {
@@ -54,8 +53,7 @@ public class AuthService {
         return autenticar(username, password) != null;
     }
 
-    // 2. OBTENER ROL
-    // Utiliza el rol realmente guardado en MySQL.
+    // 3. OBTENER ROL DEL USUARIO
     public String obtenerRol(Usuario usuario) {
 
         if (usuario == null
@@ -86,19 +84,20 @@ public class AuthService {
         return rol;
     }
 
-    // 3. REGISTRAR USUARIO
-    // Todas las cuentas nuevas reciben el rol CLIENTE.
+    // 4. REGISTRAR USUARIO
     public void registrarUsuario(
             String username,
             String password) {
 
         if (username == null || username.isBlank()) {
+
             throw new IllegalArgumentException(
                     "El nombre de usuario es obligatorio."
             );
         }
 
         if (password == null || password.length() < 8) {
+
             throw new IllegalArgumentException(
                     "La contraseña debe tener al menos 8 caracteres."
             );
@@ -107,6 +106,7 @@ public class AuthService {
         String nombreUsuario = username.trim();
 
         if (usuarioRepository.findByUsername(nombreUsuario) != null) {
+
             throw new IllegalArgumentException(
                     "El usuario ya está registrado."
             );
@@ -117,19 +117,17 @@ public class AuthService {
         Usuario usuario = new Usuario(nombreUsuario, hash);
 
         usuario.setRol("CLIENTE");
-
-        // Las cuentas nuevas comienzan sin perfil vinculado.
         usuario.setPerfilUsuarioId(null);
 
         usuarioRepository.save(usuario);
     }
 
-    // 4. CONSULTAR PERFIL VINCULADO
-    // El username debe provenir de un JWT validado.
+    // 5. CONSULTAR PERFIL VINCULADO
     @Transactional(readOnly = true)
     public Long obtenerPerfilUsuarioId(String username) {
 
         if (username == null || username.isBlank()) {
+
             throw new IllegalArgumentException(
                     "Usuario inválido."
             );
@@ -139,6 +137,7 @@ public class AuthService {
                 usuarioRepository.findByUsername(username);
 
         if (usuario == null) {
+
             throw new IllegalArgumentException(
                     "La cuenta no existe."
             );
@@ -147,26 +146,21 @@ public class AuthService {
         return usuario.getPerfilUsuarioId();
     }
 
-    // 5. VINCULAR PERFIL NUEVO
-    //
-    // Este método debe llamarse exclusivamente desde
-    // el backend, después de crear un perfil nuevo
-    // para el usuario autenticado.
-    //
-    // Nunca se debe aceptar un ID de perfil elegido
-    // libremente por el navegador.
+    // 6. VINCULAR PERFIL NUEVO
     @Transactional
     public Long vincularPerfilNuevo(
             String username,
             Long perfilUsuarioId) {
 
         if (username == null || username.isBlank()) {
+
             throw new IllegalArgumentException(
                     "Usuario inválido."
             );
         }
 
         if (perfilUsuarioId == null || perfilUsuarioId <= 0) {
+
             throw new IllegalArgumentException(
                     "El ID del perfil es inválido."
             );
@@ -176,19 +170,21 @@ public class AuthService {
                 usuarioRepository.findByUsername(username);
 
         if (usuario == null) {
+
             throw new IllegalArgumentException(
                     "La cuenta no existe."
             );
         }
 
         if (!"CLIENTE".equals(obtenerRol(usuario))) {
+
             throw new IllegalStateException(
                     "Solo una cuenta Cliente puede registrar un perfil."
             );
         }
 
-        // Evitar reemplazar una vinculación existente.
         if (usuario.getPerfilUsuarioId() != null) {
+
             throw new IllegalStateException(
                     "La cuenta ya tiene un perfil vinculado."
             );
@@ -199,5 +195,19 @@ public class AuthService {
         usuarioRepository.saveAndFlush(usuario);
 
         return perfilUsuarioId;
+    }
+
+    // 7. CONSULTAR ROL ACTUAL PARA RENOVAR JWT
+    @Transactional(readOnly = true)
+    public String obtenerRolActual(String username) {
+
+        Usuario usuario =
+                usuarioRepository.findByUsername(username);
+
+        if (usuario == null) {
+            return null;
+        }
+
+        return obtenerRol(usuario);
     }
 }

@@ -1,4 +1,3 @@
-
 package com.voy_vuelvo.api_getaway.controller;
 
 import com.voy_vuelvo.api_getaway.dto.LoginRequest;
@@ -7,9 +6,15 @@ import com.voy_vuelvo.api_getaway.model.Usuario;
 import com.voy_vuelvo.api_getaway.service.AuthService;
 import com.voy_vuelvo.api_getaway.util.JwtUtil;
 
+import io.jsonwebtoken.JwtException;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,12 +31,11 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // INICIO DE SESIÓN
+    // 1. INICIO DE SESION
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @RequestBody LoginRequest loginRequest) {
 
-        // Comprobar que se ingresaron las credenciales.
         if (loginRequest == null
                 || loginRequest.getUsername() == null
                 || loginRequest.getPassword() == null) {
@@ -41,23 +45,24 @@ public class AuthController {
                     .body("Debes ingresar usuario y contraseña.");
         }
 
-        // Verificar las credenciales en MySQL.
         Usuario usuario = authService.autenticar(
                 loginRequest.getUsername(),
                 loginRequest.getPassword()
         );
 
         if (usuario == null) {
+
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body("Credenciales inválidas.");
         }
 
-        // Obtener el rol real del usuario.
         String rol;
 
         try {
+
             rol = authService.obtenerRol(usuario);
+
         } catch (IllegalStateException ex) {
 
             return ResponseEntity
@@ -65,7 +70,6 @@ public class AuthController {
                     .body("La cuenta no tiene un rol válido asignado.");
         }
 
-        // Generar JWT con usuario y rol verificados.
         String token = jwtUtil.generateToken(
                 usuario.getUsername(),
                 rol
@@ -76,12 +80,13 @@ public class AuthController {
         );
     }
 
-    // REGISTRO DE USUARIOS
+    // 2. REGISTRO DE USUARIOS
     @PostMapping("/register")
     public ResponseEntity<String> registrar(
             @RequestBody Usuario usuarioDTO) {
 
         if (usuarioDTO == null) {
+
             return ResponseEntity
                     .badRequest()
                     .body("Debes ingresar los datos del usuario.");
@@ -89,7 +94,6 @@ public class AuthController {
 
         try {
 
-            // AuthService asigna siempre el rol CLIENTE.
             authService.registrarUsuario(
                     usuarioDTO.getUsername(),
                     usuarioDTO.getPassword()
@@ -110,5 +114,70 @@ public class AuthController {
                     .status(status)
                     .body(ex.getMessage());
         }
+    }
+
+    // 3. RENOVACION DEL TOKEN JWT
+    @PostMapping("/refresh")
+    public Mono<ResponseEntity<?>> renovarToken(
+            @RequestHeader(
+                    value = HttpHeaders.AUTHORIZATION,
+                    required = false
+            ) String authorization) {
+
+        return Mono.<ResponseEntity<?>>fromCallable(() -> {
+
+            if (authorization == null
+                    || !authorization.startsWith("Bearer ")) {
+
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("Token requerido.");
+            }
+
+            try {
+
+                String token =
+                        authorization.substring(7).trim();
+
+                // Validar firma y vencimiento.
+                jwtUtil.validateToken(token);
+
+                // Obtener la identidad del usuario.
+                String username =
+                        jwtUtil.extractUsername(token);
+
+                // Consultar el rol actual en MySQL.
+                String rolActual =
+                        authService.obtenerRolActual(username);
+
+                if (rolActual == null) {
+
+                    return ResponseEntity
+                            .status(HttpStatus.UNAUTHORIZED)
+                            .body("La cuenta no existe.");
+                }
+
+                // Generar un nuevo JWT.
+                String nuevoToken =
+                        jwtUtil.renovarToken(token, rolActual);
+
+                return ResponseEntity.ok(
+                        new TokenResponse(nuevoToken)
+                );
+
+            } catch (JwtException | IllegalArgumentException ex) {
+
+                return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body("Debes iniciar sesión nuevamente.");
+
+            } catch (IllegalStateException ex) {
+
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("La cuenta no tiene permisos válidos.");
+            }
+
+        }).subscribeOn(Schedulers.boundedElastic());
     }
 }

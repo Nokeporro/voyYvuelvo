@@ -70,12 +70,10 @@ public class SecurityConfig {
 
         return http
 
-                // Desactivar autenticacion tradicional
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
 
-                // Activar CORS
                 .cors(cors -> cors.configurationSource(
                         corsConfigurationSource()
                 ))
@@ -96,37 +94,46 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // 5. CREAR PERFIL DEL CLIENTE
+                        // 5. RENOVACION DEL JWT
+                        .pathMatchers(
+                                HttpMethod.POST,
+                                "/auth/refresh"
+                        )
+                        .hasAnyRole(
+                                "ADMINISTRADOR",
+                                "VENDEDOR",
+                                "CLIENTE"
+                        )
+
+                        // 6. CREAR PERFIL DEL CLIENTE
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/auth/perfil"
                         )
                         .hasRole("CLIENTE")
 
-                        // 6. CONSULTAR PERFIL PROPIO
+                        // 7. CONSULTAR PERFIL PROPIO
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/auth/perfil"
                         )
                         .hasRole("CLIENTE")
 
-                        // 7. CONSULTAR CUENTAS REALES
-                        // Solo Administrador
+                        // 8. CONSULTAR CUENTAS REALES
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/auth/cuentas"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 8. RESERVAS SEGURAS DEL CLIENTE
+                        // 9. RESERVAS SEGURAS DEL CLIENTE
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/auth/reservas"
                         )
                         .hasRole("CLIENTE")
 
-                        // 9. DOCUMENTACION SWAGGER
-                        // Se conserva la configuracion de main
+                        // 10. DOCUMENTACION SWAGGER
                         .pathMatchers(
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
@@ -137,7 +144,7 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // 10. CONSULTAR RUTAS Y EQUIPAMIENTO
+                        // 11. CONSULTAR RUTAS Y EQUIPAMIENTO
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/api/rutas",
@@ -147,8 +154,7 @@ public class SecurityConfig {
                         )
                         .permitAll()
 
-                        // 11. CONSULTAR RESERVAS
-                        // Administrador y Vendedor
+                        // 12. CONSULTAR RESERVAS
                         .pathMatchers(
                                 HttpMethod.GET,
                                 "/api/reservas",
@@ -159,61 +165,61 @@ public class SecurityConfig {
                                 "VENDEDOR"
                         )
 
-                        // 12. CREAR RESERVAS ADMINISTRATIVAS
+                        // 13. CREAR RESERVAS ADMINISTRATIVAS
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/api/reservas"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 13. CREAR PERFILES ADMINISTRATIVOS
+                        // 14. CREAR PERFILES ADMINISTRATIVOS
                         .pathMatchers(
                                 HttpMethod.POST,
                                 "/api/usuarios"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 14. ADMINISTRACION DE USUARIOS
+                        // 15. ADMINISTRACION DE USUARIOS
                         .pathMatchers(
                                 "/api/usuarios",
                                 "/api/usuarios/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 15. ADMINISTRACION DE PAGOS
+                        // 16. ADMINISTRACION DE PAGOS
                         .pathMatchers(
                                 "/api/pagos",
                                 "/api/pagos/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 16. MODIFICAR RUTAS
+                        // 17. MODIFICAR RUTAS
                         .pathMatchers(
                                 "/api/rutas",
                                 "/api/rutas/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 17. MODIFICAR EQUIPAMIENTO
+                        // 18. MODIFICAR EQUIPAMIENTO
                         .pathMatchers(
                                 "/api/equipamiento",
                                 "/api/equipamiento/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 18. OTRAS OPERACIONES DE RESERVAS
+                        // 19. OTRAS OPERACIONES DE RESERVAS
                         .pathMatchers(
                                 "/api/reservas",
                                 "/api/reservas/**"
                         )
                         .hasRole("ADMINISTRADOR")
 
-                        // 19. BLOQUEAR RUTAS NO DEFINIDAS
+                        // 20. BLOQUEAR RUTAS NO DEFINIDAS
                         .anyExchange()
                         .denyAll()
                 )
 
-                // 20. VALIDACION JWT
+                // 21. VALIDACION JWT
                 .addFilterAt(
                         jwtFilter,
                         SecurityWebFiltersOrder.AUTHENTICATION
